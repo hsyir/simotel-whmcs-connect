@@ -1,7 +1,8 @@
 <?php
 add_hook('AdminAreaPage', 1, function ($vars) {
-    $config = \WHMCS\Module\Addon\Simotel\Admin\WhmcsOperations::getConfig();
-    $channelName = "whmcs" . \WHMCS\Module\Addon\Simotel\Admin\WhmcsOperations::getCurrentAdminExten();
+    $config = \WHMCS\Module\Addon\Simotel\WhmcsOperations::getConfig();
+    $channelName = "whmcs" . \WHMCS\Module\Addon\Simotel\WhmcsOperations::getCurrentAdminExten();
+    $popUpTime = isset($config["PopUpTime"]) ? $config["PopUpTime"] : "30";
 
     $js = <<<EOF
 
@@ -14,6 +15,8 @@ add_hook('AdminAreaPage', 1, function ($vars) {
                 window.wsPort = $config[WsPort];
                 window.rootWebUrl = "$config[RootWebUrl]";
                 window.panelWebUrl = "$config[AdminWebUrl]";
+                window.addonUrl = "$config[RootWebUrl]"+"/modules/addons/simotel";
+                window.PopUpTime = $popUpTime ;
                 
                 
                 var pusherScript = document.createElement('script');

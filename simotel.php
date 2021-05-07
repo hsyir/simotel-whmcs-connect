@@ -67,7 +67,7 @@ function simotel_config()
         // Description displayed within the admin interface
         'description' => '',
         // Module author name
-        'author' => 'Nasim Telecom',
+        'author' => 'Hossein Yaghmaee',
         // Default language
         'language' => 'english',
         // Version number
@@ -88,6 +88,13 @@ function simotel_config()
                 'Size' => '50',
                 'Default' => '',
                 'Description' => '',
+            ],
+            'PhoneFields' => [
+                'FriendlyName' => 'Phone Fields',
+                'Type' => 'text',
+                'Size' => '50',
+                'Default' => 'phonenumber,address2',
+                'Description' => 'Comma separated fields name ',
             ],
             'WsAppKey' => [
                 'FriendlyName' => 'Web socket app key',
@@ -124,13 +131,19 @@ function simotel_config()
                 'Default' => '',
                 'Description' => '',
             ],
-            // a password field type allows for masked text input
             'WsSecret' => [
                 'FriendlyName' => 'Web Socket Secret',
                 'Type' => 'password',
                 'Size' => '25',
                 'Default' => '',
                 'Description' => '',
+            ],
+            'PopUpTime' => [
+                'FriendlyName' => 'Caller Id pop up time to hide',
+                'Type' => 'text',
+                'Size' => '5',
+                'Default' => '30',
+                'Description' => 'Seconds',
             ],
         ]
     ];

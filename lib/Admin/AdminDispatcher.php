@@ -3,7 +3,7 @@
 namespace WHMCS\Module\Addon\Simotel\Admin;
 
 /**
- * Sample Admin Area Dispatch Handler
+ *  Admin Area Dispatch Handler
  */
 class AdminDispatcher {
 

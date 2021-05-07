@@ -1,0 +1,12 @@
+{
+    "name": "hsyir/simotel-whmcs-connect",
+    "authors": [
+        {
+            "name": "Hossein Yaghmaee",
+            "email": "hosseinyaghmaee@gmail.com"
+        }
+    ],
+    "require": {
+        "pusher/pusher-php-server": "^6.1"
+    }
+}
