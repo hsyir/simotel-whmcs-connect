@@ -12,58 +12,89 @@ class Controller
 {
     public function index($vars)
     {
-        logActivity(json_encode($_REQUEST) . json_encode($_POST), 0);
-
         $exten = $_REQUEST["exten"];
         $state = $_REQUEST["state"];
         $participant = $_REQUEST["participant"];
 
+        $this->validetApiRequest($participant, $exten, $state);
+
         $client = WhmcsOperations::getFirstClientByPhoneNumber($participant);
 
         if ($client) {
-            $clientFullname = $client->firstname . " " . $client->lastname;
-            $clientData = [
-                "id" => $client->id,
-                "firstname" => $client->firstname,
-                "lastname" => $client->lastname,
-                "fullname" => $clientFullname,
-                "companyname" => $client->companyname,
-                "notes" => $client->notes,
-                "phonenumber" => $client->phonenumber,
-            ];
+            $clientData = $this->extractClientResource($client);
         } else {
             $clientData = null;
         }
 
-
-        if ($state != "Ringing")
-            die("...");
-
         $channelName = "whmcs" . $exten;
         $data = [
+            "state" => $state,
             "exten" => $exten,
             "participant" => $participant,
             "client" => $clientData,
         ];
 
-        $adminId = $this->getCurrentAdminId();
-
         $notif = new PushNotification();
         $notif->send($channelName, "newCall", $data);
-        echo "Done";
+
+        echo "Call data successfully sent to client";
         exit;
     }
 
-    private function getCurrentAdminId()
+    /**
+     * @param string $string
+     */
+    private function logError(string $string)
     {
-        $command = 'GetAdminDetails';
-        $results = localAPI($command);
+        logActivity("Simotel Error: " . $string . "  " . json_encode($_REQUEST), 0);
+    }
 
-        if ($results['result'] == 'success') {
-            return $results["adminid"];
-        } else {
-            return null;
+    /**
+     * @param $participant
+     * @param $exten
+     * @param $state
+     */
+    private function validetApiRequest($participant, $exten, $state)
+    {
+
+        if (!$state) {
+            $this->logError("call state not defined");
+            exit;
         }
+
+        if ($state != "Ringing") {
+            $this->logError("only ring state supported");
+            exit;
+        }
+
+        if (!$participant) {
+            $this->logError("participant number required");
+            exit;
+        }
+
+        if (!$exten) {
+            $this->logError("exten number required");
+            exit;
+        }
+
+    }
+
+    /**
+     * @param $client
+     * @return array
+     */
+    private function extractClientResource($client): array
+    {
+        $clientFullname = $client->firstname . " " . $client->lastname;
+        return [
+            "id" => $client->id,
+            "firstname" => $client->firstname,
+            "lastname" => $client->lastname,
+            "fullname" => $clientFullname,
+            "companyname" => $client->companyname,
+            "notes" => $client->notes,
+            "phonenumber" => $client->phonenumber,
+        ];
     }
 
 }
