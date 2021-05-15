@@ -74,7 +74,6 @@ function simotel_config()
         'version' => '1.0',
         'fields' => [
             // a text field type allows for single line text input
-
             'RootWebUrl' => [
                 'FriendlyName' => 'Whmcs root web url',
                 'Type' => 'text',
@@ -145,6 +144,48 @@ function simotel_config()
                 'Default' => '30',
                 'Description' => 'Seconds',
             ],
+            'BlockPattern' => [
+                'FriendlyName' => 'Regx block pattern',
+                'Type' => 'text',
+                'Size' => '25',
+                'Default' => '/^[0-9]{3}$/',
+                'Description' => 'Regular expression pattern for block unwanted caller id numbers',
+            ],/*
+            'SimotelServerAddress' => [
+                'FriendlyName' => 'Simotel Server Address',
+                'Type' => 'text',
+                'Size' => '25',
+                'Default' => '',
+                'Description' => '',
+            ],
+            'SimotelWebServiceUser' => [
+                'FriendlyName' => 'Simotel Webservice User',
+                'Type' => 'text',
+                'Size' => '25',
+                'Default' => '',
+                'Description' => '',
+            ],
+            'SimotelWebServicePass' => [
+                'FriendlyName' => 'Simotel Webservice Password',
+                'Type' => 'password',
+                'Size' => '25',
+                'Default' => '',
+                'Description' => '',
+            ],
+            'SimotelWebServiceContext' => [
+                'FriendlyName' => 'Simotel Context',
+                'Type' => 'text',
+                'Size' => '25',
+                'Default' => '',
+                'Description' => '',
+            ],*/
+            'PhoneNumberRegx' => [
+                'FriendlyName' => 'Javascript Phone Number Regx',
+                'Type' => 'text',
+                'Size' => '25',
+                'Default' => '/09[0-9]{9}/g',
+                'Description' => '',
+            ],
         ]
     ];
 }
@@ -164,8 +205,33 @@ function simotel_config()
  */
 function simotel_activate()
 {
-    // Create custom tables and schema required by your module
 
+    // Create custom tables and schema required by your module
+    try {
+        Capsule::schema()
+            ->create(
+                'mod_simotel_options',
+                function ($table) {
+                    /** @var \Illuminate\Database\Schema\Blueprint $table */
+                    $table->increments('id');
+                    $table->integer('admin_id')->nullable();
+                    $table->string('key');
+                    $table->text('value');
+                }
+            );
+        return [
+
+            // Supported values here include: success, error or info
+            'status' => 'success',
+            'description' => 'Ok.',
+        ];
+    } catch (\Exception $e) {
+        return [
+            // Supported values here include: success, error or info
+            'status' => "error",
+            'description' => 'Unable to create mod_simotel_options: ' . $e->getMessage(),
+        ];
+    }
 }
 
 /**
@@ -183,6 +249,24 @@ function simotel_activate()
  */
 function simotel_deactivate()
 {
+    // Undo any database and schema modifications made by your module here
+    try {
+        Capsule::schema()
+            ->dropIfExists('mod_simotel_options');
+
+        return [
+            // Supported values here include: success, error or info
+            'status' => 'success',
+            'description' => 'This is a demo module only. '
+                . 'In a real module you might report a success here.',
+        ];
+    } catch (\Exception $e) {
+        return [
+            // Supported values here include: success, error or info
+            "status" => "error",
+            "description" => "Unable to drop mod_addonexample: {$e->getMessage()}",
+        ];
+    }
 }
 
 /**
@@ -209,9 +293,9 @@ function simotel_upgrade($vars)
  *
  * This function is optional.
  *
+ * @return string
  * @see AddonModule\Admin\Controller::index()
  *
- * @return string
  */
 function simotel_output($vars)
 {
@@ -234,7 +318,17 @@ function simotel_output($vars)
  */
 function simotel_sidebar($vars)
 {
-    $sidebar = '<p>Sidebar output HTML goes here</p>';
+    $configs = \WHMCS\Module\Addon\Simotel\WhmcsOperations::getConfig();
+    $sidebar = "<div class='sidebar-header'>
+    <i class='fas fa-box-alt'></i>
+    منو سیموتل
+    </div> 
+    <ul class='menu'>
+        <li><a href='$configs[AdminWebUrl]/addonmodules.php?module=simotel&action=moduleConfigForm'>تنظیمات ادمین</a></li>
+        <li><a href='$configs[AdminWebUrl]/addonmodules.php?module=simotel'>تنظیمات کاربر</a></li>
+    </ul>
+    
+    ";
     return $sidebar;
 }
 
@@ -246,9 +340,9 @@ function simotel_sidebar($vars)
  *
  * This function is optional.
  *
+ * @return array
  * @see AddonModule\Client\Controller::index()
  *
- * @return array
  */
 function simotel_clientarea($vars)
 {

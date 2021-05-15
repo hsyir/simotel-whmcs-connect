@@ -3,6 +3,7 @@ const addonUrl = window.addonUrl;
 const channelName = window.channelName;
 const popUpTime = window.PopUpTime;
 const popUpTimeMiliSeconds = PopUpTime * 1000;
+const phoneNumberRegx = window.phoneNumberRegx;
 //pusher init
 var pusherOptions = {
     useTLS: true,
@@ -23,12 +24,12 @@ function callerId(callData) {
     $.notify.addStyle('simotel-caller-id', {
         html:
             "<div class=''>"
-            +"<div class='icon-holder'><img class='newcall-icon' src='" + addonUrl + "/templates/images/call.png' /></div>"
-            +"<div class='body' data-notify-html='body'/>"
-            +"<div class='clrfx'>"
-            +"<a class='closeNotify' ><strong>-</strong></a>"
-            +"</div>"
-            +`<div class='countDownProgress' style='animation: progressBarCountDown linear ${popUpTime}s'><span></span></div>`
+            + "<div class='icon-holder'><img class='newcall-icon' src='" + addonUrl + "/templates/images/call.png' /></div>"
+            + "<div class='body' data-notify-html='body'/>"
+            + "<div class='clrfx'>"
+            + "<a class='closeNotify' ><strong>-</strong></a>"
+            + "</div>"
+            + `<div class='countDownProgress' style='animation: progressBarCountDown linear ${popUpTime}s'><span></span></div>`
 
     });
     showNotif(callData);
@@ -97,11 +98,13 @@ function showNotif(callData) {
         // $(html_notifBox).append($("<div class='countDownProgress'>").append($("<span>")))
 
 
-        $.notify({
+        let ab = $.notify({
             body: html_notifBox,
         }, {
             style: 'simotel-caller-id',
         });
+        // setTimeout(x=>{$(ab.body[0]).parents(".notifyjs-wrapper").slideUp(5000);},1000)
+
 
     } else {
         html_notifBox = $("<div>");
@@ -159,7 +162,6 @@ var notifyOptions = {
     gap: 5
 }
 
-
 // load css
 var cssId = 'simotelCss';
 if (!document.getElementById(cssId)) {
@@ -172,3 +174,150 @@ if (!document.getElementById(cssId)) {
     link.media = 'all';
     head.appendChild(link);
 }
+
+//--- simotel click to dial --------------------------------------
+
+// find numbers in page and attach the ClickToDIal Balloon
+$('p ,td').each(function () {
+    if ($(this).find("textarea,input,a").length > 0) return null;
+    let newContent = $(this).html().replaceAll(phoneNumberRegx, makeBalloon)
+    $(this).html(newContent);
+});
+$("input,textarea").each(function () {
+    let numbers = $(this).val().match(phoneNumberRegx);
+    if (numbers != null) {
+        for (let i in numbers) {
+            let balloon = makeBalloon(numbers[i]);
+            $(balloon).insertAfter($(this));
+        }
+    }
+})
+
+$('body').on("click", function (e) {
+    if ($(e.target).parents(".simotelClickToDial").length > 0)
+        return;
+    $(".simotelClickToDial").removeClass("active");
+})
+$('body').on("click", ".simotelClickToDial .number", function () {
+
+    $(".simotelClickToDial").removeClass("active");
+    $(this).parent().addClass("active");
+
+
+    resetElHeight($(this).parent().find(".balloon"));
+
+})
+
+
+$('body').on("click", ".simotelClickToDial .balloon a", function (e) {
+    e.preventDefault();
+    let balloon = $(this).parents(".balloon");
+    $(balloon).find(".message").html("")
+    setStatus("pending", "در حال ارسال تماس ...");
+    resetElHeight($(balloon));
+    $.get(rootWebUrl + "/index.php?m=simotel&action=simotelCall&callee=" + $(this).data("number"))
+        .done(x => {
+            if (x.success == true)
+                setStatus("success", "با موفقیت ارسال شد.");
+            else {
+                setStatus("error", "خطا در ارسال تماس.");
+                $(balloon).find(".message").html(x.message)
+            }
+        })
+        .fail(x => {
+            setStatus("error", "خطا در ارسال تماس.");
+        })
+        .done(x => {
+            resetElHeight($(balloon));
+        });
+
+
+    function setStatus(status, message) {
+        let statusElement = $(balloon).find(".status");
+        $(statusElement).html(message);
+        $(statusElement).removeClass("error");
+        $(statusElement).removeClass("pending");
+        $(statusElement).removeClass("success");
+        $(statusElement).addClass(status);
+
+    }
+
+})
+
+function resetElHeight(el) {
+    let balloonHeight = -1 * $(el).height() - 30;
+    $(el).css({top: balloonHeight + "px"})
+}
+
+function makeBalloon(number) {
+    return `<span class="simotelClickToDial">
+                <span class="balloon">
+                <div>${number}</div>
+                    <div style="text-align: center"> <a href="#"  data-number="${number}">ارسال تماس</a></div>
+                    <div class="status"></div>
+                    <span class="message"></span>                    
+                </span> 
+                <span class="number">${number}</span>
+            </span>`;
+}
+
+//-----------------------------------------------------------------------------
+//--------------------- module configuration ----------------------------------
+//-----------------------------------------------------------------------------
+
+function addProfilesRow(name="", address="", user="", pass="") {
+    let index = $("form.module-configs table tbody tr").length;
+    let row = `
+            <tr>
+              <td>${index+1}</td>
+                <td><input type="text" name="simotelServerProfile[${index}][profile_name]" value="${name}" class="form-control">
+                </td>
+                <td><input dir="ltr" type="text" name="simotelServerProfile[${index}][server_address]" value="${address}"
+                           class="form-control"></td>
+                <td><input dir="ltr" type="text" name="simotelServerProfile[${index}][api_user]" value="${user}"
+                           class="form-control"></td>
+                <td><input dir="ltr" type="password" name="simotelServerProfile[${index}][api_pass]" value="${pass}"
+                           class="form-control"></td>
+                <td><input dir="ltr" type="text" name="simotelServerProfile[${index}][context]" value="${pass}"
+                           class="form-control"></td>
+                <td><a href="#" class="btn btn-danger btn-sm delete-row">حذف</a></td>           
+                           
+            </tr>               
+            `
+
+    $("form.module-configs tbody").append(row)
+}
+
+$("document").ready(function () {
+
+    $("form.module-configs #addProfile").click(function (e) {
+        e.preventDefault();
+        addProfilesRow();
+    })
+    $("form.module-configs table").on("click"," a.delete-row",function(e){
+        $(this).parents("tr").remove();
+
+
+        $("form.module-configs table tbody").find("tr").each(function(index,val){
+            $(this).find("td:first").html(index+1);
+        });
+
+
+
+
+    })
+    $("form.module-configs").submit(function (e) {
+        e.preventDefault();
+        $("#saveModuleConfigsBtn").attr("disabled", "disabled")
+        $.post($(this).attr("action"), $(this).serialize())
+            .success(x => {
+                if (x.success == true)
+                    alert("ذخیره شد.")
+            })
+            .done(function () {
+                $("#saveModuleConfigsBtn").attr("disabled", false)
+            })
+    })
+
+})
+

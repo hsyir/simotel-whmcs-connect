@@ -16,10 +16,9 @@ class WhmcsOperations
      */
     public static function getCurrentAdminId()
     {
-        $command = 'GetAdminDetails';
-        $results = localAPI($command);
-        if ($results['result'] == 'success') {
-            return $results["adminid"];
+        $details = self::getCurrentAdminDetails();
+        if ($details['result'] == 'success') {
+            return $details["adminid"];
         } else {
             return null;
         }
@@ -38,10 +37,13 @@ class WhmcsOperations
      * @param $adminId
      * @return mixed
      */
-    public static function getAdminExten($adminId)
+    public static function getAdminExten($adminId=null)
     {
-        $admin = Capsule::table('tbladmins')->find($adminId);
-        return $admin->notes;
+        $adminId = $adminId?$adminId :self::getCurrentAdminId();
+
+        $options = new Options();
+        return $options->get("exten",$adminId);
+
     }
 
 
@@ -84,16 +86,38 @@ class WhmcsOperations
      */
     public static function render($tplFile, $params = [])
     {
-        $file = __DIR__ . "/../../templates/{$tplFile}.tpl";
-        if(!file_exists())
-        $smarty = new Smarty;
+        $file = __DIR__ . "/../templates/{$tplFile}.tpl";
+        if (!file_exists())
+            $smarty = new Smarty;
         foreach ($params as $key => $value)
-        $smarty->assign($key, $value);
+            $smarty->assign($key, $value);
+
+        $configs = \WHMCS\Module\Addon\Simotel\WhmcsOperations::getConfig();
+        $smarty->assign("configs", $configs);
+
         $smarty->caching = false;
         $smarty->compile_dir = $GLOBALS['templates_compiledir'];
 
         return $smarty->fetch($file);
     }
 
+
+    public static function adminCanConfigureModuleConfigs()
+    {
+
+        $details = self::getCurrentAdminDetails();
+
+        $permission = explode(",",$details["allowedpermissions"]);
+        $hasPermission = collect($permission)->contains("Configure Addon Modules");
+
+        return $hasPermission;
+
+    }
+
+    public static function getCurrentAdminDetails(){
+        $command = 'GetAdminDetails';
+        $results = localAPI($command);
+        return $results;
+    }
 
 }

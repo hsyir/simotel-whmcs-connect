@@ -1,48 +1,48 @@
-<script src="https://js.pusher.com/7.0.3/pusher.min.js"></script>
-<script type="text/javascript">
-    {literal} window.channelName=  "{/literal}{$channelName}{literal}";{/literal}
-</script>
-<script>
-    var options = {
-        cluster: 'mt1',
-        wsHost: "pusher.hsy.ir",
-        wsPort: 6001,
-        forceTLS: false,
-        disableStats: true,
-        authEndpoint: "/admin/addonmodules.php?module=simotel&action=authorizeChannel"
-    }
-    var pusher = new Pusher("asdasd", options);
+<form class="configs" action="{$configs["AdminWebUrl"] }/addonmodules.php?module=simotel&action=storeMyConfigs"
+      method="post">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="simotel_profile">انتخاب سرور سیموتل</label>
+                <select name="simotel_profile" id="simotel_profile" class="form-control">
+                    {foreach from=$simotelServers key=key item=profile}
+                        <option value="{$profile->profile_name}"
+                                {if $selectedSimotelProfileName eq $profile->profile_name}
+                                    selected
+                                {/if}>
+                            {$profile->profile_name}</option>
+                    {/foreach}
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="exten">شماره اکستن سیموتل </label>
+                <input type="text" name="exten" id="exten"
+                       value="{WHMCS\Module\Addon\Simotel\WhmcsOperations::getAdminExten()}" class="form-control">
+            </div>
+        </div>
+    </div>
+    <input type="submit" value="ذخیره" class="btn btn-primary" id="saveBtn">
+    <script>
 
-    var channel = pusher.subscribe(channelName);
+        $("document").ready(function () {
+            $("form.configs").submit(function (e) {
+                e.preventDefault();
+                $("#saveBtn").attr("disabled","disabled")
+                $.post($(this).attr("action"),$(this).serialize())
+                    .success(x=> {
+                        if(x.success == true)
+                            alert("ذخیره شد.")
+                    })
+                    .done(function(){
+                        $("#saveBtn").attr("disabled",false)
+                    })
+            })
+        })
 
-    channel.bind("newCall", (data) => {
-        logCall(data);
+    </script>
+</form>
 
-    });
-
-    function logCall(callData){
-        var newNode=document.createElement("div");
-        $(newNode).addClass("history-item");
-        $(newNode).html("<div>Caller Id: "+callData.participant+"</div>");
-        if(callData.client_id){
-            $(newNode).append("<div>Client:"+callData.client.fullname+"</div>");
-            $(newNode).append("<div>Client Profile: "+"<a href='/admin/clientssummary.php?userid="+callData.client.id+"'>Go To Profile</a></div>");
-            $(newNode).append("<div>Active Tickets: "+"<a href='/admin/client/"+callData.client.id+"/tickets'>Go To Tickets</a></div>");
-            $(newNode).append("<div>Open New Ticket: "+"<a href='/admin/supporttickets.php?action=open&userid="+callData.client.id+"'>New Ticket</a></div>");
-            $(newNode).append("<div>Notes: "+callData.client.notes+"</div>");
-        }
-        $("#history").prepend(newNode);
-    }
-
-</script>
-<h3 class="h5">مرکز تماس سیموتل</h3>
-
-<h6>تاریخچه تماس ها:</h6>
-<div id="history" dir="ltr"></div>
-<style>
-    .history-item {
-        padding: 10px;
-        margin-bottom: 10px;
-        border: 1px #aaa solid;
-    }
-</style>
