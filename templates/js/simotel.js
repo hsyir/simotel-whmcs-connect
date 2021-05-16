@@ -26,8 +26,9 @@ function callerId(callData) {
             "<div class=''>"
             + "<div class='icon-holder'><img class='newcall-icon' src='" + addonUrl + "/templates/images/call.png' /></div>"
             + "<div class='body' data-notify-html='body'/>"
+            + "<div class='footer' data-notify-html='footer'/>"
             + "<div class='clrfx'>"
-            + "<a class='closeNotify' ><strong>-</strong></a>"
+            + "<a class='closeNotify' ><strong>x</strong></a>"
             + "</div>"
             + `<div class='countDownProgress' style='animation: progressBarCountDown linear ${popUpTime}s'><span></span></div>`
 
@@ -84,13 +85,24 @@ function showNotif(callData) {
         //--------------------------------------------------
         $(html_notifBox).append($("<div class='clrfx'>"))
 
+        //https://mysup.ir/panel/s4admin/clientsnotes.php?userid=394
 
-        let html_tickets = $("<a>").attr("href", `${adminPanelUrl}/client/${client.id}/tickets`).html(`<img src='${addonUrl}/templates/images/view-tickets.png' />`);
-        let html_newTicket = $("<a>").attr("href", `${adminPanelUrl}/supporttickets.php?action=open&userid=${client.id}m`).html(`<img src='${addonUrl}/templates/images/new-ticket.png' />`);
-        $(html_notifBox).append(
+        /* let html_tickets = $("<a>").attr("href", `${adminPanelUrl}/client/${client.id}/tickets`).html(`<img src='${addonUrl}/templates/images/view-tickets.png' />`);
+         let html_newTicket = $("<a>").attr("href", `${adminPanelUrl}/supporttickets.php?action=open&userid=${client.id}m`).html(`<img src='${addonUrl}/templates/images/new-ticket.png' />`);
+         let html_notes = $("<a>").attr("href", `${adminPanelUrl}/clientsnotes.php?userid=${client.id}`).html(`<img src='${addonUrl}/templates/images/new-ticket.png' />`);
+ */
+        let html_tickets = $("<a>").attr("href", `${adminPanelUrl}/client/${client.id}/tickets`).html(` تیکت ها`);
+        let html_newTicket = $("<a>").attr("href", `${adminPanelUrl}/supporttickets.php?action=open&userid=${client.id}m`).html(`تیکت جدید`);
+        let html_notes = $("<a>").attr("href", `${adminPanelUrl}/clientsnotes.php?userid=${client.id}`).html(`یادداشت`);
+        let html_services = $("<a>").attr("href", `${adminPanelUrl}/clientsservices.php?userid=${client.id}`).html(`سرویس ها`);
+
+        let html_footer = $("<div>");
+        $(html_footer).append(
             $("<div class='simotelBtns'>")
                 .append($("<div class='simotelBtn' title='مشاده تیکت ها'>").append(html_tickets))
                 .append($("<div class='simotelBtn' title='تیکت جدید'>").append(html_newTicket))
+                .append($("<div class='simotelBtn' title='یادداشت'>").append(html_notes))
+                .append($("<div class='simotelBtn' title='سرویس ها'>").append(html_services))
         )
 
         $(html_notifBox).append($("<div class='clrfx'>"))
@@ -100,6 +112,7 @@ function showNotif(callData) {
 
         let ab = $.notify({
             body: html_notifBox,
+            footer: html_footer
         }, {
             style: 'simotel-caller-id',
         });
@@ -265,11 +278,11 @@ function makeBalloon(number) {
 //--------------------- module configuration ----------------------------------
 //-----------------------------------------------------------------------------
 
-function addProfilesRow(name="", address="", user="", pass="") {
+function addProfilesRow(name = "", address = "", user = "", pass = "") {
     let index = $("form.module-configs table tbody tr").length;
     let row = `
             <tr>
-              <td>${index+1}</td>
+              <td>${index + 1}</td>
                 <td><input type="text" name="simotelServerProfile[${index}][profile_name]" value="${name}" class="form-control">
                 </td>
                 <td><input dir="ltr" type="text" name="simotelServerProfile[${index}][server_address]" value="${address}"
@@ -294,15 +307,13 @@ $("document").ready(function () {
         e.preventDefault();
         addProfilesRow();
     })
-    $("form.module-configs table").on("click"," a.delete-row",function(e){
+    $("form.module-configs table").on("click", " a.delete-row", function (e) {
         $(this).parents("tr").remove();
 
 
-        $("form.module-configs table tbody").find("tr").each(function(index,val){
-            $(this).find("td:first").html(index+1);
+        $("form.module-configs table tbody").find("tr").each(function (index, val) {
+            $(this).find("td:first").html(index + 1);
         });
-
-
 
 
     })

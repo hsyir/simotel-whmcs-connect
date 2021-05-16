@@ -16,7 +16,6 @@ class Controller
     public function index($vars)
     {
 
-        logActivity(json_encode($_REQUEST), 0);
         $exten = $_REQUEST["exten"];
         $state = $_REQUEST["state"];
         $participant = $_REQUEST["participant"];
@@ -133,7 +132,6 @@ class Controller
         $user = $simotelProfile["api_user"];
         $pass = $simotelProfile["api_pass"];
         $context = $simotelProfile["context"];
-
 
         $callee = $_REQUEST["callee"];
         $client = WhmcsOperations::getFirstClientByPhoneNumber($callee);
