@@ -44,57 +44,59 @@
     width: 100%;
 }
 
-.notifyjs-simotel-caller-id-base .body {
+.notifyjs-simotel-caller-id-base .simotel-popup-body {
     width: 200px;
     float: right;
     padding-right: 5px;
 }
 
-.notifyjs-simotel-caller-id-base .body .clientNotes {
+.notifyjs-simotel-caller-id-base .simotel-popup-body .clientNotes {
     cursor: pointer;
 }
 
-.notifyjs-simotel-caller-id-base .body .clientNotes .readMoreDots {
+.notifyjs-simotel-caller-id-base .simotel-popup-body .clientNotes .readMoreDots {
     font-weight: 600;
     color: #0f64bb;
 }
 
-.notifyjs-simotel-caller-id-base .body .clientNotes .bracket {
+.notifyjs-simotel-caller-id-base .simotel-popup-body .clientNotes .bracket {
     font-size: 8px;
     font-weight: 600;
     color: #0f64bb;
 }
 
-.notifyjs-simotel-caller-id-base .body .clientCompany a {
+.notifyjs-simotel-caller-id-base .simotel-popup-body .clientCompany a {
     color: #e77119 !important;
     font-weight: 600;
 }
 
-.notifyjs-simotel-caller-id-base .footer .simotelBtns {
+.notifyjs-simotel-caller-id-base .simotel-popup-footer .simotelBtns {
     margin-top: 10px;
     padding-left: 10px;
 }
 
-.notifyjs-simotel-caller-id-base .footer .simotelBtn {
-    border: 1px solid #e7c8c8;
+.notifyjs-simotel-caller-id-base .simotel-popup-footer .simotelBtn {
+    border: 1px solid #0f64bb;
+    color: #0f64bb;
     display: inline-block;
-    font-size: 12px;
+    font-size: 11px;
     /*width: 33px;*/
     /*height: 33px;*/
-    padding: 1px;
+    padding: 2px;
     float: left;
     margin-right: 5px;
-    border-radius: 2px;
-    box-shadow: -1px 1px 1px 1px #999;
+    border-radius: 5px;
+    /*box-shadow: -1px 1px 1px 1px #999;*/
     margin-top: 5px;
 }
-
-.notifyjs-simotel-caller-id-base .footer .simotelBtn:hover {
-    border: 1px solid #e7c8c8;
-    box-shadow: 0px 0px 1px 1px #999;
+.notifyjs-simotel-caller-id-base .simotel-popup-footer .simotelBtn:hover {
+    background-color: #0f64bb;
+}
+.notifyjs-simotel-caller-id-base .simotel-popup-footer .simotelBtn:hover a{
+    color: #f3f3f3 !important;
 }
 
-.notifyjs-simotel-caller-id-base .footer .simotelBtn img {
+.notifyjs-simotel-caller-id-base .simotel-popup-footer .simotelBtn img {
     width: 30px;
     height: 30px;
 }

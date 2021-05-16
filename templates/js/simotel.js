@@ -24,9 +24,9 @@ function callerId(callData) {
     $.notify.addStyle('simotel-caller-id', {
         html:
             "<div class=''>"
-            + "<div class='icon-holder'><img class='newcall-icon' src='" + addonUrl + "/templates/images/call.png' /></div>"
-            + "<div class='body' data-notify-html='body'/>"
-            + "<div class='footer' data-notify-html='footer'/>"
+            + "<div class='icon-holder'><img class='newcall-icon' src='" + addonUrl + "/templates/images/call-simotel-blue.png' /></div>"
+            + "<div class='simotel-popup-body' data-notify-html='body'/>"
+            + "<div class='simotel-popup-footer' data-notify-html='footer'/>"
             + "<div class='clrfx'>"
             + "<a class='closeNotify' ><strong>x</strong></a>"
             + "</div>"
@@ -196,7 +196,7 @@ $('p ,td').each(function () {
     let newContent = $(this).html().replaceAll(phoneNumberRegx, makeBalloon)
     $(this).html(newContent);
 });
-$("input,textarea").each(function () {
+$("input[type=text],input[type=number],input[type=tel]").each(function () {
     let numbers = $(this).val().match(phoneNumberRegx);
     if (numbers != null) {
         for (let i in numbers) {
@@ -212,13 +212,9 @@ $('body').on("click", function (e) {
     $(".simotelClickToDial").removeClass("active");
 })
 $('body').on("click", ".simotelClickToDial .number", function () {
-
     $(".simotelClickToDial").removeClass("active");
     $(this).parent().addClass("active");
-
-
     resetElHeight($(this).parent().find(".balloon"));
-
 })
 
 
@@ -228,7 +224,8 @@ $('body').on("click", ".simotelClickToDial .balloon a", function (e) {
     $(balloon).find(".message").html("")
     setStatus("pending", "در حال ارسال تماس ...");
     resetElHeight($(balloon));
-    $.get(rootWebUrl + "/index.php?m=simotel&action=simotelCall&callee=" + $(this).data("number"))
+    //https://mysup.ir/panel/s4admin/addonmodules.php?module=simotel
+    $.get(adminPanelUrl + "/addonmodules.php?module=simotel&action=simotelCall&callee=" + $(this).data("number"))
         .done(x => {
             if (x.success == true)
                 setStatus("success", "با موفقیت ارسال شد.");
@@ -244,15 +241,11 @@ $('body').on("click", ".simotelClickToDial .balloon a", function (e) {
             resetElHeight($(balloon));
         });
 
-
     function setStatus(status, message) {
         let statusElement = $(balloon).find(".status");
         $(statusElement).html(message);
-        $(statusElement).removeClass("error");
-        $(statusElement).removeClass("pending");
-        $(statusElement).removeClass("success");
+        $(statusElement).removeClass("error pending success");
         $(statusElement).addClass(status);
-
     }
 
 })

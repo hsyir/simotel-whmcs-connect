@@ -15,7 +15,6 @@ class Controller
 {
     public function index($vars)
     {
-
         $exten = $_REQUEST["exten"];
         $state = $_REQUEST["state"];
         $participant = $_REQUEST["participant"];
@@ -52,7 +51,7 @@ class Controller
     private function logError(string $string)
     {
         echo $string;
-        logActivity("Simotel Error: " . $string . "  " . json_encode($_REQUEST), 0);
+//        logActivity("Simotel Error: " . $string . "  " . json_encode($_REQUEST), 0);
     }
 
     /**
@@ -114,59 +113,5 @@ class Controller
             "notes" => $client->notes,
             "phonenumber" => $client->phonenumber,
         ];
-    }
-
-    public function simotelCall($vars)
-    {
-        $options = new Options();
-        $config = WhmcsOperations::getConfig();
-        $adminId = WhmcsOperations::getCurrentAdminId();
-        $selectedSimotelProfileName = $options->get("simotelProfile",$adminId);
-
-        $simotelServerProfiles = $options->get("simotelServerProfiles");
-        $simotelServers = json_decode($simotelServerProfiles);
-
-        $simotelProfile = (array) collect($simotelServers)->keyBy("profile_name")->get($selectedSimotelProfileName);
-
-        $server = $simotelProfile["server_address"];
-        $user = $simotelProfile["api_user"];
-        $pass = $simotelProfile["api_pass"];
-        $context = $simotelProfile["context"];
-
-        $callee = $_REQUEST["callee"];
-        $client = WhmcsOperations::getFirstClientByPhoneNumber($callee);
-        $callerId = $client ? $client->firstname . " " . $client->lastname : $callee;
-
-        $data = [
-            "caller" => WhmcsOperations::getCurrentAdminExten(),
-            "callee" => $callee,
-            "context" => $context,
-            "caller_id" => $callerId,
-            "timeout" => "30"
-        ];
-
-        $options = [
-            'body' => json_encode($data),
-            "headers" => [
-                'Content-Type' => ' application/json'
-            ],
-            'auth' => [
-                $user,
-                $pass
-            ]
-        ];
-
-        $client = new Client(["base_uri" => $server]);
-        $response = $client->put("/api/v3/call/originate/act", $options);
-
-        header('Content-Type: application/json');
-        echo $response->getBody();;
-        exit;
-    }
-
-
-    public function test()
-    {
-        WhmcsOperations::adminCanConfigureModuleConfigs();
     }
 }
