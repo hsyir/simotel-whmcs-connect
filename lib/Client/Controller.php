@@ -17,6 +17,7 @@ class Controller
     {
         $exten = $_REQUEST["exten"];
         $state = $_REQUEST["state"];
+        $uniqueId = $_REQUEST["unique_id"];
         $participant = $_REQUEST["participant"];
         $direction = isset($_REQUEST["direction"]) ? $_REQUEST["direction"] : "in";
 
@@ -36,10 +37,11 @@ class Controller
             "exten" => $exten,
             "participant" => $participant,
             "client" => $clientData,
+            "unique_id" => $uniqueId,
         ];
 
         $notif = new PushNotification();
-        $notif->send($channelName, "newCall", $data);
+        $notif->send($channelName, "CallerId", $data);
 
         echo "Call data successfully sent to client";
         exit;

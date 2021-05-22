@@ -1,9 +1,16 @@
 <?php
 add_hook('AdminAreaPage', 1, function ($vars) {
     $config = \WHMCS\Module\Addon\Simotel\WhmcsOperations::getConfig();
+    $adminOptions = \WHMCS\Module\Addon\Simotel\WhmcsOperations::getAdminOptions();
     $channelName = "whmcs" . \WHMCS\Module\Addon\Simotel\WhmcsOperations::getCurrentAdminExten();
     $popUpTime = isset($config["PopUpTime"]) ? $config["PopUpTime"] : "30";
     $phoneNumberRegx = isset($config["PhoneNumberRegx"]) ? $config["PhoneNumberRegx"] : "/09[0-9]{9}/g";
+    $clickToDialActive = $adminOptions->clickToDialActive === true ? "true" : "false";
+    $callerIdPopUpActive = $adminOptions->callerIdPopUpActive === true ? "true" : "false";
+    $popUpButtons = collect($adminOptions->selectedPopUpButtons)->keys();
+    if($popUpButtons==[])
+        $popUpButtons=["view_profile","notes","tickets","create_ticket"];
+    $selectedPupUpButtons= json_encode($popUpButtons);
 
     $js = <<<EOF
 
@@ -17,9 +24,11 @@ add_hook('AdminAreaPage', 1, function ($vars) {
                 window.rootWebUrl = "$config[RootWebUrl]";
                 window.panelWebUrl = "$config[AdminWebUrl]";
                 window.addonUrl = "$config[RootWebUrl]"+"/modules/addons/simotel";
-                window.PopUpTime = $popUpTime ;
+                window.popUpTime = $popUpTime ;
                 window.phoneNumberRegx = $phoneNumberRegx ;
-                
+                window.callerIdPopUpActive = $callerIdPopUpActive ;
+                window.clickToDialActive = $clickToDialActive ;
+                window.selectedPopUpButtons = {$selectedPupUpButtons} ;
                 
                 var pusherScript = document.createElement('script');
                 pusherScript.onload = function () {
@@ -27,10 +36,9 @@ add_hook('AdminAreaPage', 1, function ($vars) {
                     simotelScript.src = "$config[RootWebUrl]/modules/addons/simotel/templates/js/simotel.js";
                     document.head.appendChild(simotelScript); //or something of th
                 };
+                
                 pusherScript.src = "https://js.pusher.com/7.0.0/pusher.min.js";
                 document.head.appendChild(pusherScript); //or something of th
-            
-
 EOF;
 
     $extraVariables = [];

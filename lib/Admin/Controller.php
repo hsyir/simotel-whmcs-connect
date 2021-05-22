@@ -19,13 +19,13 @@ class Controller
         $options = new Options();
 
         $adminId = WhmcsOperations::getCurrentAdminId();
-        $selectedSimotelProfileName = $options->get("simotelProfile",$adminId);
+        $adminOptions = $options->getAdminOptions($adminId);
+        $popUpButtons = $adminOptions->selectedPopUpButtons;
 
         $simotelServerProfiles = $options->get("simotelServerProfiles");
-
         $simotelServers = json_decode($simotelServerProfiles);
 
-        return WhmcsOperations::render("adminIndexPage",compact("simotelServers",'selectedSimotelProfileName'));
+        return WhmcsOperations::render("adminIndexPage", compact("simotelServers", 'adminOptions','popUpButtons'));
     }
 
     public function authorizeChannel()
@@ -39,9 +39,19 @@ class Controller
         $adminId = WhmcsOperations::getCurrentAdminId();
         $simotelProfileName = $_REQUEST["simotel_profile"];
         $exten = $_REQUEST["exten"];
+        $callerIdPopUpActive = $_REQUEST["caller_id_pop_up"] == "on";
+        $clickToDialActive = $_REQUEST["click_to_dial"] == "on";
+
+        $popUpButtons = $_REQUEST["popup_buttons"] ?? [];
+        $selectedPopUpButtons = [];
+        foreach ($popUpButtons as $btn => $status) {
+            $selectedPopUpButtons[$btn] = true;
+        }
+
+        $optionValues = compact("exten", "callerIdPopUpActive", "simotelProfileName", "clickToDialActive", "selectedPopUpButtons");
+
         $options = new Options();
-        $options->set("exten", $exten, $adminId);
-        $options->set("simotelProfile", $simotelProfileName, $adminId);
+        $options->setAdminOptions($adminId, $optionValues);
 
         header('Content-Type: application/json');
         echo json_encode(["success" => true]);
@@ -50,7 +60,7 @@ class Controller
 
     public function moduleConfigForm()
     {
-        if(!WhmcsOperations::adminCanConfigureModuleConfigs())
+        if (!WhmcsOperations::adminCanConfigureModuleConfigs())
             return "Unauthorized";
 
         $options = new Options();
@@ -93,11 +103,11 @@ class Controller
         $pass = $simotelProfile["api_pass"];
         $context = $simotelProfile["context"];
 
-        if(!$server or !$user or !$pass or !$context)
+        if (!$server or !$user or !$pass or !$context)
             $this->returnCallError("اطلاعات تماس با سیموتل کامل نشده است");
 
         $callee = $_REQUEST["callee"];
-        if(!$callee) $this->returnCallError("شماره مقصد نامشخص است");
+        if (!$callee) $this->returnCallError("شماره مقصد نامشخص است");
 
         $client = WhmcsOperations::getFirstClientByPhoneNumber($callee);
         $callerId = $client ? $client->firstname . " " . $client->lastname : $callee;
@@ -124,8 +134,7 @@ class Controller
         try {
             $client = new Client(["base_uri" => $server]);
             $response = $client->put("/api/v3/call/originate/act", $options);
-        }
-        catch (\Exception $exception){
+        } catch (\Exception $exception) {
             $this->returnCallError("خطا در ارتباط با سرور سیموتل");
         }
 
@@ -137,7 +146,7 @@ class Controller
     private function returnCallError($message)
     {
         header('Content-Type: application/json');
-        echo json_encode(["success"=>false,"message"=>$message]);
+        echo json_encode(["success" => false, "message" => $message]);
         exit;
     }
 

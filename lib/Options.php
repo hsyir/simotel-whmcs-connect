@@ -52,4 +52,23 @@ class Options
             die($exception->getMessage());
         }
     }
+
+    public function getPublicOptions()
+    {
+        return Capsule::table('mod_simotel_options')
+            ->where("admin_id",null)
+            ->get()->pluck("value","key");
+    }
+
+    public function getAdminOptions($adminId)
+    {
+        $jsonOptions = $this->get("adminOptions",$adminId,[]);
+        return json_decode($jsonOptions);
+    }
+
+    public function setAdminOptions($adminId,$optionsArray)
+    {
+        $jsonOptions = json_encode($optionsArray);
+        $this->set("adminOptions",$jsonOptions,$adminId);
+    }
 }

@@ -9,6 +9,8 @@ use WHMCS\Database\Capsule;
 class WhmcsOperations
 {
 
+    private static $configs;
+    private static $adminOptions;
 
     /**
      * get current login admin id
@@ -37,13 +39,10 @@ class WhmcsOperations
      * @param $adminId
      * @return mixed
      */
-    public static function getAdminExten($adminId=null)
+    public static function getAdminExten($adminId = null)
     {
-        $adminId = $adminId?$adminId :self::getCurrentAdminId();
-
-        $options = new Options();
-        return $options->get("exten",$adminId);
-
+        $options = self::getAdminOptions($adminId);
+        return $options->exten;
     }
 
 
@@ -53,9 +52,31 @@ class WhmcsOperations
      */
     public static function getConfig()
     {
+        if (self::$configs)
+            return self::$configs;
+
+        $options = new Options();
+        $publicConfigs = $options->getPublicOptions()->toArray();
+
         $configData = Capsule::table('tbladdonmodules')->whereModule("simotel")->get();
         $config = $configData->pluck("value", "setting")->toArray();
-        return $config;
+
+        return self::$configs = array_merge($config, $publicConfigs);
+    }
+
+    /**
+     * get simotel module configs
+     * @param null $adminId
+     * @return mixed
+     */
+    public static function getAdminOptions($adminId = null)
+    {
+        if (self::$adminOptions)
+            return self::$adminOptions;
+
+        $adminId = $adminId ? $adminId : self::getCurrentAdminId();
+        $options = new Options();
+        return self::$adminOptions = $options->getAdminOptions($adminId);
     }
 
     /**
@@ -70,7 +91,7 @@ class WhmcsOperations
         $phoneFields = explode(",", $config["PhoneFields"]);
 
         foreach ($phoneFields as $field) {
-            $client = Capsule::table('tblclients')->where($field, $phoneNumber)->first();
+            $client = Capsule::table('tblclients')->where($field,"like", "%$phoneNumber%")->first();
             if ($client)
                 return $client;
         }
@@ -104,17 +125,16 @@ class WhmcsOperations
 
     public static function adminCanConfigureModuleConfigs()
     {
-
         $details = self::getCurrentAdminDetails();
 
-        $permission = explode(",",$details["allowedpermissions"]);
+        $permission = explode(",", $details["allowedpermissions"]);
         $hasPermission = collect($permission)->contains("Configure Addon Modules");
 
         return $hasPermission;
-
     }
 
-    public static function getCurrentAdminDetails(){
+    public static function getCurrentAdminDetails()
+    {
         $command = 'GetAdminDetails';
         $results = localAPI($command);
         return $results;
