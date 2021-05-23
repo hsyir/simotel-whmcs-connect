@@ -131,11 +131,12 @@ class Controller
             ]
         ];
 
+
         try {
             $client = new Client(["base_uri" => $server]);
             $response = $client->put("/api/v3/call/originate/act", $options);
         } catch (\Exception $exception) {
-            $this->returnCallError("خطا در ارتباط با سرور سیموتل");
+            $this->returnCallError("خطا در ارتباط با سرور سیموتل" . "  " . $exception->getMessage());
         }
 
         header('Content-Type: application/json');

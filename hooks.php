@@ -3,18 +3,20 @@ add_hook('AdminAreaPage', 1, function ($vars) {
     $config = \WHMCS\Module\Addon\Simotel\WhmcsOperations::getConfig();
     $adminOptions = \WHMCS\Module\Addon\Simotel\WhmcsOperations::getAdminOptions();
     $channelName = "whmcs" . \WHMCS\Module\Addon\Simotel\WhmcsOperations::getCurrentAdminExten();
+
+
     $popUpTime = isset($config["PopUpTime"]) ? $config["PopUpTime"] : "30";
     $phoneNumberRegx = isset($config["PhoneNumberRegx"]) ? $config["PhoneNumberRegx"] : "/09[0-9]{9}/g";
     $clickToDialActive = $adminOptions->clickToDialActive === true ? "true" : "false";
     $callerIdPopUpActive = $adminOptions->callerIdPopUpActive === true ? "true" : "false";
+
     $popUpButtons = collect($adminOptions->selectedPopUpButtons)->keys();
     if($popUpButtons==[])
-        $popUpButtons=["view_profile","notes","tickets","create_ticket"];
-    $selectedPupUpButtons= json_encode($popUpButtons);
+        $popUpButtons=["view_profile","notes","tickets", "create_ticket"];
+    $selectedPupUpButtons = json_encode($popUpButtons);
 
     $js = <<<EOF
 
-                // Simotel Caller Id 
                 window.channelName = "$channelName";
                 window.app_key = "$config[WsAppKey]";
                 window.app_cluster = "$config[WsCluster]";

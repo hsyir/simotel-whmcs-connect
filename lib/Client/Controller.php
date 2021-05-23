@@ -43,17 +43,19 @@ class Controller
         $notif = new PushNotification();
         $notif->send($channelName, "CallerId", $data);
 
-        echo "Call data successfully sent to client";
+        header('Content-Type: application/json');
+        echo json_encode(["success" => true]);
         exit;
     }
 
     /**
-     * @param string $string
+     * @param string $message
      */
-    private function logError(string $string)
+    private function logError(string $message)
     {
-        echo $string;
-//        logActivity("Simotel Error: " . $string . "  " . json_encode($_REQUEST), 0);
+        header('Content-Type: application/json');
+        echo json_encode(["success" => false,"message"=>$message]);
+        exit;
     }
 
     /**
@@ -65,35 +67,33 @@ class Controller
     {
 
         if (!$state) {
-            $this->logError("call state not defined");
+            $this->logError("Call state not defined");
             exit;
         }
 
         if ($state != "Ringing") {
-            $this->logError("only ring state supported");
+            $this->logError("Only ring state supported");
             exit;
         }
 
         if ($direction != "in") {
-            $this->logError("only 'in' call direction supported");
+            $this->logError("Only 'in' call direction supported");
             exit;
         }
 
         if (!$participant) {
-            $this->logError("participant number required");
+            $this->logError("Participant number required");
             exit;
         }
 
         $config = WhmcsOperations::getConfig();
-        var_dump(preg_match($config["BlockPattern"], $participant));
-        echo $config["BlockPattern"] . "<br>";
         if (preg_match($config["BlockPattern"], $participant)) {
             $this->logError("Block number");
             exit;
         }
 
         if (!$exten) {
-            $this->logError("exten number required");
+            $this->logError("Exten number required");
             exit;
         }
 
