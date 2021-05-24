@@ -8,7 +8,6 @@ const callerIdPopUpActive = window.callerIdPopUpActive;
 const clickToDialActive = window.clickToDialActive;
 const selectedPopUpButtons = window.selectedPopUpButtons;
 
-
 //pusher init
 if (window.callerIdPopUpActive) {
     var pusherOptions = {
@@ -292,7 +291,7 @@ if (!document.getElementById(cssId)) {
     link.id = cssId;
     link.rel = 'stylesheet';
     link.type = 'text/css';
-    link.href = rootWebUrl + '/modules/addons/simotel/templates/css/simotel.css';
+    link.href = rootWebUrl + '/modules/addons/simotel/templates/css/simotel.min.css';
     link.media = 'all';
     head.appendChild(link);
 }

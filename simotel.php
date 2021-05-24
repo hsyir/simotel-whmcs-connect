@@ -93,7 +93,7 @@ function simotel_config()
                 'Type' => 'text',
                 'Size' => '50',
                 'Default' => 'phonenumber,address2',
-                'Description' => 'Comma separated fields name ',
+                'Description' => 'Comma separated database fields name ',
             ],
             'WsAppKey' => [
                 'FriendlyName' => 'Web socket app key',
@@ -138,7 +138,7 @@ function simotel_config()
                 'Description' => '',
             ],
             'PopUpTime' => [
-                'FriendlyName' => 'Caller Id pop up time to hide',
+                'FriendlyName' => 'CallerId hide timer',
                 'Type' => 'text',
                 'Size' => '5',
                 'Default' => '30',
@@ -149,28 +149,28 @@ function simotel_config()
                 'Type' => 'text',
                 'Size' => '25',
                 'Default' => '/^[0-9]{3}$/',
-                'Description' => 'Regular expression pattern for block unwanted caller id numbers',
+                'Description' => 'Regular expression - block unwanted incoming calls caller id',
             ],
             'SimotelConnectTimeout' => [
                 'FriendlyName' => 'Simotel Connect Timeout',
                 'Type' => 'text',
                 'Size' => '10',
                 'Default' => '10',
-                'Description' => 'Seconds',
+                'Description' => 'Seconds - click to dial',
             ],
             'SimotelResponseTimeout' => [
                 'FriendlyName' => 'Simotel Response Timeout',
                 'Type' => 'text',
                 'Size' => '10',
                 'Default' => '5',
-                'Description' => 'Seconds',
+                'Description' => 'Seconds - click to dial',
             ],
             'PhoneNumberRegx' => [
-                'FriendlyName' => 'Javascript Phone Number Regx',
+                'FriendlyName' => 'Regx phone numbers',
                 'Type' => 'text',
                 'Size' => '25',
                 'Default' => '/09[0-9]{9}/g',
-                'Description' => '',
+                'Description' => 'for discover phone numbers on whole document',
             ],
         ]
     ];

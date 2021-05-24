@@ -25,7 +25,7 @@ class Controller
         $simotelServerProfiles = $options->get("simotelServerProfiles");
         $simotelServers = json_decode($simotelServerProfiles);
 
-        return WhmcsOperations::render("adminIndexPage", compact("simotelServers", 'adminOptions','popUpButtons'));
+        return WhmcsOperations::render("adminUserOptions", compact("simotelServers", 'adminOptions','popUpButtons'));
     }
 
     public function authorizeChannel()
