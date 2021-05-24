@@ -90,10 +90,12 @@ class Controller
     // --------------------------------------------------------------------
     public function simotelCall($vars)
     {
+        $configs = WhmcsOperations::getConfig();
         $options = new Options();
         $adminId = WhmcsOperations::getCurrentAdminId();
+        $adminOptions = WhmcsOperations::getAdminOptions($adminId);
 
-        $selectedSimotelProfileName = $options->get("simotelProfile", $adminId);
+        $selectedSimotelProfileName =$adminOptions->simotelProfileName;
         $simotelServerProfiles = $options->get("simotelServerProfiles");
         $simotelServers = json_decode($simotelServerProfiles);
         $simotelProfile = (array)collect($simotelServers)->keyBy("profile_name")->get($selectedSimotelProfileName);
@@ -128,9 +130,10 @@ class Controller
             'auth' => [
                 $user,
                 $pass
-            ]
+            ],
+            'timeout' => $configs["SimotelResponseTimeout"], // Response timeout
+            'connect_timeout' => $configs["SimotelConnectTimeout"], // Connection timeout
         ];
-
 
         try {
             $client = new Client(["base_uri" => $server]);

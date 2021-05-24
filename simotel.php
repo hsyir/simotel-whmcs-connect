@@ -150,35 +150,21 @@ function simotel_config()
                 'Size' => '25',
                 'Default' => '/^[0-9]{3}$/',
                 'Description' => 'Regular expression pattern for block unwanted caller id numbers',
-            ],/*
-            'SimotelServerAddress' => [
-                'FriendlyName' => 'Simotel Server Address',
-                'Type' => 'text',
-                'Size' => '25',
-                'Default' => '',
-                'Description' => '',
             ],
-            'SimotelWebServiceUser' => [
-                'FriendlyName' => 'Simotel Webservice User',
+            'SimotelConnectTimeout' => [
+                'FriendlyName' => 'Simotel Connect Timeout',
                 'Type' => 'text',
-                'Size' => '25',
-                'Default' => '',
-                'Description' => '',
+                'Size' => '10',
+                'Default' => '10',
+                'Description' => 'Seconds',
             ],
-            'SimotelWebServicePass' => [
-                'FriendlyName' => 'Simotel Webservice Password',
-                'Type' => 'password',
-                'Size' => '25',
-                'Default' => '',
-                'Description' => '',
-            ],
-            'SimotelWebServiceContext' => [
-                'FriendlyName' => 'Simotel Context',
+            'SimotelResponseTimeout' => [
+                'FriendlyName' => 'Simotel Response Timeout',
                 'Type' => 'text',
-                'Size' => '25',
-                'Default' => '',
-                'Description' => '',
-            ],*/
+                'Size' => '10',
+                'Default' => '5',
+                'Description' => 'Seconds',
+            ],
             'PhoneNumberRegx' => [
                 'FriendlyName' => 'Javascript Phone Number Regx',
                 'Type' => 'text',

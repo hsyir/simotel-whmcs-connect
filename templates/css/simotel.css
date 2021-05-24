@@ -217,3 +217,21 @@
 .simotelClickToDial .balloon .status.error {
     color: red;
 }
+
+
+
+.simotelConfigs fieldset {
+    border: 1px solid #ddd;
+    border-radius: 15px;
+    margin-bottom: 20px;
+    padding-bottom: 30px;
+}
+
+h4.legend {
+    color: #aaa;
+    font-weight: 600;
+    font-size: 13px;
+    margin: 10px 0;
+    border-bottom: 1px #ddd solid;
+    padding: 4px;
+}
