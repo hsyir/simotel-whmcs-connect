@@ -4,8 +4,11 @@ namespace WHMCS\Module\Addon\Simotel\Admin;
 
 
 use GuzzleHttp\Client;
+use Hsy\Simotel\Simotel;
 use WHMCS\Module\Addon\Simotel\Options;
+use WHMCS\Module\Addon\Simotel\PBX\Pbx;
 use WHMCS\Module\Addon\Simotel\PushNotification;
+use WHMCS\Module\Addon\Simotel\Smarty;
 use WHMCS\Module\Addon\Simotel\WhmcsOperations;
 
 /**
@@ -16,16 +19,16 @@ class Controller
 
     public function index($vars)
     {
-        $options = new Options();
-
         $adminId = WhmcsOperations::getCurrentAdminId();
+
+        $options = new Options();
         $adminOptions = $options->getAdminOptions($adminId);
         $popUpButtons = $adminOptions->selectedPopUpButtons;
 
         $simotelServerProfiles = $options->get("simotelServerProfiles");
         $simotelServers = json_decode($simotelServerProfiles);
 
-        return WhmcsOperations::render("adminUserOptions", compact("simotelServers", 'adminOptions','popUpButtons'));
+        return Smarty::render("adminUserOptions", compact("simotelServers", 'adminOptions', 'popUpButtons'));
     }
 
     public function authorizeChannel()
@@ -67,7 +70,7 @@ class Controller
         $simotelServers = $options->get("simotelServerProfiles", null, []);
         $simotelServers = json_decode($simotelServers);
 
-        return WhmcsOperations::render("moduleConfigs", compact("simotelServers"));
+        return Smarty::render("moduleConfigs", compact("simotelServers"));
     }
 
     public function storeModuleConfigs()
@@ -86,72 +89,30 @@ class Controller
 
 
     // --------------------------------------------------------------------
-    // ---- Simotel Call --------------------------------------------------
+    // ---- Click To Dial --------------------------------------------------
     // --------------------------------------------------------------------
     public function simotelCall($vars)
     {
-        $configs = WhmcsOperations::getConfig();
-        $options = new Options();
-        $adminId = WhmcsOperations::getCurrentAdminId();
-        $adminOptions = WhmcsOperations::getAdminOptions($adminId);
-
-        $selectedSimotelProfileName =$adminOptions->simotelProfileName;
-        $simotelServerProfiles = $options->get("simotelServerProfiles");
-        $simotelServers = json_decode($simotelServerProfiles);
-        $simotelProfile = (array)collect($simotelServers)->keyBy("profile_name")->get($selectedSimotelProfileName);
-
-        $server = $simotelProfile["server_address"];
-        $user = $simotelProfile["api_user"];
-        $pass = $simotelProfile["api_pass"];
-        $context = $simotelProfile["context"];
-
-        if (!$server or !$user or !$pass or !$context)
-            $this->returnCallError("اطلاعات تماس با سیموتل کامل نشده است");
-
         $callee = $_REQUEST["callee"];
         if (!$callee) $this->returnCallError("شماره مقصد نامشخص است");
 
-        $client = WhmcsOperations::getFirstClientByPhoneNumber($callee);
-        $callerId = $client ? $client->firstname . " " . $client->lastname : $callee;
+        $pbx = new Pbx();
+        $result = $pbx->sendCall($callee);
 
-        $data = [
-            "caller" => WhmcsOperations::getCurrentAdminExten(),
-            "callee" => $callee,
-            "context" => $context,
-            "caller_id" => $callerId,
-            "timeout" => "30"
-        ];
 
-        $options = [
-            'body' => json_encode($data),
-            "headers" => [
-                'Content-Type' => ' application/json'
-            ],
-            'auth' => [
-                $user,
-                $pass
-            ],
-            'timeout' => $configs["SimotelResponseTimeout"], // Response timeout
-            'connect_timeout' => $configs["SimotelConnectTimeout"], // Connection timeout
-        ];
-
-        try {
-            $client = new Client(["base_uri" => $server]);
-            $response = $client->put("/api/v3/call/originate/act", $options);
-        } catch (\Exception $exception) {
-            $this->returnCallError("خطا در ارتباط با سرور سیموتل" . "  " . $exception->getMessage());
+        header('Content-Type: application/json');
+        if ($pbx->fails()) {
+            echo json_encode(["success" => false, "message" => $pbx->errors()]);
+            exit;
         }
 
         header('Content-Type: application/json');
-        echo $response->getBody();;
+        echo $result;
         exit;
     }
 
     private function returnCallError($message)
     {
-        header('Content-Type: application/json');
-        echo json_encode(["success" => false, "message" => $message]);
-        exit;
     }
 
 }

@@ -14,13 +14,13 @@ class InstalledVersions
 private static $installed = array (
   'root' => 
   array (
-    'pretty_version' => '1.0.0+no-version-set',
-    'version' => '1.0.0.0',
+    'pretty_version' => 'dev-main',
+    'version' => 'dev-main',
     'aliases' => 
     array (
     ),
-    'reference' => NULL,
-    'name' => 'sazimo/addonmodule',
+    'reference' => 'fa4f511624678853afd0c3be083aa98bb9ef5399',
+    'name' => 'hsyir/simotel-whmcs-connect',
   ),
   'versions' => 
   array (
@@ -50,6 +50,25 @@ private static $installed = array (
       array (
       ),
       'reference' => '35ea11d335fd638b5882ff1725228b3d35496ab1',
+    ),
+    'hsyir/simotel-whmcs-connect' => 
+    array (
+      'pretty_version' => 'dev-main',
+      'version' => 'dev-main',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'fa4f511624678853afd0c3be083aa98bb9ef5399',
+    ),
+    'nasimtelecom/simotel-php-connect' => 
+    array (
+      'pretty_version' => 'dev-main',
+      'version' => 'dev-main',
+      'aliases' => 
+      array (
+        0 => '9999999-dev',
+      ),
+      'reference' => '1af7e7ae3d35b24cecca7a96aac28136720de416',
     ),
     'paragonie/random_compat' => 
     array (
@@ -127,15 +146,6 @@ private static $installed = array (
       array (
       ),
       'reference' => '120b605dfeb996808c31b6477290a714d356e822',
-    ),
-    'sazimo/addonmodule' => 
-    array (
-      'pretty_version' => '1.0.0+no-version-set',
-      'version' => '1.0.0.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => NULL,
     ),
   ),
 );

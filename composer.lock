@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bf3864a303fa2580482e7bd1cb2a28e3",
+    "content-hash": "cd53c14f7e1b731070572d90d012df0e",
     "packages": [
         {
             "name": "guzzlehttp/guzzle",
@@ -238,6 +238,51 @@
                 "source": "https://github.com/guzzle/psr7/tree/1.8.1"
             },
             "time": "2021-03-21T16:25:00+00:00"
+        },
+        {
+            "name": "nasimtelecom/simotel-php-connect",
+            "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/nasimtelecom/simotel-php-connect.git",
+                "reference": "1af7e7ae3d35b24cecca7a96aac28136720de416"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/nasimtelecom/simotel-php-connect/zipball/1af7e7ae3d35b24cecca7a96aac28136720de416",
+                "reference": "1af7e7ae3d35b24cecca7a96aac28136720de416",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "guzzlehttp/guzzle": ">=6.5"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^8.0|^9.0"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Hsy\\Simotel\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Hossein",
+                    "email": "hosseinyaghmaee@gmail.com"
+                }
+            ],
+            "description": "Keep connected with simotel in php",
+            "support": {
+                "issues": "https://github.com/nasimtelecom/simotel-php-connect/issues",
+                "source": "https://github.com/nasimtelecom/simotel-php-connect/tree/main"
+            },
+            "time": "2021-04-08T20:37:09+00:00"
         },
         {
             "name": "paragonie/random_compat",
@@ -638,7 +683,9 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "nasimtelecom/simotel-php-connect": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],

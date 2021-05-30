@@ -7,6 +7,7 @@
         }
     ],
     "require": {
-        "pusher/pusher-php-server": "^6.1"
+        "pusher/pusher-php-server": "^6.1",
+        "nasimtelecom/simotel-php-connect": "dev-main"
     }
 }

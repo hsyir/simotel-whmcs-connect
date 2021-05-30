@@ -10,8 +10,8 @@ class ComposerStaticInit92ddd94fa9b5a72fe9727e7cb8020d16
         '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
         'c964ee0ededf28c96ebd9db5099ef910' => __DIR__ . '/..' . '/guzzlehttp/promises/src/functions_include.php',
         'a0edc8309cc5e1d60e3047b5df6b7052' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/functions_include.php',
-        '3109cb1a231dcd04bee1f9f620d46975' => __DIR__ . '/..' . '/paragonie/sodium_compat/autoload.php',
         '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
+        '3109cb1a231dcd04bee1f9f620d46975' => __DIR__ . '/..' . '/paragonie/sodium_compat/autoload.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -21,6 +21,10 @@ class ComposerStaticInit92ddd94fa9b5a72fe9727e7cb8020d16
             'Psr\\Log\\' => 8,
             'Psr\\Http\\Message\\' => 17,
             'Psr\\Http\\Client\\' => 16,
+        ),
+        'H' => 
+        array (
+            'Hsy\\Simotel\\' => 12,
         ),
         'G' => 
         array (
@@ -46,6 +50,10 @@ class ComposerStaticInit92ddd94fa9b5a72fe9727e7cb8020d16
         'Psr\\Http\\Client\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/http-client/src',
+        ),
+        'Hsy\\Simotel\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/nasimtelecom/simotel-php-connect/src',
         ),
         'GuzzleHttp\\Psr7\\' => 
         array (
