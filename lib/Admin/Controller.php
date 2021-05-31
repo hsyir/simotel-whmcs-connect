@@ -87,7 +87,6 @@ class Controller
     }
 
 
-
     // --------------------------------------------------------------------
     // ---- Click To Dial --------------------------------------------------
     // --------------------------------------------------------------------
@@ -99,7 +98,6 @@ class Controller
         $pbx = new Pbx();
         $result = $pbx->sendCall($callee);
 
-
         header('Content-Type: application/json');
         if ($pbx->fails()) {
             echo json_encode(["success" => false, "message" => $pbx->errors()]);
@@ -107,8 +105,9 @@ class Controller
         }
 
         header('Content-Type: application/json');
-        echo $result;
+        echo json_encode(["success" => true]);
         exit;
+
     }
 
     private function returnCallError($message)

@@ -1,12 +1,12 @@
 <?php return array (
   'root' => 
   array (
-    'pretty_version' => 'dev-main',
-    'version' => 'dev-main',
+    'pretty_version' => '2.x-dev',
+    'version' => '2.9999999.9999999.9999999-dev',
     'aliases' => 
     array (
     ),
-    'reference' => 'fa4f511624678853afd0c3be083aa98bb9ef5399',
+    'reference' => 'ad7b624bda6c4da3b795d396071c57de064e46ad',
     'name' => 'hsyir/simotel-whmcs-connect',
   ),
   'versions' => 
@@ -40,12 +40,12 @@
     ),
     'hsyir/simotel-whmcs-connect' => 
     array (
-      'pretty_version' => 'dev-main',
-      'version' => 'dev-main',
+      'pretty_version' => '2.x-dev',
+      'version' => '2.9999999.9999999.9999999-dev',
       'aliases' => 
       array (
       ),
-      'reference' => 'fa4f511624678853afd0c3be083aa98bb9ef5399',
+      'reference' => 'ad7b624bda6c4da3b795d396071c57de064e46ad',
     ),
     'nasimtelecom/simotel-php-connect' => 
     array (

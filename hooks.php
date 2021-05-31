@@ -1,9 +1,9 @@
 <?php
+
 add_hook('AdminAreaPage', 1, function ($vars) {
     $config = \WHMCS\Module\Addon\Simotel\WhmcsOperations::getConfig();
     $adminOptions = \WHMCS\Module\Addon\Simotel\WhmcsOperations::getAdminOptions();
     $channelName = "whmcs" . \WHMCS\Module\Addon\Simotel\WhmcsOperations::getCurrentAdminExten();
-
 
     $popUpTime = isset($config["PopUpTime"]) ? $config["PopUpTime"] : "30";
     $phoneNumberRegx = isset($config["PhoneNumberRegx"]) ? $config["PhoneNumberRegx"] : "/09[0-9]{9}/g";
