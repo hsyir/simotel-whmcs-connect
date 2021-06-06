@@ -150,8 +150,29 @@ function simotel_activate()
                     $table->text('value');
                 }
             );
+        Capsule::schema()
+            ->create(
+                'mod_simotel_calls',
+                function ($table) {
+                    /** @var \Illuminate\Database\Schema\Blueprint $table */
+                    $table->increments('id');
+                    $table->string('unique_id',20)->unique();
+                    $table->dateTime('start_at')->nullable();
+                    $table->dateTime('end_at')->nullable();
+                    $table->string('src')->nullable();
+                    $table->string('dst')->nullable();
+                    $table->string('record')->nullable();
+                    $table->string('status')->nullable();
+                    $table->integer('billsec')->nullable();
+                    $table->integer('admin_id')->nullable();
+                    $table->integer('client_id')->nullable();
+                    $table->string('comment')->nullable();
+                    $table->string('direction')->nullable();
+                    $table->timestamps();
+                    $table->softDeletes();
+                }
+            );
         return [
-
             // Supported values here include: success, error or info
             'status' => 'success',
             'description' => 'Ok.',
@@ -174,6 +195,9 @@ function simotel_deactivate()
     try {
         Capsule::schema()
             ->dropIfExists('mod_simotel_options');
+
+        Capsule::schema()
+            ->dropIfExists('mod_simotel_calls');
 
         return [
             // Supported values here include: success, error or info

@@ -11,8 +11,8 @@ add_hook('AdminAreaPage', 1, function ($vars) {
     $callerIdPopUpActive = $adminOptions->callerIdPopUpActive === true ? "true" : "false";
 
     $popUpButtons = collect($adminOptions->selectedPopUpButtons)->keys();
-    if($popUpButtons==[])
-        $popUpButtons=["view_profile","notes","tickets", "create_ticket"];
+    if ($popUpButtons == [])
+        $popUpButtons = ["view_profile", "notes", "tickets", "create_ticket"];
     $selectedPupUpButtons = json_encode($popUpButtons);
 
     $js = <<<EOF
@@ -47,4 +47,20 @@ EOF;
     $extraVariables['jscode'] =
         $vars["jscode"] . $js;
     return $extraVariables;
+});
+add_hook('AdminAreaClientSummaryPage', 1, function ($vars) {
+    return 'This message will be output on the Client Summary page. I can add HTML here';
+});
+
+add_hook('AdminAreaClientSummaryActionLinks', 1, function ($vars) {
+    $config = \WHMCS\Module\Addon\Simotel\WhmcsOperations::getConfig();
+
+
+    $return = [];
+    $return[] = '<a href="">
+<img src="' . $config["RootWebUrl"] . '/modules/addons/simotel/templates/images/call-history-icon.png" border="0" align="absmiddle">
+آخرین تماس ها
+</a>';
+
+    return $return;
 });

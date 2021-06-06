@@ -41,8 +41,16 @@ class WhmcsOperations
      */
     public static function getAdminExten($adminId = null)
     {
-        $options = self::getAdminOptions($adminId);
-        return $options->exten;
+        $adminId = $adminId ? $adminId : self::getCurrentAdminId();
+        $options = new Options();
+        return $options->get("exten",$adminId);
+    }
+
+
+    public static function getAdminByExten($exten)
+    {
+        $options = new Options();
+        return $options->findAdmin("exten",$exten);
     }
 
 
@@ -138,6 +146,11 @@ class WhmcsOperations
         $command = 'GetAdminDetails';
         $results = localAPI($command);
         return $results;
+    }
+
+    public static function dd($var)
+    {
+        echo "<pre>" . var_export($var,true) . "</pre>";
     }
 
 }
