@@ -38,9 +38,34 @@ class Controller
     public function cdrReport()
     {
 
+        if (!WhmcsOperations::adminCanConfigureModuleConfigs())
+            return "Unauthorized";
+
         list($calls, $pagination) = $this->getCalls();
 
         return Smarty::render("cdr", compact("calls","pagination"));
+    }
+
+    public function adminsList()
+    {
+
+        if (!WhmcsOperations::adminCanConfigureModuleConfigs())
+            return "Unauthorized";
+
+        $adminsOptions = new Options();
+        $options = $adminsOptions->getAllAdminsOptions()->keyBy("admin_id")->map(function ($item) {
+            return json_decode($item->value);
+        })->toArray();
+
+        $admins = Capsule::table('tbladmins')
+            ->get(["firstname", "lastname", "username", "id"])
+            ->map(function ($item) use ($options) {
+                $item = (array)$item;
+                $item["options"] = ($options[$item["id"]]);
+                return $item;
+            })->toArray();
+
+        return Smarty::render("allAdminsConfigs", compact("admins"));
     }
 
 
@@ -87,19 +112,7 @@ class Controller
         $simotelServers = $options->get("simotelServerProfiles", null, []);
         $simotelServers = json_decode($simotelServers);
 
-        $adminsOptions = new Options();
-        $options = $adminsOptions->getAllAdminsOptions()->keyBy("admin_id")->map(function ($item) {
-            return json_decode($item->value);
-        })->toArray();
-
-        $admins = Capsule::table('tbladmins')
-            ->get(["firstname", "lastname", "username", "id"])
-            ->map(function ($item) use ($options) {
-                $item = (array)$item;
-                $item["options"] = ($options[$item["id"]]);
-                return $item;
-            })->toArray();
-        return Smarty::render("moduleConfigs", compact("simotelServers", "admins", "calls","HTMLpagePagination"));
+        return Smarty::render("moduleConfigs", compact("simotelServers"));
     }
 
     public function storeModuleConfigs()

@@ -33,15 +33,15 @@ class Pbx
      */
     public function newState(): bool
     {
-            logActivity(json_encode($_REQUEST), 0);
         $exten = $_REQUEST["exten"];
         $adminId = WhmcsOperations::getAdminByExten($exten);
         $state = $_REQUEST["state"];
+        $dialing = $_REQUEST["dialing"];
         $uniqueId = $_REQUEST["unique_id"];
         $participant = $_REQUEST["participant"];
         $direction = isset($_REQUEST["direction"]) ? $_REQUEST["direction"] : "in";
 
-        $validate = $this->validateNewStateRequest($participant, $exten, $state, $direction);
+        $validate = $this->validateNewStateRequest($participant, $exten, $state, $direction, $dialing);
         if (!$validate)
             return false;
 
@@ -62,23 +62,34 @@ class Pbx
             "unique_id" => $uniqueId,
         ];
 
-
         try {
-            $notif = new PushNotification();
-            $notif->send($channelName, "CallerId", $data);
 
+            $src = $direction=="in" ? $participant : $exten;
+            $dst = $direction=="out" ? $participant : $exten;
             Call::create([
                 "unique_id" => $uniqueId,
-                "src" => $participant,
-                "dst" => $exten,
+                "src" => $src,
+                "dst" => $dst,
                 "client_id" => $client->id,
                 "admin_id" => $adminId,
-                "status" => "RINGING"
+                "status" => $state,
+                "direction" => $direction
             ]);
         } catch (\Exception $exception) {
             $this->addError($exception->getMessage());
             return false;
         }
+
+
+        try {
+            $notif = new PushNotification();
+            $notif->send($channelName, "CallerId", $data);
+
+        } catch (\Exception $exception) {
+            $this->addError($exception->getMessage());
+            return false;
+        }
+
 
         return true;
     }
@@ -131,18 +142,24 @@ class Pbx
      * @param $exten
      * @param $state
      * @param $direction
+     * @param $dialing
      * @return bool
      */
-    private function validateNewStateRequest($participant, $exten, $state, $direction): bool
+    private function validateNewStateRequest($participant, $exten, $state, $direction, $dialing): bool
     {
         if (!$state)
             $this->addError("Call state not defined");
-        else if ($state != "Ringing")
-            $this->addError("Only 'Ringing' state supported");
 
-        /*if ($direction != "in") {
-            $this->addError("Only 'in' call direction supported");
-        }*/
+
+        if ($direction == "in") {
+            if ($state != "Ringing")
+                $this->addError("Only 'Ringing' state supported");
+        }
+        else{
+            if ($dialing != "yes") {
+                $this->addError("Not Supported State");
+            }
+        }
 
         if (!$participant) {
             $this->addError("Participant number required");

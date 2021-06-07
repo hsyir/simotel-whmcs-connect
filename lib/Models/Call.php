@@ -8,7 +8,7 @@ class Call extends \Illuminate\Database\Eloquent\Model
 {
     use EloquentHelper;
     protected $table="mod_simotel_calls";
-    protected $fillable=["unique_id", "src", "client_id" , "admin_id","status","dst"];
+    protected $fillable=["unique_id", "src", "client_id" , "admin_id","status","dst","direction"];
 
     public function admin()
     {

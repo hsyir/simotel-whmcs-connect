@@ -1,21 +1,4 @@
 {$pagination}
-<div class="container-fluid mt-5">
-    <table class="table">
-        <thead>
-
-        </thead>
-        <tbody>
-        {foreach from=$admins key=key item=admin}
-            <tr>
-                <td>{$admin["firstname"]} {$admin["lastname"]}</td>
-                <td>{WHMCS\Module\Addon\Simotel\WhmcsOperations::getAdminExten($admin["id"])}</td>
-                <td>{$admin["options"]->simotelProfileName}</td>
-            </tr>
-        {/foreach}
-        </tbody>
-    </table>
-</div>
-
 <h3 class="mt-5"> تماس ها</h3>
 
 <div class="container-fluid mt-5">
@@ -28,6 +11,9 @@
                 <th>Client</th>
                 <th>Created At</th>
                 <th>Billsec</th>
+                <th>Direction</th>
+                <th>Status</th>
+                <th >UId</th>
             </tr>
         </thead>
         <tbody>
@@ -39,7 +25,9 @@
                 <td>{$call->client->fullname}</td>
                 <td dir="ltr" class="text-center">{$call->created_at_fa}</td>
                 <td dir="ltr" class="text-center">{$call->billsec_minutes}</td>
+                <td >{$call->direction}</td>
                 <td >{$call->status}</td>
+                <td >{$call->unique_id}</td>
             </tr>
         {/foreach}
         </tbody>

@@ -248,6 +248,8 @@ function simotel_sidebar($vars)
     <ul class='menu'>
         <li><a href='$configs[AdminWebUrl]/addonmodules.php?module=simotel&action=moduleConfigForm'>تنظیمات ادمین</a></li>
         <li><a href='$configs[AdminWebUrl]/addonmodules.php?module=simotel'>تنظیمات کاربر</a></li>
+        <li><a href='$configs[AdminWebUrl]/addonmodules.php?module=simotel&action=cdrReport'>تماس ها</a></li>
+        <li><a href='$configs[AdminWebUrl]/addonmodules.php?module=simotel&action=adminsList'>مشاهده کاربران</a></li>
     </ul>
     
     ";
