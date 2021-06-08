@@ -6,6 +6,7 @@
         <tbody>
         {foreach from=$admins key=key item=admin}
             <tr>
+                <td>{$admin['id']}</td>
                 <td>{$admin["firstname"]} {$admin["lastname"]}</td>
                 <td>{WHMCS\Module\Addon\Simotel\WhmcsOperations::getAdminExten($admin["id"])}</td>
                 <td>{$admin["options"]->simotelProfileName}</td>

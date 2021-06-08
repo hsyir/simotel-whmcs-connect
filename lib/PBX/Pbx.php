@@ -62,22 +62,23 @@ class Pbx
             "unique_id" => $uniqueId,
         ];
 
-        try {
-
-            $src = $direction=="in" ? $participant : $exten;
-            $dst = $direction=="out" ? $participant : $exten;
-            Call::create([
-                "unique_id" => $uniqueId,
-                "src" => $src,
-                "dst" => $dst,
-                "client_id" => $client->id,
-                "admin_id" => $adminId,
-                "status" => $state,
-                "direction" => $direction
-            ]);
-        } catch (\Exception $exception) {
-            $this->addError($exception->getMessage());
-            return false;
+        if($uniqueId){
+            try {
+                $src = $direction=="in" ? $participant : $exten;
+                $dst = $direction=="out" ? $participant : $exten;
+                Call::create([
+                    "unique_id" => $uniqueId,
+                    "src" => $src,
+                    "dst" => $dst,
+                    "client_id" => $client->id,
+                    "admin_id" => $adminId,
+                    "status" => $state,
+                    "direction" => $direction
+                ]);
+            } catch (\Exception $exception) {
+                $this->addError($exception->getMessage());
+                return false;
+            }
         }
 
 

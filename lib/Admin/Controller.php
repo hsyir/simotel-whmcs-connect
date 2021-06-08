@@ -7,6 +7,7 @@ use GuzzleHttp\Client;
 use Hsy\Simotel\Simotel;
 use WHMCS\Module\Addon\Simotel\Models\Call;
 use WHMCS\Module\Addon\Simotel\Options;
+use WHMCS\Module\Addon\Simotel\PBX\Events\Cdr;
 use WHMCS\Module\Addon\Simotel\PBX\Pbx;
 use WHMCS\Module\Addon\Simotel\PushNotification;
 use WHMCS\Module\Addon\Simotel\Smarty;
@@ -48,7 +49,6 @@ class Controller
 
     public function adminsList()
     {
-
         if (!WhmcsOperations::adminCanConfigureModuleConfigs())
             return "Unauthorized";
 
