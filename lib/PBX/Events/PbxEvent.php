@@ -11,8 +11,8 @@ abstract class PbxEvent
 
     public function __construct()
     {
-        $this->request = $_REQUEST;
+        $this->request = new Request();
     }
 
-    abstract public function dispatch(Request $request);
+    abstract public function dispatch();
 }

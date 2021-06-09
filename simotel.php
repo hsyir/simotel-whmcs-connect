@@ -4,12 +4,15 @@ use WHMCS\Database\Capsule;
 use WHMCS\Module\Addon\Simotel\Admin\AdminDispatcher;
 use WHMCS\Module\Addon\Simotel\Client\ClientDispatcher;
 
-
-require(__DIR__ . "/vendor/autoload.php");
-
 if (!defined("WHMCS")) {
     die("This file cannot be accessed directly");
 }
+
+require(__DIR__ . "/vendor/autoload.php");
+
+
+
+
 
 /**
  * @return array

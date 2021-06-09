@@ -5,6 +5,7 @@ namespace WHMCS\Module\Addon\Simotel\Admin;
 
 use GuzzleHttp\Client;
 use Hsy\Simotel\Simotel;
+use League\Container\Container;
 use WHMCS\Module\Addon\Simotel\Models\Call;
 use WHMCS\Module\Addon\Simotel\Options;
 use WHMCS\Module\Addon\Simotel\PBX\Events\Cdr;
@@ -51,6 +52,7 @@ class Controller
     {
         if (!WhmcsOperations::adminCanConfigureModuleConfigs())
             return "Unauthorized";
+
 
         $adminsOptions = new Options();
         $options = $adminsOptions->getAllAdminsOptions()->keyBy("admin_id")->map(function ($item) {

@@ -19,7 +19,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => '36f5d4da5a3a24d0ecdf01642f565be55177af06',
+    'reference' => 'c2fc4ace67ef33f96f8634a673b6edc546bfc97f',
     'name' => 'hsyir/simotel-whmcs-connect',
   ),
   'versions' => 
@@ -121,7 +121,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => '36f5d4da5a3a24d0ecdf01642f565be55177af06',
+      'reference' => 'c2fc4ace67ef33f96f8634a673b6edc546bfc97f',
     ),
     'illuminate/collections' => 
     array (
