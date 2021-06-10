@@ -1,8 +1,8 @@
 <?php
 namespace WHMCS\Module\Addon\Simotel\PBX\Events;
 
-use WHMCS\Module\Addon\Simotel\Models\Call;
 use WHMCS\Module\Addon\Simotel\PBX\Errors;
+use WHMCS\Module\Addon\Simotel\Request;
 
 abstract class PbxEvent
 {
@@ -13,6 +13,5 @@ abstract class PbxEvent
     {
         $this->request = new Request();
     }
-
     abstract public function dispatch();
 }

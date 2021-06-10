@@ -18,7 +18,7 @@ class NewState extends PbxEvent
         $dialing = $this->request->dialing;
         $uniqueId = $this->request->unique_id;
         $participant = $this->request->participant;
-        $direction = isset($this->request->direction) ? $this->request->direction : "in";
+        $direction = $this->request->direction ;
 
         $validate = $this->validateNewStateRequest($participant, $exten, $state, $direction, $dialing);
         if (!$validate)
@@ -85,14 +85,18 @@ class NewState extends PbxEvent
         if (!$state)
             $this->addError("Call state not defined");
 
-
         if ($direction == "in") {
             if ($state != "Ringing")
                 $this->addError("Only 'Ringing' state supported");
-        } else {
+
+        }
+        if ($direction == "out") {
             if ($dialing != "yes") {
                 $this->addError("Not Supported State");
             }
+        }
+        if (!$direction) {
+                $this->addError("Direction Not Defined!");
         }
 
         if (!$participant) {

@@ -1,5 +1,5 @@
 <?php
-namespace WHMCS\Module\Addon\Simotel\PBX\Events;
+namespace WHMCS\Module\Addon\Simotel;
 
 class Request
 {
