@@ -6,64 +6,34 @@ use WHMCS\Module\Addon\Simotel\Models\Call;
 use WHMCS\Module\Addon\Simotel\PushNotification;
 use WHMCS\Module\Addon\Simotel\WhmcsOperations;
 
-class NewState extends PbxEvent
+class TestEvent extends PbxEvent
 {
     /**
      * @return bool
+     * @throws \Exception
      */
     public function dispatch(): bool
     {
         $exten = $this->request->exten;
-        $adminId = WhmcsOperations::getAdminByExten($exten);
-        $state = $this->request->state;
-        $dialing = $this->request->dialing;
-        $uniqueId = $this->request->unique_id;
         $participant = $this->request->participant;
-        $direction = $this->request->direction;
 
-        $validate = $this->validateNewStateRequest($participant, $exten, $state, $direction, $dialing);
-        if (!$validate)
+        if (!$this->validateNewStateRequest($participant, $exten))
             return false;
 
         $client = WhmcsOperations::getFirstClientByPhoneNumber($participant);
-
-        if ($client)
-            $clientData = $this->extractClientInfo($client);
-        else
-            $clientData = null;
+        $clientData = $client ? $this->extractClientInfo($client) : null;
 
         $channelName = "whmcs" . $exten;
         $data = [
-            "state" => $state,
             "exten" => $exten,
             "participant" => $participant,
             "client" => $clientData,
-            "unique_id" => $uniqueId,
+            "unique_id" => random_int(100000, 999999),
         ];
-
-        if ($uniqueId) {
-            try {
-                $src = $direction == "in" ? $participant : $exten;
-                $dst = $direction == "out" ? $participant : $exten;
-                Call::create([
-                    "unique_id" => $uniqueId,
-                    "src" => $src,
-                    "dst" => $dst,
-                    "client_id" => $client->id,
-                    "admin_id" => $adminId,
-                    "status" => $state,
-                    "direction" => $direction
-                ]);
-            } catch (\Exception $exception) {
-                $this->addError($exception->getMessage());
-                return false;
-            }
-        }
 
         try {
             $notif = new PushNotification();
             $notif->send($channelName, "CallerId", $data);
-
         } catch (\Exception $exception) {
             $this->addError($exception->getMessage());
             return false;
@@ -74,29 +44,10 @@ class NewState extends PbxEvent
     /**
      * @param $participant
      * @param $exten
-     * @param $state
-     * @param $direction
-     * @param $dialing
      * @return bool
      */
-    private function validateNewStateRequest($participant, $exten, $state, $direction, $dialing): bool
+    private function validateNewStateRequest($participant, $exten): bool
     {
-        if (!$state)
-            $this->addError("Call state not defined");
-
-        if ($direction == "in") {
-            if ($state != "Ringing")
-                $this->addError("Only 'Ringing' state supported");
-
-        }
-        if ($direction == "out") {
-            if ($dialing != "yes") {
-                $this->addError("Not Supported State");
-            }
-        }
-        if (!$direction) {
-            $this->addError("Direction Not Defined!");
-        }
 
         if (!$participant) {
             $this->addError("Participant number required");

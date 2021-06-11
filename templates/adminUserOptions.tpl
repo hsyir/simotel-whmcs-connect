@@ -36,6 +36,7 @@
                     <div class="form-group">
                         <label for="simotel_profile">انتخاب سرور سیموتل</label>
                         <select name="simotel_profile" id="simotel_profile" class="form-control">
+                            <option value="" >انتخاب کنید</option>
                             {foreach from=$simotelServers key=key item=profile}
                                 <option value="{$profile->profile_name}"
                                         {if $adminOptions->simotelProfileName eq $profile->profile_name}
@@ -94,103 +95,6 @@
                     </div>
                 {/foreach}
 
-{*
-                <div class="col-sm-6">
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox" value="on" name="popup_buttons[view_profile]"
-                                   {if isset($popUpButtons->view_profile)}checked{/if}>
-                            مشاهده پروفایل
-                        </label>
-                    </div>
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox" value="on" name="popup_buttons[edit_profile]"
-                                   {if isset($popUpButtons->edit_profile)}checked{/if}>
-                            ویرایش پروفایل
-                        </label>
-                    </div>
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox" value="on" name="popup_buttons[services]"
-                                   {if isset($popUpButtons->services)}checked{/if}>
-                            سرویس ها
-                        </label>
-                    </div>
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox" value="on" name="popup_buttons[domains]"
-                                   {if isset($popUpButtons->domains)}checked{/if}>
-                            دامنه ها
-                        </label>
-                    </div>
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox" value="on" name="popup_buttons[notes]"
-                                   {if isset($popUpButtons->notes)}checked{/if}>
-                            یادداشت ها
-                        </label>
-                    </div>
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox" value="on" name="popup_buttons[tickets]"
-                                   {if isset($popUpButtons->tickets)}checked{/if}>
-                            تیکت ها
-                        </label>
-                    </div>
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox" value="on" name="popup_buttons[transactions]"
-                                   {if isset($popUpButtons->transactions)}checked{/if}>
-                            تراکنش ها
-                        </label>
-                    </div>
-                </div>
-                <div class="col-sm-6">
-
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox" value="on" name="popup_buttons[factors]"
-                                   {if isset($popUpButtons->factors)}checked{/if}>
-                            فاکتورها
-                        </label>
-                    </div>
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox" value="on" name="popup_buttons[pre_factors]"
-                                   {if isset($popUpButtons->pre_factors)}checked{/if}>
-                            پیش فاکتورها
-                        </label>
-                    </div>
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox" value="on" name="popup_buttons[create_ticket]"
-                                   {if isset($popUpButtons->create_ticket)}checked{/if}>
-                            تیکت جدید
-                        </label>
-                    </div>
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox" value="on" name="popup_buttons[create_factor]"
-                                   {if isset($popUpButtons->create_factor)}checked{/if}>
-                            ایجاد فاکتور
-                        </label>
-                    </div>
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox" value="on" name="popup_buttons[create_pre_factor]"
-                                   {if isset($popUpButtons->create_pre_factor)}checked{/if}>
-                            ایجاد پیش فاکتور
-                        </label>
-                    </div>
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox" value="on" name="popup_buttons[view_bill]"
-                                   {if isset($popUpButtons->view_bill)}checked{/if}>
-                            مشاهده صورتحساب
-                        </label>
-                    </div>
-                </div>*}
             </div>
         </div>
 
@@ -224,6 +128,32 @@
              </span>
                     </div><!-- /input-group -->
                     <small id="popUpStatus"></small>
+                </div>
+            </div>
+        </div>
+
+    </fieldset>
+</form>
+<div class="m-5">&nbsp</div>
+<form action="" id="clickToDial" class="simotelConfigs">
+    <fieldset>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <h4 class="h4 legend">ارسال تماس (کلیک تو دایل)</h4>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <input type="text" name="dst" id="dst" class="form-control"
+                               placeholder="شماره تماس">
+                        <span class="input-group-btn">
+                 <button class="btn btn-warning" type="submit">ارسال تماس</button>
+             </span>
+                    </div><!-- /input-group -->
+                    <small id="clickToDialStatus"></small>
                 </div>
             </div>
         </div>
@@ -273,7 +203,7 @@
             $("#popUpStatus").html("در حال ارسال تماس آزمایشی");
             let participant = $("#participant").val();
             let exten = $("#exten").val();
-            let url = "{$configs["WebRootUrl"] }/panel/index.php?m=simotel&event_name=NewState&state=Ringing&exten=" + exten + "&participant=" + participant
+            let url = "{$configs["WebRootUrl"] }/panel/index.php?m=simotel&event_name=TestEvent&exten=" + exten + "&participant=" + participant
             $.get(url).success(result => {
                 console.log(result)
                 if (result.success) {
@@ -285,6 +215,25 @@
                 }
             });
         })
-    })
+        $("#clickToDial").submit(function (e) {
+            e.preventDefault();
+            let dst = $("#dst").val();
+            $.get(adminPanelUrl + "/addonmodules.php?module=simotel&action=simotelCall&callee=" + dst)
+                .done(x => {
+                    if (x.success) {
+                        $("#clickToDialStatus").html("با موفقیت ارسال شد.");
+                        $("#clickToDialStatus").addClass("text-success")
+                    } else {
+                        $("#clickToDialStatus").html("خطا در ارسال تماس:" + result.message);
+                        $("#clickToDialStatus").addClass("text-danger")
+                    }
+                })
+                .fail(x => {
+                    setStatus("error", "خطا در ارسال تماس.");
+                })
 
+
+        })
+    })
+    /**/
 </script>
