@@ -1,23 +1,7 @@
 const adminPanelUrl = window.panelWebUrl;
 const addonUrl = window.addonUrl;
-const channelName = window.channelName;
-const popUpTime = window.popUpTime;
-const popUpTimeMilliSeconds = popUpTime * 1000;
-const phoneNumberRegx = window.phoneNumberRegx;
-const callerIdPopUpActive = window.callerIdPopUpActive;
-const clickToDialActive = window.clickToDialActive;
-const selectedPopUpButtons = window.selectedPopUpButtons;
 
-
-const callerIdConfig = {
-    selectedPopUpButtons,
-    adminPanelUrl,
-    addonUrl,
-    popUpTime,
-    popUpTimeMilliSeconds
-}
-
-//pusher init
+//pusher
 if (window.callerIdPopUpActive) {
     var pusherOptions = {
         useTLS: true,
@@ -30,182 +14,19 @@ if (window.callerIdPopUpActive) {
         authEndpoint: auth_endpoint,
     }
     let pusher = new Pusher(app_key, pusherOptions);
-    let channel = pusher.subscribe(channelName);
-    channel.bind("CallerId", callerId);
+    let channel = pusher.subscribe(window.channelName);
+    channel.bind("CallerId", callData => {
+        let callerIdConfig = {
+            selectedPopUpButtons: window.selectedPopUpButtons,
+            adminPanelUrl,
+            addonUrl,
+            popUpTime: window.popUpTime,
+        }
+        let callerIdd = new CallerId(callData, callerIdConfig);
+        callerIdd.show();
+    });
 }
 
-
-function callerId(callData) {
-
-    let callerIdd = new CallerId(callData, callerIdConfig);
-    return;
-
-    let html_notifBox;
-    let html_tell;
-    let html_clientName;
-
-    let client = callData.client;
-
-    html_notifBox = $("<div>");
-
-    if (client) {
-        //  client name ---------------------------------------------
-        html_clientName = $("<a>").attr("href", `${adminPanelUrl}/clientssummary.php?userid=${client.id}`).html(`<strong> ${client.fullname}</strong>`);
-        $(html_notifBox).append($("<div class='clientName'>").append(html_clientName))
-
-        //  company name ---------------------------------------------
-        let companyName = $("<a>").attr("href", `${adminPanelUrl}/clientssummary.php?userid=${client.id}`).html(` ${client.companyname}`);
-        if (client.hasOwnProperty("companyname"))
-            $(html_notifBox).append($("<div class='clientCompany'>").append(companyName))
-
-        //  participant number ---------------------------------------------
-        html_tell = $("<a>").attr("href", `tel:${callData.participant}`).html(`<strong> ${callData.participant}</strong>`);
-        $(html_notifBox).append($("<div class='clientTell'>").append(html_tell))
-
-        //  notes ---------------------------------------------
-        const notesSummaryCharectersCount = 30;
-        if (client.notes) {
-            if (client.notes.length > notesSummaryCharectersCount) {
-                let readMoreBtn = $("<span>").click(function () {
-                    $(this).html(client.notes)
-                }).html(client.notes.slice(0, notesSummaryCharectersCount)
-                    + "<a class='readMoreDots'> <span class='bracket'>[</span>...<span class='bracket'>]</span> </a>")
-                let clientNotes = $("<div>").html(`<strong>یادداشت: </strong>`).append(readMoreBtn);
-                $(html_notifBox).append($("<div class='clientNotes'>").append(clientNotes))
-            } else {
-                let clientNotes = $("<div>").html(`<strong>یادداشت: </strong>${client.notes}`);
-                $(html_notifBox).append($("<div class='clientNotes'>").append(clientNotes))
-            }
-        }
-
-        $(html_notifBox).append($("<div class='clrfx'>"))
-
-        //--------------------------------------------------
-        let popUpButtons = {
-            view_profile: {
-                url: `${adminPanelUrl}/clientssummary.php?userid=${client.id}`,
-                caption: "مشاهده پروفایل"
-            },
-            edit_profile: {
-                url: `${adminPanelUrl}/clientsprofile.php?userid=${client.id}`,
-                caption: "ویرایش پروفایل"
-            },
-            services: {
-                url: `${adminPanelUrl}/clientsservices.php?userid=${client.id}`,
-                caption: "سرویس ها"
-            },
-            domains: {
-                url: `${adminPanelUrl}/clientsdomains.php?userid=${client.id}`,
-                caption: "دامنه ها"
-            },
-            notes: {
-                url: `${adminPanelUrl}/clientsnotes.php?userid=${client.id}`,
-                caption: "یادداشت ها"
-            },
-            tickets: {
-                url: `${adminPanelUrl}/client/${client.id}/tickets`,
-                caption: "تیکت ها"
-            },
-            transactions: {
-                url: `${adminPanelUrl}/clientstransactions.php?userid=${client.id}`,
-                caption: "تراکنش ها"
-            },
-            factors: {
-                url: `${adminPanelUrl}/clientsinvoices.php?userid=${client.id}`,
-                caption: "فاکتور ها"
-            },
-            pre_factors: {
-                url: `${adminPanelUrl}/clientsquotes.php?userid=${client.id}`,
-                caption: "پیش فاکتور ها"
-            },
-            create_ticket: {
-                url: `${adminPanelUrl}/supporttickets.php?action=open&userid=${client.id}`,
-                caption: "ایجاد تیکت"
-            },
-            create_factor: {
-                url: `${adminPanelUrl}/clientssummary.php?userid=${client.id}`,
-                caption: "ایجاد فاکتور"
-            },
-            create_pre_factor: {
-                url: `${adminPanelUrl}/quotes.php?action=manage&userid=${client.id}`,
-                caption: "ایجاد پیش فاکتور"
-            },
-            view_bill: {
-                url: `${adminPanelUrl}/reports.php?report=client_statement&userid=${client.id}`,
-                caption: "صورت حساب"
-            },
-        }
-
-        let html_footer = $("<div>");
-        $(html_footer).append($("<div class='simotelBtns'>"));
-        selectedPopUpButtons.forEach(btn => {
-            if (popUpButtons.hasOwnProperty(btn)) {
-                let btnToAppend = $("<a>").attr("href", popUpButtons[btn].url).html(popUpButtons[btn].caption)
-                $(html_footer).find(".simotelBtns").append(btnToAppend)
-            }
-        })
-        $(html_notifBox).append($("<div class='clrfx'>"))
-
-        let popup = $.notify({
-            body: html_notifBox,
-            footer: html_footer
-        }, {
-            style: 'simotel-caller-id',
-        });
-        $(popup).turnOnHideTimer(callData);
-
-    } else {
-        clientName = "بدون نام";
-        html_tell = $("<a>").attr("href", "tel:" + callData.participant).html(callData.participant);
-        $(html_notifBox).append($("<div>").append(clientName))
-        $(html_notifBox).append($("<div>").append(html_tell))
-        let popup = $.notify({
-                body: html_notifBox,
-            },
-            {
-                style: 'simotel-caller-id',
-            });
-        $(popup).turnOnHideTimer(callData);
-    }
-}
-
-(function ($) {
-    $.fn.turnOnHideTimer = function (callData) {
-        let countDownCounter = popUpTimeMilliSeconds / 100;
-        let popUpElement = $(this[0].body[0]).parents(".notifyjs-wrapper");
-        let interval;
-        let intervalTime = 100;
-        let popupFixed = false;
-
-        let intervalAction = () => {
-            if (countDownCounter < 1) {
-                popUpElement.find(".notifyjs-simotel-caller-id-base").css("background-color", "#fa9393")
-                popUpElement.slideUp(1000, function () {
-                    popUpElement.remove()
-                });
-                clearInterval(interval);
-            }
-            countDownCounter--;
-        };
-
-        interval = setInterval(intervalAction, intervalTime)
-
-        $(popUpElement).on("click", function () {
-            popupFixed = true;
-            fixedPopups.add(callData)
-            popUpElement.find(".notifyjs-simotel-caller-id-base").addClass("fixed")
-            clearInterval(interval);
-            $(popUpElement).find(".countDownProgress").slideUp(150);
-        }).on("mouseover", function () {
-            $(popUpElement).find(".countDownProgress").css("animation-play-state", "paused")
-            clearInterval(interval);
-        }).on("mouseleave", function () {
-            $(popUpElement).find(".countDownProgress").css("animation-play-state", "running")
-            interval = !popupFixed ? setInterval(intervalAction, intervalTime) : null;
-        });
-    };
-
-})(jQuery);
 
 const fixedPopups = {
     add: function (callData) {
@@ -229,20 +50,18 @@ const fixedPopups = {
     }
 }
 // load notify js script
-var notifyScript = document.createElement('script');
-notifyScript.src = rootWebUrl + "/modules/addons/simotel/templates/js/notify.min.js";
-notifyScript.onload = function () {
+var notifyJsScript = document.createElement('script');
+notifyJsScript.src = rootWebUrl + "/modules/addons/simotel/templates/js/notify.min.js";
+notifyJsScript.onload = function () {
     $.notify.addStyle('simotel-caller-id', {
         html:
             "<div class=''>"
             + "<div class='icon-holder'><img class='newcall-icon' src='" + addonUrl + "/templates/images/call-simotel-blue.png' /></div>"
             + "<div class='simotel-popup-body' data-notify-html='body'/>"
-            + "<div class='simotel-popup-footer' data-notify-html='footer'/>"
             + "<div class='clrfx'>"
             + "<a class='closeNotify' ><strong>x</strong></a>"
             + "</div>"
             + `<div class='countDownProgress' style='animation: progressBarCountDown forwards linear ${popUpTime}s'><span></span></div>`
-
     });
     $.notify.defaults(notifyOptions)
 
@@ -258,38 +77,12 @@ notifyScript.onload = function () {
     })
 
 };
-document.head.appendChild(notifyScript); //or something of th
-
+document.head.appendChild(notifyJsScript); //or something of th
 var notifyOptions = {
-    // whether to hide the notification on click
     clickToHide: false,
-    // whether to auto-hide the notification
     autoHide: false,
-    // if autoHide, hide after milliseconds
-    autoHideDelay: popUpTimeMilliSeconds,
-    // show the arrow pointing at the element
-    arrowShow: true,
-    // arrow size in pixels
-    arrowSize: 5,
-    // position defines the notification position though uses the defaults below
     position: 'bottom right',
-    // default positions
-    elementPosition: 'bottom right',
-    globalPosition: 'bottom right',
-    // default style
-    style: 'bootstrap',
-    // default class (string or [string])
     className: 'info',
-    // show animation
-    showAnimation: 'slideDown',
-    // show animation duration
-    showDuration: 400,
-    // hide animation
-    hideAnimation: 'slideUp',
-    // hide animation duration
-    hideDuration: 200,
-    // padding between element and notification
-    gap: 5
 }
 
 // load css
@@ -300,14 +93,15 @@ if (!document.getElementById(cssId)) {
     link.id = cssId;
     link.rel = 'stylesheet';
     link.type = 'text/css';
-    link.href = rootWebUrl + '/modules/addons/simotel/templates/css/simotel.min.css';
+    link.href = rootWebUrl + '/modules/addons/simotel/templates/css/simotel.css';
     link.media = 'all';
     head.appendChild(link);
 }
 
 //--- simotel click to dial --------------------------------------
 // find numbers in page and attach the ClickToDIal Balloon
-if (clickToDialActive) {
+const phoneNumberRegx = window.phoneNumberRegx;
+if (window.clickToDialActive) {
     $('p ,td').each(function () {
         if ($(this).find("textarea,input,a").length > 0) return null;
         let newContent = $(this).html().replaceAll(phoneNumberRegx, makeBalloon)
@@ -456,10 +250,10 @@ function setCookie(name, value, days) {
 }
 
 function getCookie(name) {
-    var nameEQ = name + "=";
-    var ca = document.cookie.split(';');
-    for (var i = 0; i < ca.length; i++) {
-        var c = ca[i];
+    let nameEQ = name + "=";
+    let ca = document.cookie.split(';');
+    for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
         while (c.charAt(0) == ' ') c = c.substring(1, c.length);
         if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
     }
@@ -474,161 +268,148 @@ function eraseCookie(name) {
 // -----------------------------------------------------------------
 
 class CallerId {
-    /*
-    * config and options
-    *   buttons
-    *   hide timer
-    *   unique id
-    *   pinned
-    *   callData
-    *
-    * methods
-    *   appear
-    *   hide
-    *   pin
-    *   stop hiding
-    *   resume hiding
-    *   set comment
-    *   show comment
-    *   show notes
-    *
-    */
-
     constructor(callData, config) {
         this.callData = callData;
         this.uniqueId = callData.unique_id;
         this.config = config;
     }
-
-    createHtml(callData) {
-        let client = callData.client;
-        let html_notifBox;
-        let html_tell;
-        let html_clientName;
-        html_notifBox = $("<div>");
+    createHtml() {
+        let callData = this.callData;
+        let client = this.callData.client;
+        let html;
+        html = $("<div>");
         if (client) {
             //  client name ---------------------------------------------
-            html_clientName = $("<a>").attr("href", `${adminPanelUrl}/clientssummary.php?userid=${client.id}`).html(`<strong> ${client.fullname}</strong>`);
-            $(html_notifBox).append($("<div class='clientName'>").append(html_clientName))
+            let html_clientName;
+            html_clientName = $("<a>").attr("href", `${this.config.adminPanelUrl}/clientssummary.php?userid=${client.id}`).html(`<strong> ${client.fullname}</strong>`);
+            $(html).append($("<div class='clientName'>").append(html_clientName))
 
             //  company name ---------------------------------------------
-            let companyName = $("<a>").attr("href", `${adminPanelUrl}/clientssummary.php?userid=${client.id}`).html(` ${client.companyname}`);
+            let companyName = $("<a>").attr("href", `${this.config.adminPanelUrl}/clientssummary.php?userid=${client.id}`).html(` ${client.companyname}`);
             if (client.hasOwnProperty("companyname"))
-                $(html_notifBox).append($("<div class='clientCompany'>").append(companyName))
+                $(html).append($("<div class='clientCompany'>").append(companyName))
 
             //  participant number ---------------------------------------------
+            let html_tell;
             html_tell = $("<a>").attr("href", `tel:${callData.participant}`).html(`<strong> ${callData.participant}</strong>`);
-            $(html_notifBox).append($("<div class='clientTell'>").append(html_tell))
+            $(html).append($("<div class='clientTell'>").append(html_tell))
 
             //  notes ---------------------------------------------
-            const notesSummaryCharectersCount = 30;
+            const notesSummaryCharactersCount = 30;
             if (client.notes) {
-                if (client.notes.length > notesSummaryCharectersCount) {
+                if (client.notes.length > notesSummaryCharactersCount) {
                     let readMoreBtn = $("<span>").click(function () {
                         $(this).html(client.notes)
-                    }).html(client.notes.slice(0, notesSummaryCharectersCount)
+                    }).html(client.notes.slice(0, notesSummaryCharactersCount)
                         + "<a class='readMoreDots'> <span class='bracket'>[</span>...<span class='bracket'>]</span> </a>")
                     let clientNotes = $("<div>").html(`<strong>یادداشت: </strong>`).append(readMoreBtn);
-                    $(html_notifBox).append($("<div class='clientNotes'>").append(clientNotes))
+                    $(html).append($("<div class='clientNotes'>").append(clientNotes))
                 } else {
                     let clientNotes = $("<div>").html(`<strong>یادداشت: </strong>${client.notes}`);
-                    $(html_notifBox).append($("<div class='clientNotes'>").append(clientNotes))
+                    $(html).append($("<div class='clientNotes'>").append(clientNotes))
                 }
             }
 
-            $(html_notifBox).append($("<div class='clrfx'>"))
+            $(html).append($("<div class='clrfx'>"))
 
             //--------------------------------------------------
-            let adminPanelUrl = this.config.adminPanelUrl;
-            let popUpButtons = {
-                view_profile: {
-                    url: `${adminPanelUrl}/clientssummary.php?userid=${client.id}`,
-                    caption: "مشاهده پروفایل"
-                },
-                edit_profile: {
-                    url: `${adminPanelUrl}/clientsprofile.php?userid=${client.id}`,
-                    caption: "ویرایش پروفایل"
-                },
-                services: {
-                    url: `${adminPanelUrl}/clientsservices.php?userid=${client.id}`,
-                    caption: "سرویس ها"
-                },
-                domains: {
-                    url: `${adminPanelUrl}/clientsdomains.php?userid=${client.id}`,
-                    caption: "دامنه ها"
-                },
-                notes: {
-                    url: `${adminPanelUrl}/clientsnotes.php?userid=${client.id}`,
-                    caption: "یادداشت ها"
-                },
-                tickets: {
-                    url: `${adminPanelUrl}/client/${client.id}/tickets`,
-                    caption: "تیکت ها"
-                },
-                transactions: {
-                    url: `${adminPanelUrl}/clientstransactions.php?userid=${client.id}`,
-                    caption: "تراکنش ها"
-                },
-                factors: {
-                    url: `${adminPanelUrl}/clientsinvoices.php?userid=${client.id}`,
-                    caption: "فاکتور ها"
-                },
-                pre_factors: {
-                    url: `${adminPanelUrl}/clientsquotes.php?userid=${client.id}`,
-                    caption: "پیش فاکتور ها"
-                },
-                create_ticket: {
-                    url: `${adminPanelUrl}/supporttickets.php?action=open&userid=${client.id}`,
-                    caption: "ایجاد تیکت"
-                },
-                create_factor: {
-                    url: `${adminPanelUrl}/clientssummary.php?userid=${client.id}`,
-                    caption: "ایجاد فاکتور"
-                },
-                create_pre_factor: {
-                    url: `${adminPanelUrl}/quotes.php?action=manage&userid=${client.id}`,
-                    caption: "ایجاد پیش فاکتور"
-                },
-                view_bill: {
-                    url: `${adminPanelUrl}/reports.php?report=client_statement&userid=${client.id}`,
-                    caption: "صورت حساب"
-                },
-            }
+            let popUpButtons = this.getAllButtons(client);
 
-            let html_footer = $("<div>");
-            $(html_footer).append($("<div class='simotelBtns'>"));
+            let html_footer = $("<div class='simotelBtns'>");
             this.config.selectedPopUpButtons.forEach(btn => {
                 if (popUpButtons.hasOwnProperty(btn)) {
                     let btnToAppend = $("<a>").attr("href", popUpButtons[btn].url).html(popUpButtons[btn].caption)
-                    $(html_footer).find(".simotelBtns").append(btnToAppend)
+                    $(html_footer).append(btnToAppend)
                 }
             })
-            $(html_notifBox).append($("<div class='clrfx'>"))
-            return html_notifBox;
+
+            $(html).append($("<div class='clrfx'>"))
+            $(html).append(html_footer)
+            return html;
 
         } else {
             let clientName = "بدون نام";
+            let html_tell;
             html_tell = $("<a>").attr("href", "tel:" + callData.participant).html(callData.participant);
-            $(html_notifBox).append($("<div>").append(clientName))
-            $(html_notifBox).append($("<div>").append(html_tell))
-            return html_notifBox;
+            $(html).append($("<div>").append(clientName))
+            $(html).append($("<div>").append(html_tell))
+            return html;
         }
     }
 
-    createNotifyBox(callData) {
-        let html = this.createHtml(callData);
+    getAllButtons(client) {
+        let adminPanelUrl = this.config.adminPanelUrl;
+        return {
+            view_profile: {
+                url: `${adminPanelUrl}/clientssummary.php?userid=${client.id}`,
+                caption: "مشاهده پروفایل"
+            },
+            edit_profile: {
+                url: `${adminPanelUrl}/clientsprofile.php?userid=${client.id}`,
+                caption: "ویرایش پروفایل"
+            },
+            services: {
+                url: `${adminPanelUrl}/clientsservices.php?userid=${client.id}`,
+                caption: "سرویس ها"
+            },
+            domains: {
+                url: `${adminPanelUrl}/clientsdomains.php?userid=${client.id}`,
+                caption: "دامنه ها"
+            },
+            notes: {
+                url: `${adminPanelUrl}/clientsnotes.php?userid=${client.id}`,
+                caption: "یادداشت ها"
+            },
+            tickets: {
+                url: `${adminPanelUrl}/client/${client.id}/tickets`,
+                caption: "تیکت ها"
+            },
+            transactions: {
+                url: `${adminPanelUrl}/clientstransactions.php?userid=${client.id}`,
+                caption: "تراکنش ها"
+            },
+            factors: {
+                url: `${adminPanelUrl}/clientsinvoices.php?userid=${client.id}`,
+                caption: "فاکتور ها"
+            },
+            pre_factors: {
+                url: `${adminPanelUrl}/clientsquotes.php?userid=${client.id}`,
+                caption: "پیش فاکتور ها"
+            },
+            create_ticket: {
+                url: `${adminPanelUrl}/supporttickets.php?action=open&userid=${client.id}`,
+                caption: "ایجاد تیکت"
+            },
+            create_factor: {
+                url: `${adminPanelUrl}/clientssummary.php?userid=${client.id}`,
+                caption: "ایجاد فاکتور"
+            },
+            create_pre_factor: {
+                url: `${adminPanelUrl}/quotes.php?action=manage&userid=${client.id}`,
+                caption: "ایجاد پیش فاکتور"
+            },
+            view_bill: {
+                url: `${adminPanelUrl}/reports.php?report=client_statement&userid=${client.id}`,
+                caption: "صورت حساب"
+            },
+        };
+    }
+
+    show() {
+        let html = this.createHtml();
         let popup = $.notify({
             body: html,
         }, {
             style: 'simotel-caller-id',
         });
-        this.popUp = popup;
-        $(popup).turnOnHideTimer();
+        console.log(popup)
+        this.popUp = $(popup.body[0]).parents(".notifyjs-wrapper");
+        this.turnOnHideTimer();
     }
 
     turnOnHideTimer() {
-        let countDownCounter = popUpTimeMilliSeconds / 100;
-        let popUpElement = $(this[0].body[0]).parents(".notifyjs-wrapper");
+        let countDownCounter = (this.config.popUpTime * 1000) / 100;
+        let popUpElement = this.popUp;
         let interval;
         let intervalTime = 100;
         let popupFixed = false;
@@ -648,7 +429,6 @@ class CallerId {
 
         $(popUpElement).on("click", function () {
             popupFixed = true;
-            fixedPopups.add(callData)
             popUpElement.find(".notifyjs-simotel-caller-id-base").addClass("fixed")
             clearInterval(interval);
             $(popUpElement).find(".countDownProgress").slideUp(150);

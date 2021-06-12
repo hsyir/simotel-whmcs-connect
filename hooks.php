@@ -35,7 +35,7 @@ add_hook('AdminAreaPage', 1, function ($vars) {
                 var pusherScript = document.createElement('script');
                 pusherScript.onload = function () {
                     var simotelScript = document.createElement('script');
-                    simotelScript.src = "$config[RootWebUrl]/modules/addons/simotel/templates/js/simotel.min.js";
+                    simotelScript.src = "$config[RootWebUrl]/modules/addons/simotel/templates/js/simotel.js";
                     document.head.appendChild(simotelScript); //or something of th
                 };
                 

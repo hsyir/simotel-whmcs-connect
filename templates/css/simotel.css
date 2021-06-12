@@ -76,12 +76,12 @@
     font-weight: 600;
 }
 
-.notifyjs-simotel-caller-id-base .simotel-popup-footer .simotelBtns {
+.notifyjs-simotel-caller-id-base .simotel-popup-body .simotelBtns {
     margin-top: 10px;
     padding-left: 10px;
 }
 
-.notifyjs-simotel-caller-id-base .simotel-popup-footer .simotelBtns a {
+.notifyjs-simotel-caller-id-base .simotel-popup-body .simotelBtns a {
     border: 1px solid #0f64bb;
     color: #0f64bb;
     display: inline-block;
@@ -95,7 +95,7 @@
     /*box-shadow: -1px 1px 1px 1px #999;*/
     margin-top: 5px;
 }
-.notifyjs-simotel-caller-id-base .simotel-popup-footer .simotelBtns  a:hover{
+.notifyjs-simotel-caller-id-base .simotel-popup-body .simotelBtns  a:hover{
     background-color: #0f64bb;
     color: #f3f3f3 !important;
 }
