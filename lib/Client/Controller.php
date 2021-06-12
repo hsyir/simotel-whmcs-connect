@@ -12,17 +12,17 @@ class Controller
     public function index($vars)
     {
         $pbx = new Pbx();
-        $json = $pbx->dispatchEvent()
-            ? json_encode(["success" => true])
-            : json_encode(["success" => false, "errors" => $pbx->errors()]);
+        $result = $pbx->dispatchEvent()
+            ? ["success" => true]
+            : ["success" => false, "errors" => $pbx->errors()];
 
-        $this->echoResponse($json);
+        $this->echoResponse($result);
 
     }
 
-    private function echoResponse($json){
+    private function echoResponse($result){
         header('Content-Type: application/json');
-        echo $json;
+        echo json_encode($result);
         exit;
     }
 
