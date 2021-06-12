@@ -1,4 +1,5 @@
 <?php
+
 use WHMCS\Database\Capsule;
 use WHMCS\Module\Addon\Simotel\Admin\AdminDispatcher;
 use WHMCS\Module\Addon\Simotel\Client\ClientDispatcher;
@@ -8,6 +9,10 @@ if (!defined("WHMCS")) {
 }
 
 require(__DIR__ . "/vendor/autoload.php");
+
+
+
+
 
 /**
  * @return array
