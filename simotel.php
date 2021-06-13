@@ -11,9 +11,6 @@ if (!defined("WHMCS")) {
 require(__DIR__ . "/vendor/autoload.php");
 
 
-
-
-
 /**
  * @return array
  */
@@ -93,6 +90,12 @@ function simotel_config()
                 'Size' => '25',
                 'Default' => '/^[0-9]{3}$/',
                 'Description' => 'Regular expression - block unwanted incoming calls',
+            ],
+            'CustomAdminPath' => [
+                'FriendlyName' => 'Custom admin path',
+                'Type' => 'text',
+                'Size' => '50',
+                'Default' => '',
             ],
          /*   'SimotelConnectTimeout' => [
                 'FriendlyName' => 'Simotel Connect Timeout',

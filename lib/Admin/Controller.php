@@ -3,14 +3,13 @@
 namespace WHMCS\Module\Addon\Simotel\Admin;
 
 
-use GuzzleHttp\Client;
 use Hsy\Simotel\Simotel;
 use League\Container\Container;
 use WHMCS\Module\Addon\Simotel\Models\Call;
 use WHMCS\Module\Addon\Simotel\Options;
-use WHMCS\Module\Addon\Simotel\PBX\Events\Cdr;
 use WHMCS\Module\Addon\Simotel\PBX\Pbx;
 use WHMCS\Module\Addon\Simotel\PushNotification;
+use WHMCS\Module\Addon\Simotel\Request;
 use WHMCS\Module\Addon\Simotel\Smarty;
 use WHMCS\Module\Addon\Simotel\WhmcsOperations;
 use WHMCS\Database\Capsule;
@@ -21,6 +20,12 @@ use WHMCS\Database\Capsule;
  */
 class Controller
 {
+    private $request;
+
+    public function __construct()
+    {
+        $this->request = new Request;
+    }
 
     public function index($vars)
     {
@@ -39,13 +44,22 @@ class Controller
 
     public function cdrReport()
     {
-
         if (!WhmcsOperations::adminCanConfigureModuleConfigs())
             return "Unauthorized";
 
         list($calls, $pagination) = $this->getCalls();
 
-        return Smarty::render("cdr", compact("calls","pagination"));
+        return Smarty::render("cdr", compact("calls", "pagination"));
+    }
+
+    public function storeAdminsExtens()
+    {
+        $extens = $this->request->adminExten;
+        $options = new Options;
+        foreach ($extens as $adminId=>$exten){
+            $options->set("exten",$exten,$adminId);
+        }
+        $this->echoResponse(["success"=>true]);
     }
 
     public function adminsList()
@@ -211,25 +225,42 @@ class Controller
      */
     private function getCalls(): array
     {
-        $record_count = Call::count();
+        $clientId = $this->request->client_id;
+        $src = $this->request->src;
+        $dst = $this->request->dst;
+        $callQuery = Call
+            ::when($src, function ($q) use ($src) {
+                return $q->where("src", "like", "%$src%");
+            })
+            ->when($dst, function ($q) use ($dst) {
+                return $q->where("dst", "like", "%$dst%");
+            })
+            ->when($clientId, function ($q) use ($clientId) {
+                return $q->whereClientId($clientId);
+            });
+        $record_count = $callQuery->count();
         $offset = 50;
         $offsets = $record_count / $offset;
-        if (!$_REQUEST['page']) {
-            $page = 1;
-        } else {
-            $page = $_REQUEST['page'];
-        }
+        $page = $this->request->page ?? 1;
         if ($record_count != null) {
-            $calls = Call::with("admin","client")->offset(($page - 1) * $offset)
+            $calls = $callQuery
+                ->with("admin", "client")
+                ->offset(($page - 1) * $offset)
                 ->limit($offset)
-                ->orderBy("id","DESC")
+                ->orderBy("id", "DESC")
                 ->get();
         }
-        $configs=WhmcsOperations::getConfig();
-        $adminUrl = $configs["AdminWebUrl"];
-        $modulelink = "$adminUrl/addonmodules.php?module=simotel&action=cdrReport";
+        $queryString = ($dst ? "&dst=$dst" : "") . ($src ? "&src=$src" : "");
+        $adminUrl = WhmcsOperations::getAdminPanelUrl();
+        $modulelink = "$adminUrl/addonmodules.php?module=simotel&action=cdrReport{$queryString}";
         $HTMLpagePagination = $this->paginate($record_count, $offset, $page, $modulelink, $offsets);
         return array($calls, $HTMLpagePagination);
     }
 
+
+    private function echoResponse($result){
+        header('Content-Type: application/json');
+        echo json_encode($result);
+        exit;
+    }
 }

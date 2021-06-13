@@ -43,14 +43,23 @@ class WhmcsOperations
     {
         $adminId = $adminId ? $adminId : self::getCurrentAdminId();
         $options = new Options();
-        return $options->get("exten",$adminId);
+        return $options->get("exten", $adminId);
     }
 
 
     public static function getAdminByExten($exten)
     {
         $options = new Options();
-        return $options->findAdmin("exten",$exten);
+        return $options->findAdmin("exten", $exten);
+    }
+
+    public static function getAdminPanelUrl($address=null): string
+    {
+        global $CONFIG;
+        $domain = $CONFIG["Domain"];
+        $config = WhmcsOperations::getConfig();
+        $customAdminPath = $config["CustomAdminPath"] ?? "";
+        return $domain . $customAdminPath . $address;
     }
 
 
@@ -68,7 +77,6 @@ class WhmcsOperations
 
         $configData = Capsule::table('tbladdonmodules')->whereModule("simotel")->get();
         $config = $configData->pluck("value", "setting")->toArray();
-
         return self::$configs = array_merge($config, $publicConfigs);
     }
 
@@ -99,7 +107,7 @@ class WhmcsOperations
         $phoneFields = explode(",", $config["PhoneFields"]);
 
         foreach ($phoneFields as $field) {
-            $client = Capsule::table('tblclients')->where($field,"like", "%$phoneNumber%")->first();
+            $client = Capsule::table('tblclients')->where($field, "like", "%$phoneNumber%")->first();
             if ($client)
                 return $client;
         }
@@ -150,7 +158,7 @@ class WhmcsOperations
 
     public static function dd($var)
     {
-        echo "<pre>" . var_export($var,true) . "</pre>";
+        echo "<pre>" . var_export($var, true) . "</pre>";
     }
 
 }
