@@ -28,6 +28,7 @@ class Smarty
             $smarty->assign($key, $value);
 
         $smarty->assign("configs", WhmcsOperations::getConfig());
+        $smarty->assign("request", new Request);
 
         $smarty->caching = false;
         $smarty->compile_dir = $GLOBALS['templates_compiledir'];
