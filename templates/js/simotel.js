@@ -1,6 +1,5 @@
 const adminPanelUrl = window.panelWebUrl;
 const addonUrl = window.addonUrl;
-
 //pusher
 if (window.callerIdPopUpActive) {
     var pusherOptions = {
@@ -11,7 +10,7 @@ if (window.callerIdPopUpActive) {
         wssPort: wsPort,
         disableStats: true,
         enabledTransports: ['ws', 'wss'],
-        authEndpoint: auth_endpoint,
+        authEndpoint: authEndpoint,
     }
     let pusher = new Pusher(app_key, pusherOptions);
     let channel = pusher.subscribe(window.channelName);
@@ -26,9 +25,7 @@ if (window.callerIdPopUpActive) {
         callerIdd.show();
     });
 }
-
-
-const fixedPopups = {
+/*const fixedPopups = {
     add: function (callData) {
         let popups = this.getCookie();
         if (!popups) popups = [];
@@ -48,7 +45,8 @@ const fixedPopups = {
     getAll: function () {
         return this.getCookie();
     }
-}
+}*/
+
 // load notify js script
 var notifyJsScript = document.createElement('script');
 notifyJsScript.src = rootWebUrl + "/modules/addons/simotel/templates/js/notify.min.js";
@@ -68,14 +66,12 @@ notifyJsScript.onload = function () {
     $(document).on('click', '.notifyjs-simotel-caller-id-base .closeNotify', function () {
         $(this).trigger('notify-hide');
     });
-
-    $(document).ready(function () {
+   /* $(document).ready(function () {
         let popups = fixedPopups.getAll();
-        /*for(let i in popups){
+        /!*for(let i in popups){
             callerId(popups[i])
-        }*/
-    })
-
+        }*!/
+    })*/
 };
 document.head.appendChild(notifyJsScript); //or something of th
 var notifyOptions = {
@@ -273,6 +269,7 @@ class CallerId {
         this.uniqueId = callData.unique_id;
         this.config = config;
     }
+
     createHtml() {
         let callData = this.callData;
         let client = this.callData.client;

@@ -31,21 +31,6 @@ function simotel_config()
         // Version number
         'version' => '1.0',
         'fields' => [
-            // a text field type allows for single line text input
-            'RootWebUrl' => [
-                'FriendlyName' => 'Whmcs root web url',
-                'Type' => 'text',
-                'Size' => '50',
-                'Default' => '',
-                'Description' => '',
-            ],
-            'AdminWebUrl' => [
-                'FriendlyName' => 'Whmcs admin panel web url',
-                'Type' => 'text',
-                'Size' => '50',
-                'Default' => '',
-                'Description' => '',
-            ],
             'PhoneFields' => [
                 'FriendlyName' => 'Phone Fields',
                 'Type' => 'text',
@@ -54,49 +39,49 @@ function simotel_config()
                 'Description' => 'Comma separated database fields name ',
             ],
             'WsAppKey' => [
-                'FriendlyName' => 'Web socket app key',
+                'FriendlyName' => 'Pusher app key',
                 'Type' => 'text',
                 'Size' => '25',
                 'Default' => '',
                 'Description' => '',
             ],
             'WsAppId' => [
-                'FriendlyName' => 'Web socket app ID',
+                'FriendlyName' => 'Pusher app ID',
                 'Type' => 'text',
                 'Size' => '25',
                 'Default' => '',
                 'Description' => '',
             ],
             'WsHost' => [
-                'FriendlyName' => 'Web Socket Server Host',
+                'FriendlyName' => 'Pusher Server Host',
                 'Type' => 'text',
                 'Size' => '25',
                 'Default' => '',
                 'Description' => '',
             ],
             'WsPort' => [
-                'FriendlyName' => 'Web Socket Server Port',
+                'FriendlyName' => 'Pusher Server Port',
                 'Type' => 'text',
                 'Size' => '25',
                 'Default' => '',
                 'Description' => '',
             ],
             'WsCluster' => [
-                'FriendlyName' => 'Web Socket Cluster',
+                'FriendlyName' => 'Pusher Cluster',
                 'Type' => 'text',
                 'Size' => '25',
                 'Default' => '',
                 'Description' => '',
             ],
             'WsSecret' => [
-                'FriendlyName' => 'Web Socket Secret',
+                'FriendlyName' => 'Pusher Secret',
                 'Type' => 'password',
                 'Size' => '25',
                 'Default' => '',
                 'Description' => '',
             ],
             'PopUpTime' => [
-                'FriendlyName' => 'CallerId hide timer',
+                'FriendlyName' => 'CallerId show time',
                 'Type' => 'text',
                 'Size' => '5',
                 'Default' => '30',
@@ -107,9 +92,9 @@ function simotel_config()
                 'Type' => 'text',
                 'Size' => '25',
                 'Default' => '/^[0-9]{3}$/',
-                'Description' => 'Regular expression - block unwanted incoming calls caller id',
+                'Description' => 'Regular expression - block unwanted incoming calls',
             ],
-            'SimotelConnectTimeout' => [
+         /*   'SimotelConnectTimeout' => [
                 'FriendlyName' => 'Simotel Connect Timeout',
                 'Type' => 'text',
                 'Size' => '10',
@@ -122,13 +107,13 @@ function simotel_config()
                 'Size' => '10',
                 'Default' => '5',
                 'Description' => 'Seconds - click to dial',
-            ],
+            ],*/
             'PhoneNumberRegx' => [
                 'FriendlyName' => 'Regx phone numbers',
                 'Type' => 'text',
                 'Size' => '25',
                 'Default' => '/09[0-9]{9}/g',
-                'Description' => 'for discover phone numbers on whole document',
+                'Description' => 'Discover phone numbers on whole document',
             ],
         ]
     ];

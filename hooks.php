@@ -20,12 +20,12 @@ add_hook('AdminAreaPage', 1, function ($vars) {
                 window.channelName = "$channelName";
                 window.app_key = "$config[WsAppKey]";
                 window.app_cluster = "$config[WsCluster]";
-                window.auth_endpoint = "$config[AdminWebUrl]/addonmodules.php?module=simotel&action=authorizeChannel";
+                window.authEndpoint = "$config[AdminWebUrl]/addonmodules.php?module=simotel&action=authorizeChannel";
                 window.wsHost = "$config[WsHost]";
                 window.wsPort = "$config[WsPort]";
-                window.rootWebUrl = "$config[RootWebUrl]";
-                window.panelWebUrl = "$config[AdminWebUrl]";
-                window.addonUrl = "$config[RootWebUrl]"+"/modules/addons/simotel";
+                window.rootWebUrl = whmcsBaseUrl ;
+                window.panelWebUrl = whmcsBaseUrl + adminBaseRoutePath ;
+                window.addonUrl = whmcsBaseUrl + "/modules/addons/simotel";
                 window.popUpTime = $popUpTime ;
                 window.phoneNumberRegx = $phoneNumberRegx ;
                 window.callerIdPopUpActive = $callerIdPopUpActive ;
@@ -35,17 +35,15 @@ add_hook('AdminAreaPage', 1, function ($vars) {
                 var pusherScript = document.createElement('script');
                 pusherScript.onload = function () {
                     var simotelScript = document.createElement('script');
-                    simotelScript.src = "$config[RootWebUrl]/modules/addons/simotel/templates/js/simotel.js";
+                    simotelScript.src = addonUrl +"/templates/js/simotel.js";
                     document.head.appendChild(simotelScript); //or something of th
                 };
-                
                 pusherScript.src = "https://js.pusher.com/7.0.0/pusher.min.js";
                 document.head.appendChild(pusherScript); //or something of th
 EOF;
 
     $extraVariables = [];
-    $extraVariables['jscode'] =
-        $vars["jscode"] . $js;
+    $extraVariables['jscode'] = $vars["jscode"] . $js;
     return $extraVariables;
 });
 add_hook('AdminAreaClientSummaryPage', 1, function ($vars) {

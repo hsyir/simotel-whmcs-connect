@@ -51,8 +51,8 @@
 }
 
 .notifyjs-simotel-caller-id-base .simotel-popup-body {
-    width: 200px;
-    float: right;
+    /*width: 200px;*/
+    /*float: right;*/
     padding-right: 5px;
 }
 
