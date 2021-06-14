@@ -1,5 +1,5 @@
 <form class="module-configs simotelConfigs"
-      action="{$configs["AdminWebUrl"] }/addonmodules.php?module=simotel&action=storeModuleConfigs"
+      action="{WHMCS\Module\Addon\Simotel\WhmcsOperations::getAdminPanelUrl("/addonmodules.php?module=simotel&action=storeModuleConfigs")}"
       method="post">
 
     <fieldset>

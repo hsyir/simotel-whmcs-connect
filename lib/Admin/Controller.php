@@ -3,34 +3,91 @@
 namespace WHMCS\Module\Addon\Simotel\Admin;
 
 
-use GuzzleHttp\Client;
+use Hsy\Simotel\Simotel;
+use League\Container\Container;
+use WHMCS\Module\Addon\Simotel\Models\Call;
 use WHMCS\Module\Addon\Simotel\Options;
+use WHMCS\Module\Addon\Simotel\PBX\Pbx;
 use WHMCS\Module\Addon\Simotel\PushNotification;
+use WHMCS\Module\Addon\Simotel\Request;
+use WHMCS\Module\Addon\Simotel\Smarty;
 use WHMCS\Module\Addon\Simotel\WhmcsOperations;
+use WHMCS\Database\Capsule;
+
 
 /**
  * Admin Area Controller
  */
 class Controller
 {
+    private $request;
+
+    public function __construct()
+    {
+        $this->request = new Request;
+    }
 
     public function index($vars)
     {
-        $options = new Options();
-
         $adminId = WhmcsOperations::getCurrentAdminId();
+
+        $options = new Options();
         $adminOptions = $options->getAdminOptions($adminId);
         $popUpButtons = $adminOptions->selectedPopUpButtons;
+        $exten = WhmcsOperations::getCurrentAdminExten();
 
         $simotelServerProfiles = $options->get("simotelServerProfiles");
         $simotelServers = json_decode($simotelServerProfiles);
 
-        return WhmcsOperations::render("adminUserOptions", compact("simotelServers", 'adminOptions','popUpButtons'));
+        return Smarty::render("adminUserOptions", compact("simotelServers", 'adminOptions', 'popUpButtons', "exten"));
     }
+
+    public function cdrReport()
+    {
+        if (!WhmcsOperations::adminCanConfigureModuleConfigs())
+            return "Unauthorized";
+
+        list($calls, $pagination) = $this->getCalls();
+
+        return Smarty::render("cdr", compact("calls", "pagination"));
+    }
+
+    public function storeAdminsExtens()
+    {
+        $extens = $this->request->adminExten;
+        $options = new Options;
+        foreach ($extens as $adminId=>$exten){
+            $options->set("exten",$exten,$adminId);
+        }
+        $this->echoResponse(["success"=>true]);
+    }
+
+    public function adminsList()
+    {
+        if (!WhmcsOperations::adminCanConfigureModuleConfigs())
+            return "Unauthorized";
+
+
+        $adminsOptions = new Options();
+        $options = $adminsOptions->getAllAdminsOptions()->keyBy("admin_id")->map(function ($item) {
+            return json_decode($item->value);
+        })->toArray();
+
+        $admins = Capsule::table('tbladmins')
+            ->get(["firstname", "lastname", "username", "id"])
+            ->map(function ($item) use ($options) {
+                $item = (array)$item;
+                $item["options"] = ($options[$item["id"]]);
+                return $item;
+            })->toArray();
+
+        return Smarty::render("allAdminsConfigs", compact("admins"));
+    }
+
 
     public function authorizeChannel()
     {
-        echo (new PushNotification([]))->authorize("whmcsChannel");
+        echo (new PushNotification())->authorize("whmcsChannel");
         exit;
     }
 
@@ -48,10 +105,11 @@ class Controller
             $selectedPopUpButtons[$btn] = true;
         }
 
-        $optionValues = compact("exten", "callerIdPopUpActive", "simotelProfileName", "clickToDialActive", "selectedPopUpButtons");
+        $optionValues = compact("callerIdPopUpActive", "simotelProfileName", "clickToDialActive", "selectedPopUpButtons");
 
         $options = new Options();
         $options->setAdminOptions($adminId, $optionValues);
+        $options->set("exten", $exten, $adminId);
 
         header('Content-Type: application/json');
         echo json_encode(["success" => true]);
@@ -60,14 +118,17 @@ class Controller
 
     public function moduleConfigForm()
     {
+
         if (!WhmcsOperations::adminCanConfigureModuleConfigs())
             return "Unauthorized";
+
+        list($calls, $HTMLpagePagination) = $this->getCalls();
 
         $options = new Options();
         $simotelServers = $options->get("simotelServerProfiles", null, []);
         $simotelServers = json_decode($simotelServers);
 
-        return WhmcsOperations::render("moduleConfigs", compact("simotelServers"));
+        return Smarty::render("moduleConfigs", compact("simotelServers"));
     }
 
     public function storeModuleConfigs()
@@ -83,75 +144,123 @@ class Controller
         exit;
     }
 
-
-
     // --------------------------------------------------------------------
-    // ---- Simotel Call --------------------------------------------------
+    // ---- Click To Dial -------------------------------------------------
     // --------------------------------------------------------------------
     public function simotelCall($vars)
     {
-        $configs = WhmcsOperations::getConfig();
-        $options = new Options();
-        $adminId = WhmcsOperations::getCurrentAdminId();
-        $adminOptions = WhmcsOperations::getAdminOptions($adminId);
-
-        $selectedSimotelProfileName =$adminOptions->simotelProfileName;
-        $simotelServerProfiles = $options->get("simotelServerProfiles");
-        $simotelServers = json_decode($simotelServerProfiles);
-        $simotelProfile = (array)collect($simotelServers)->keyBy("profile_name")->get($selectedSimotelProfileName);
-
-        $server = $simotelProfile["server_address"];
-        $user = $simotelProfile["api_user"];
-        $pass = $simotelProfile["api_pass"];
-        $context = $simotelProfile["context"];
-
-        if (!$server or !$user or !$pass or !$context)
-            $this->returnCallError("اطلاعات تماس با سیموتل کامل نشده است");
-
         $callee = $_REQUEST["callee"];
         if (!$callee) $this->returnCallError("شماره مقصد نامشخص است");
 
-        $client = WhmcsOperations::getFirstClientByPhoneNumber($callee);
-        $callerId = $client ? $client->firstname . " " . $client->lastname : $callee;
+        $pbx = new Pbx();
+        $result = $pbx->sendCall($callee);
 
-        $data = [
-            "caller" => WhmcsOperations::getCurrentAdminExten(),
-            "callee" => $callee,
-            "context" => $context,
-            "caller_id" => $callerId,
-            "timeout" => "30"
-        ];
-
-        $options = [
-            'body' => json_encode($data),
-            "headers" => [
-                'Content-Type' => ' application/json'
-            ],
-            'auth' => [
-                $user,
-                $pass
-            ],
-            'timeout' => $configs["SimotelResponseTimeout"], // Response timeout
-            'connect_timeout' => $configs["SimotelConnectTimeout"], // Connection timeout
-        ];
-
-        try {
-            $client = new Client(["base_uri" => $server]);
-            $response = $client->put("/api/v3/call/originate/act", $options);
-        } catch (\Exception $exception) {
-            $this->returnCallError("خطا در ارتباط با سرور سیموتل" . "  " . $exception->getMessage());
+        header('Content-Type: application/json');
+        if ($pbx->fails()) {
+            echo json_encode(["success" => false, "message" => $pbx->errors()]);
+            exit;
         }
 
         header('Content-Type: application/json');
-        echo $response->getBody();;
+        echo json_encode(["success" => true]);
         exit;
+
     }
 
-    private function returnCallError($message)
+    /**
+     * @param $record_count
+     * @param int $offset
+     * @param int $page
+     * @param string $modulelink
+     * @param float $offsets
+     * @return string
+     */
+    private function paginate($record_count, int $offset, int $page, string $modulelink, float $offsets): string
     {
-        header('Content-Type: application/json');
-        echo json_encode(["success" => false, "message" => $message]);
-        exit;
+        $HTMLpagePagination = "";
+        if ($record_count < $offset + 1) {
+            $HTMLpagePagination .= '<div class="clearfix">';
+            $HTMLpagePagination .= '<div class="hint-text pull-left">Showing <b>' . $record_count . '</b> out of <b>' . $record_count . '</b> pages</div>';
+            $HTMLpagePagination .= '</div>';
+        }
+        if ($record_count > $offset) {
+            $HTMLpagePagination .= '<div class="clearfix">';
+            if ($page * $offset < $record_count) {
+                $HTMLpagePagination .= '<div class="hint-text pull-left">Showing <b>' . $page * $offset . '</b> out of <b>' . $record_count . '</b> records</div>';
+            } else {
+                $HTMLpagePagination .= '<div class="hint-text pull-left">Showing <b>' . $record_count . '</b> out of <b>' . $record_count . '</b> records</div>';
+            }
+            $HTMLpagePagination .= '<ul style="margin:0px 0px" class="pagination pull-right">';
+            if ($page < 2) {
+                $HTMLpagePagination .= '<li class="page-item disabled"><a href="#">Previous</a></li>';
+            } else {
+                $HTMLpagePagination .= '<li class="page-item"><a href="' . $modulelink . '&page=' . ($page - 1) . '">Previous</a></li>';
+            }
+            if ($page - 2 > 0) {
+                $HTMLpagePagination .= '<li class="page-item"><a href="' . $modulelink . '&page=' . ($page - 2) . '" class="page-link">' . ($page - 2) . '</a></li>';
+            }
+            if ($page - 1 > 0) {
+                $HTMLpagePagination .= '<li class="page-item"><a href="' . $modulelink . '&page=' . ($page - 1) . '" class="page-link">' . ($page - 1) . '</a></li>';
+            }
+            $HTMLpagePagination .= '<li class="page-item active"><a href="' . $modulelink . '&page=' . ($page) . '" class="page-link">' . ($page) . '</a></li>';
+            if ($page + 1 < $offsets + 1) {
+                $HTMLpagePagination .= '<li class="page-item"><a href="' . $modulelink . '&page=' . ($page + 1) . '" class="page-link">' . ($page + 1) . '</a></li>';
+            }
+            if ($page + 2 < $offsets + 1) {
+                $HTMLpagePagination .= '<li class="page-item"><a href="' . $modulelink . '&page=' . ($page + 2) . '" class="page-link">' . ($page + 2) . '</a></li>';
+            }
+            if ($page + 1 < $offsets + 1) {
+                $HTMLpagePagination .= '<li class="page-item"><a href="' . $modulelink . '&page=' . ($page + 1) . '" class="page-link">Next</a></li>';
+            } else {
+                $HTMLpagePagination .= '<li class="page-item disabled"><a href="#" class="page-link">Next</a></li>';
+            }
+            $HTMLpagePagination .= '</ul>';
+            $HTMLpagePagination .= '</div>';
+        }
+        return $HTMLpagePagination;
     }
 
+    /**
+     * @return array
+     */
+    private function getCalls(): array
+    {
+        $clientId = $this->request->client_id;
+        $src = $this->request->src;
+        $dst = $this->request->dst;
+        $callQuery = Call
+            ::when($src, function ($q) use ($src) {
+                return $q->where("src", "like", "%$src%");
+            })
+            ->when($dst, function ($q) use ($dst) {
+                return $q->where("dst", "like", "%$dst%");
+            })
+            ->when($clientId, function ($q) use ($clientId) {
+                return $q->whereClientId($clientId);
+            });
+        $record_count = $callQuery->count();
+        $offset = 50;
+        $offsets = $record_count / $offset;
+        $page = $this->request->page ?? 1;
+        if ($record_count != null) {
+            $calls = $callQuery
+                ->with("admin", "client")
+                ->offset(($page - 1) * $offset)
+                ->limit($offset)
+                ->orderBy("id", "DESC")
+                ->get();
+        }
+        $queryString = ($dst ? "&dst=$dst" : "") . ($src ? "&src=$src" : "");
+        $adminUrl = WhmcsOperations::getAdminPanelUrl();
+        $modulelink = "$adminUrl/addonmodules.php?module=simotel&action=cdrReport{$queryString}";
+        $HTMLpagePagination = $this->paginate($record_count, $offset, $page, $modulelink, $offsets);
+        return array($calls, $HTMLpagePagination);
+    }
+
+
+    private function echoResponse($result){
+        header('Content-Type: application/json');
+        echo json_encode($result);
+        exit;
+    }
 }

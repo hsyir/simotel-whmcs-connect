@@ -39,7 +39,18 @@ class Options
             ->when($adminId, function ($q) use ($adminId) {
                 return $q->whereAdminId($adminId);
             })
+            ->when($adminId === null, function ($q) use ($adminId) {
+                return $q->whereNull("admin_id");
+            })
             ->first();
+    }
+
+    public function findAdmin($key, $value)
+    {
+        return Capsule::table('mod_simotel_options')
+            ->whereValue($value)
+            ->whereKey($key)
+            ->first()->admin_id;
     }
 
     private function storeNewItem($key, $value, $adminId = null)
@@ -56,19 +67,27 @@ class Options
     public function getPublicOptions()
     {
         return Capsule::table('mod_simotel_options')
-            ->where("admin_id",null)
-            ->get()->pluck("value","key");
+            ->where("admin_id", null)
+            ->get()->pluck("value", "key");
     }
 
     public function getAdminOptions($adminId)
     {
-        $jsonOptions = $this->get("adminOptions",$adminId,[]);
+        $jsonOptions = $this->get("adminOptions", $adminId, []);
         return json_decode($jsonOptions);
     }
 
-    public function setAdminOptions($adminId,$optionsArray)
+    public function setAdminOptions($adminId, $optionsArray)
     {
         $jsonOptions = json_encode($optionsArray);
-        $this->set("adminOptions",$jsonOptions,$adminId);
+        $this->set("adminOptions", $jsonOptions, $adminId);
+    }
+
+    public function getAllAdminsOptions()
+    {
+        return Capsule::table('mod_simotel_options')
+            ->whereKey("adminOptions")
+            ->whereNotNull("admin_id")
+            ->get();
     }
 }
