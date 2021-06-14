@@ -20,12 +20,12 @@ add_hook('AdminAreaPage', 1, function ($vars) {
                 window.channelName = "$channelName";
                 window.app_key = "$config[WsAppKey]";
                 window.app_cluster = "$config[WsCluster]";
-                window.authEndpoint = "$config[AdminWebUrl]/addonmodules.php?module=simotel&action=authorizeChannel";
                 window.wsHost = "$config[WsHost]";
                 window.wsPort = "$config[WsPort]";
                 window.rootWebUrl = whmcsBaseUrl ;
                 window.panelWebUrl = whmcsBaseUrl + adminBaseRoutePath ;
                 window.addonUrl = whmcsBaseUrl + "/modules/addons/simotel";
+                window.authEndpoint = window.panelWebUrl + "/addonmodules.php?module=simotel&action=authorizeChannel";
                 window.popUpTime = $popUpTime ;
                 window.phoneNumberRegx = $phoneNumberRegx ;
                 window.callerIdPopUpActive = $callerIdPopUpActive ;
@@ -35,7 +35,7 @@ add_hook('AdminAreaPage', 1, function ($vars) {
                 var pusherScript = document.createElement('script');
                 pusherScript.onload = function () {
                     var simotelScript = document.createElement('script');
-                    simotelScript.src = addonUrl +"/templates/js/simotel.js";
+                    simotelScript.src = addonUrl +"/templates/js/simotel.min.js";
                     document.head.appendChild(simotelScript); //or something of th
                 };
                 pusherScript.src = "https://js.pusher.com/7.0.0/pusher.min.js";
@@ -54,10 +54,11 @@ add_hook('AdminAreaClientSummaryActionLinks', 1, function ($vars) {
     $config = \WHMCS\Module\Addon\Simotel\WhmcsOperations::getConfig();
     $cdrLink = \WHMCS\Module\Addon\Simotel\WhmcsOperations::getAdminPanelUrl("/addonmodules.php?module=simotel&action=cdrReport&client_id=$vars[userid]");
     $return = [];
-    $return[] = '<a href="'.$cdrLink.'">
-<img src="' . $config["RootWebUrl"] . '/modules/addons/simotel/templates/images/call-history-icon.png" border="0" align="absmiddle">
-آخرین تماس ها
-</a>';
+    $icon = \WHMCS\Module\Addon\Simotel\WhmcsOperations::getRootUrl("/modules/addons/simotel/templates/images/call-history-icon.png");
+    $return[] = '<a href="' . $cdrLink . '">
+                    <img src="' . $icon . '" border="0" align="absmiddle">
+                    آخرین تماس ها
+                    </a>';
 
     return $return;
 });

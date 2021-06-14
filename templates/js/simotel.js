@@ -12,7 +12,6 @@ if (window.callerIdPopUpActive) {
         enabledTransports: ['ws', 'wss'],
         authEndpoint: authEndpoint,
     }
-    console.log(window.channelName)
     let pusher = new Pusher(app_key, pusherOptions);
     let channel = pusher.subscribe(window.channelName);
     channel.bind("CallerId", callData => {
@@ -67,12 +66,12 @@ notifyJsScript.onload = function () {
     $(document).on('click', '.notifyjs-simotel-caller-id-base .closeNotify', function () {
         $(this).trigger('notify-hide');
     });
-   /* $(document).ready(function () {
-        let popups = fixedPopups.getAll();
-        /!*for(let i in popups){
-            callerId(popups[i])
-        }*!/
-    })*/
+    /* $(document).ready(function () {
+         let popups = fixedPopups.getAll();
+         /!*for(let i in popups){
+             callerId(popups[i])
+         }*!/
+     })*/
 };
 document.head.appendChild(notifyJsScript); //or something of th
 var notifyOptions = {
@@ -90,7 +89,7 @@ if (!document.getElementById(cssId)) {
     link.id = cssId;
     link.rel = 'stylesheet';
     link.type = 'text/css';
-    link.href = rootWebUrl + '/modules/addons/simotel/templates/css/simotel.css';
+    link.href = rootWebUrl + '/modules/addons/simotel/templates/css/simotel.min.css';
     link.media = 'all';
     head.appendChild(link);
 }
@@ -329,10 +328,50 @@ class CallerId {
             let clientName = "بدون نام";
             let html_tell;
             html_tell = $("<a>").attr("href", "tel:" + callData.participant).html(callData.participant);
+            let thisPopup = this;
+            let copyBtn = $("<a>").attr("href", "#")
+                .click(function (e) {
+                    e.preventDefault();
+                    thisPopup.CopyMe(callData.participant);
+                })
+            $(copyBtn).append($("<img>").attr("src", addonUrl + "/templates/images/copy.png").css({width:"15px",margin:"0 5px"}).attr("title","کپی"));
+            $(html_tell).append(copyBtn);
+
+
             $(html).append($("<div>").append(clientName))
             $(html).append($("<div>").append(html_tell))
+
+            let adminPanelUrl = this.config.adminPanelUrl;
+            let buttons = [
+                {
+                    url: `${adminPanelUrl}/clientsadd.php?phonenumber=${callData.participant}`,
+                    caption: "ایجاد مشتری جدید"
+                },
+            ]
+
+            let html_footer = $("<div class='simotelBtns'>");
+            for (let btn in buttons) {
+                let btnToAppend = $("<a>").attr("href", buttons[btn].url).html(buttons[btn].caption)
+                $(html_footer).append(btnToAppend)
+            }
+
+            $(html).append($("<div class='clrfx'>"))
+            $(html).append(html_footer)
+
             return html;
         }
+    }
+
+    CopyMe(TextToCopy) {
+        var TempText = document.createElement("input");
+        TempText.value = TextToCopy;
+        document.body.appendChild(TempText);
+        TempText.select();
+
+        document.execCommand("copy");
+        document.body.removeChild(TempText);
+
+        alert("کپی شد: " + TempText.value);
     }
 
     getAllButtons(client) {
@@ -400,7 +439,6 @@ class CallerId {
         }, {
             style: 'simotel-caller-id',
         });
-        console.log(popup)
         this.popUp = $(popup.body[0]).parents(".notifyjs-wrapper");
         this.turnOnHideTimer();
     }

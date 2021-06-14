@@ -61,6 +61,12 @@ class WhmcsOperations
         $customAdminPath = $config["CustomAdminPath"] ?? "";
         return $domain . $customAdminPath . $address;
     }
+    public static function getRootUrl($address=null): string
+    {
+        global $CONFIG;
+        $domain = $CONFIG["Domain"];
+        return $domain .  $address;
+    }
 
 
     /**

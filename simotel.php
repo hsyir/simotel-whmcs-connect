@@ -26,7 +26,7 @@ function simotel_config()
         // Default language
         'language' => 'english',
         // Version number
-        'version' => '1.0',
+        'version' => '2.0',
         'fields' => [
             'PhoneFields' => [
                 'FriendlyName' => 'Phone Fields',
@@ -218,7 +218,6 @@ function simotel_upgrade($vars)
 function simotel_output($vars)
 {
     $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
-
     $dispatcher = new AdminDispatcher();
     $response = $dispatcher->dispatch($action, $vars);
     echo $response;
@@ -232,15 +231,16 @@ function simotel_output($vars)
 function simotel_sidebar($vars)
 {
     $configs = \WHMCS\Module\Addon\Simotel\WhmcsOperations::getConfig();
+    $adminUrl = \WHMCS\Module\Addon\Simotel\WhmcsOperations::getAdminPanelUrl();
     $sidebar = "<div class='sidebar-header'>
     <i class='fas fa-box-alt'></i>
     منو سیموتل
     </div> 
     <ul class='menu'>
-        <li><a href='$configs[AdminWebUrl]/addonmodules.php?module=simotel&action=moduleConfigForm'>تنظیمات ادمین</a></li>
-        <li><a href='$configs[AdminWebUrl]/addonmodules.php?module=simotel'>تنظیمات کاربر</a></li>
-        <li><a href='$configs[AdminWebUrl]/addonmodules.php?module=simotel&action=cdrReport'>تماس ها</a></li>
-        <li><a href='$configs[AdminWebUrl]/addonmodules.php?module=simotel&action=adminsList'>مشاهده کاربران</a></li>
+        <li><a href='$adminUrl/addonmodules.php?module=simotel&action=moduleConfigForm'>تنظیمات سیستم</a></li>
+        <li><a href='$adminUrl/addonmodules.php?module=simotel'>تنظیمات کاربر</a></li>
+        <li><a href='$adminUrl/addonmodules.php?module=simotel&action=cdrReport'>ریز مکالمات</a></li>
+        <li><a href='$adminUrl/addonmodules.php?module=simotel&action=adminsList'>تنظیمات همکاران</a></li>
     </ul>
     
     ";

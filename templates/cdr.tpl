@@ -1,4 +1,4 @@
-<h3 class="mt-5"> تماس ها</h3>
+<h3 class="mt-5">ریز مکالمات</h3>
 <form class="simotelConfigs" id="cdrFilterForm"
       action="{WHMCS\Module\Addon\Simotel\WhmcsOperations::getAdminPanelUrl()}/addonmodules.php?module=simotel&action=cdrReport"
       method="get">
@@ -49,9 +49,9 @@
             <th></th>
             <th>مبدا</th>
             <th>مقصد</th>
-            <th>ادمین</th>
+            <th>همکار</th>
             <th>مشتری</th>
-            <th>زمان ثبت</th>
+            <th>زمان</th>
             <th>مدت تماس</th>
             <th>وضعیت</th>
         </tr>
@@ -65,8 +65,8 @@
                 <td>{$call["dst"]}</td>
                 <td>{$call->admin->fullname}</td>
                 <td><a href="{$call->client->profile_url}">{$call->client->fullname}</a></td>
-                <td dir="ltr" class="text-center">{$call->created_at_fa}</td>
-                <td dir="ltr" class="text-center" title="{$call->billsec_minutes}">{$call->billsec_short}</td>
+                <td >{$call->created_at_fa}</td>
+                <td  title="{$call->billsec_minutes}">{$call->billsec_short}</td>
                 <td><img src="{$call->status_icon_url}" alt="{$call->status}" title="{$call->status}" width="20"></td>
             </tr>
         {/foreach}
