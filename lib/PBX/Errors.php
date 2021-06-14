@@ -18,6 +18,7 @@ trait Errors
         return !empty($this->errors);
     }
 
+
     protected function addError($msg): bool
     {
         if (is_array($msg))

@@ -32,14 +32,6 @@ class NewState extends PbxEvent
         else
             $clientData = null;
 
-        $channelName = "whmcs" . $exten;
-        $data = [
-            "state" => $state,
-            "exten" => $exten,
-            "participant" => $participant,
-            "client" => $clientData,
-            "unique_id" => $uniqueId,
-        ];
 
         if ($uniqueId) {
             try {
@@ -61,6 +53,14 @@ class NewState extends PbxEvent
         }
 
         try {
+            $channelName = "private-whmcs-" . $exten;
+            $data = [
+                "state" => $state,
+                "exten" => $exten,
+                "participant" => $participant,
+                "client" => $clientData,
+                "unique_id" => $uniqueId,
+            ];
             $notif = new PushNotification();
             $notif->send($channelName, "CallerId", $data);
 

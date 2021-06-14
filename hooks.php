@@ -3,7 +3,7 @@
 add_hook('AdminAreaPage', 1, function ($vars) {
     $config = \WHMCS\Module\Addon\Simotel\WhmcsOperations::getConfig();
     $adminOptions = \WHMCS\Module\Addon\Simotel\WhmcsOperations::getAdminOptions();
-    $channelName = "whmcs" . \WHMCS\Module\Addon\Simotel\WhmcsOperations::getCurrentAdminExten();
+    $channelName = "private-whmcs-" . \WHMCS\Module\Addon\Simotel\WhmcsOperations::getCurrentAdminExten();
 
     $popUpTime = isset($config["PopUpTime"]) ? $config["PopUpTime"] : "30";
     $phoneNumberRegx = isset($config["PhoneNumberRegx"]) ? $config["PhoneNumberRegx"] : "/09[0-9]{9}/g";
@@ -46,16 +46,15 @@ EOF;
     $extraVariables['jscode'] = $vars["jscode"] . $js;
     return $extraVariables;
 });
-add_hook('AdminAreaClientSummaryPage', 1, function ($vars) {
+/*add_hook('AdminAreaClientSummaryPage', 1, function ($vars) {
     return 'This message will be output on the Client Summary page. I can add HTML here';
-});
+});*/
 
 add_hook('AdminAreaClientSummaryActionLinks', 1, function ($vars) {
     $config = \WHMCS\Module\Addon\Simotel\WhmcsOperations::getConfig();
-
-
+    $cdrLink = \WHMCS\Module\Addon\Simotel\WhmcsOperations::getAdminPanelUrl("/addonmodules.php?module=simotel&action=cdrReport&client_id=$vars[userid]");
     $return = [];
-    $return[] = '<a href="">
+    $return[] = '<a href="'.$cdrLink.'">
 <img src="' . $config["RootWebUrl"] . '/modules/addons/simotel/templates/images/call-history-icon.png" border="0" align="absmiddle">
 آخرین تماس ها
 </a>';

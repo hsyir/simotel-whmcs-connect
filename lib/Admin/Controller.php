@@ -87,7 +87,7 @@ class Controller
 
     public function authorizeChannel()
     {
-        echo (new PushNotification([]))->authorize("whmcsChannel");
+        echo (new PushNotification())->authorize("whmcsChannel");
         exit;
     }
 

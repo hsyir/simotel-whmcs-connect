@@ -23,7 +23,7 @@ class TestEvent extends PbxEvent
         $client = WhmcsOperations::getFirstClientByPhoneNumber($participant);
         $clientData = $client ? $this->extractClientInfo($client) : null;
 
-        $channelName = "whmcs" . $exten;
+        $channelName = "private-whmcs-" . $exten;
         $data = [
             "exten" => $exten,
             "participant" => $participant,
@@ -62,10 +62,7 @@ class TestEvent extends PbxEvent
             $this->addError("Exten number not exists");
         }
 
-        if ($this->fails())
-            return false;
-
-        return true;
+        return $this->fails() ? false : true;
     }
 
     /**

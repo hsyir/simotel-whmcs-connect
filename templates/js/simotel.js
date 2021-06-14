@@ -12,6 +12,7 @@ if (window.callerIdPopUpActive) {
         enabledTransports: ['ws', 'wss'],
         authEndpoint: authEndpoint,
     }
+    console.log(window.channelName)
     let pusher = new Pusher(app_key, pusherOptions);
     let channel = pusher.subscribe(window.channelName);
     channel.bind("CallerId", callData => {
