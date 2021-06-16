@@ -26,13 +26,13 @@ if (window.callerIdPopUpActive) {
         callerIdd.show();
     });
 }
+
 class CallerId {
     constructor(callData, config) {
         this.callData = callData;
         this.uniqueId = callData.unique_id;
         this.config = config;
     }
-
     createHtml() {
         let callData = this.callData;
         let client = this.callData.client;
@@ -86,7 +86,6 @@ class CallerId {
             $(html).append(html_footer)
             $(html).append($("<div class='clrfx'>"))
             return html;
-
         } else {
             let clientName = "بدون نام";
             let html_tell;
@@ -123,7 +122,7 @@ class CallerId {
 
             $(html).append($("<div class='clrfx'>"))
             $(html).append(html_footer)
-
+            $(html).append($("<div class='clrfx'>"))
             return html;
         }
     }

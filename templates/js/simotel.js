@@ -11221,7 +11221,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 /* WEBPACK VAR INJECTION */(function($) {var notif = __webpack_require__(7);
 $.notify.addStyle('simotel-caller-id', {
-    html: "<div class=''>" + "<div class='icon-holder'><img class='newcall-icon' src='" + addonUrl + "/templates/images/call-simotel-blue.png' /></div>" + "<div class='simotel-popup-body' data-notify-html='body'/>" + "<div class='clrfx'>" + "<a class='closeNotify' ><strong>x</strong></a>" + "</div>" + ("<div class='countDownProgress' style='animation: progressBarCountDown forwards linear " + popUpTime + "s'><span></span></div>")
+    html: "<div class=''>" + "<a class='closeNotify' ><strong>x</strong></a>" + "<div class='icon-holder'><img class='newcall-icon' src='" + addonUrl + "/templates/images/call-simotel-blue.png' /></div>" + "<div class='simotel-popup-body' data-notify-html='body'/></div>" + "<div class='clrfx'>" + "</div>" + ("<div class='countDownProgress' style='animation: progressBarCountDown forwards linear " + popUpTime + "s'><span></span></div>") + "</div>"
 });
 
 $(document).on('click', '.notifyjs-simotel-caller-id-base .closeNotify', function () {
@@ -11367,7 +11367,7 @@ var CallerId = function () {
 
                 $(html).append($("<div class='clrfx'>"));
                 $(html).append(_html_footer);
-
+                $(html).append($("<div class='clrfx'>"));
                 return html;
             }
         }
