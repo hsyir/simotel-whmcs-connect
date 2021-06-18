@@ -71,93 +71,15 @@
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function($) {__webpack_require__(8);
-__webpack_require__(11);
-__webpack_require__(9);
-__webpack_require__(10);
+//vendors
+__webpack_require__(12);
 
-// load css
-var cssId = 'simotelCss';
-if (!document.getElementById(cssId)) {
-    var head = document.getElementsByTagName('head')[0];
-    var link = document.createElement('link');
-    link.id = cssId;
-    link.rel = 'stylesheet';
-    link.type = 'text/css';
-    link.href = rootWebUrl + '/modules/addons/simotel/templates/css/simotel.css';
-    link.media = 'all';
-    head.appendChild(link);
-}
-
-//-----------------------------------------------------------------------------
-//--------------------- module configuration ----------------------------------
-//-----------------------------------------------------------------------------
-
-function addProfilesRow() {
-    var name = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "";
-    var address = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "";
-    var user = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "";
-    var pass = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "";
-
-    var index = $("form.module-configs table tbody tr").length;
-    var row = "\n            <tr>\n              <td>" + (index + 1) + "</td>\n                <td><input type=\"text\" name=\"simotelServerProfile[" + index + "][profile_name]\" value=\"" + name + "\" class=\"form-control\">\n                </td>\n                <td><input dir=\"ltr\" type=\"text\" name=\"simotelServerProfile[" + index + "][server_address]\" value=\"" + address + "\"\n                           class=\"form-control\"></td>\n                <td><input dir=\"ltr\" type=\"text\" name=\"simotelServerProfile[" + index + "][api_user]\" value=\"" + user + "\"\n                           class=\"form-control\"></td>\n                <td><input dir=\"ltr\" type=\"password\" name=\"simotelServerProfile[" + index + "][api_pass]\" value=\"" + pass + "\"\n                           class=\"form-control\"></td>\n                <td><input dir=\"ltr\" type=\"text\" name=\"simotelServerProfile[" + index + "][context]\" value=\"" + pass + "\"\n                           class=\"form-control\"></td>\n                <td><a href=\"#\" class=\"btn btn-danger btn-sm delete-row\">\u062D\u0630\u0641</a></td>           \n                           \n            </tr>               \n            ";
-
-    $("form.module-configs tbody").append(row);
-}
-
-$("document").ready(function () {
-
-    $("form.module-configs #addProfile").click(function (e) {
-        e.preventDefault();
-        addProfilesRow();
-    });
-    $("form.module-configs table").on("click", " a.delete-row", function (e) {
-        $(this).parents("tr").remove();
-
-        $("form.module-configs table tbody").find("tr").each(function (index, val) {
-            $(this).find("td:first").html(index + 1);
-        });
-    });
-    $("form.module-configs").submit(function (e) {
-        e.preventDefault();
-        $("#saveModuleConfigsBtn").attr("disabled", "disabled");
-        $.post($(this).attr("action"), $(this).serialize()).success(function (x) {
-            if (x.success == true) alert("ذخیره شد.");
-        }).done(function () {
-            $("#saveModuleConfigsBtn").attr("disabled", false);
-        });
-    });
-});
-
-// ------------------------------------------
-function setCookie(name, value, days) {
-    var expires = "";
-    if (days) {
-        var date = new Date();
-        date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
-        expires = "; expires=" + date.toUTCString();
-    }
-    document.cookie = name + "=" + (value || "") + expires + "; path=/";
-}
-
-function getCookie(name) {
-    var nameEQ = name + "=";
-    var ca = document.cookie.split(';');
-    for (var i = 0; i < ca.length; i++) {
-        var c = ca[i];
-        while (c.charAt(0) == ' ') {
-            c = c.substring(1, c.length);
-        }if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
-    }
-    return null;
-}
-
-function eraseCookie(name) {
-    document.cookie = name + '=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-}
-
-// -----------------------------------------------------------------
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(2)))
+// -----------------
+__webpack_require__(22);
+__webpack_require__(23);
+__webpack_require__(19);
+__webpack_require__(21);
+__webpack_require__(20);
 
 /***/ }),
 /* 1 */
@@ -11065,7 +10987,12 @@ module.exports = __webpack_require__(1);
 /* 4 */,
 /* 5 */,
 /* 6 */,
-/* 7 */
+/* 7 */,
+/* 8 */,
+/* 9 */,
+/* 10 */,
+/* 11 */,
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -11216,294 +11143,19 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 });
 
 /***/ }),
-/* 8 */
+/* 13 */,
+/* 14 */,
+/* 15 */,
+/* 16 */,
+/* 17 */,
+/* 18 */,
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
-/* WEBPACK VAR INJECTION */(function($) {var notif = __webpack_require__(7);
-$.notify.addStyle('simotel-caller-id', {
-    html: "<div class=''>" + "<a class='closeNotify' ><strong>x</strong></a>" + "<div class='icon-holder'><img class='newcall-icon' src='" + addonUrl + "/templates/images/call-simotel-blue.png' /></div>" + "<div class='simotel-popup-body' data-notify-html='body'/></div>" + "<div class='clrfx'>" + "</div>" + ("<div class='countDownProgress' style='animation: progressBarCountDown forwards linear " + popUpTime + "s'><span></span></div>") + "</div>"
-});
-
-$(document).on('click', '.notifyjs-simotel-caller-id-base .closeNotify', function () {
-    $(this).trigger('notify-hide');
-});
-var notifyOptions = {
-    clickToHide: false,
-    autoHide: false,
-    position: 'bottom right',
-    className: 'info'
-};
-$.notify.defaults(notifyOptions);
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
-
-/***/ }),
-/* 9 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* WEBPACK VAR INJECTION */(function($) {var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var adminPanelUrl = window.panelWebUrl;
-var addonUrl = window.addonUrl;
-
-//pusher
-if (window.callerIdPopUpActive) {
-    var pusherOptions = {
-        useTLS: true,
-        cluster: app_cluster,
-        wsHost: wsHost,
-        wsPort: wsPort,
-        wssPort: wsPort,
-        disableStats: true,
-        enabledTransports: ['ws', 'wss'],
-        authEndpoint: authEndpoint
-    };
-    var pusher = new Pusher(app_key, pusherOptions);
-    var channel = pusher.subscribe(window.channelName);
-    channel.bind("CallerId", function (callData) {
-        var callerIdConfig = {
-            selectedPopUpButtons: window.selectedPopUpButtons,
-            adminPanelUrl: adminPanelUrl,
-            addonUrl: addonUrl,
-            popUpTime: window.popUpTime
-        };
-        var callerIdd = new CallerId(callData, callerIdConfig);
-        callerIdd.show();
-    });
-}
-
-var CallerId = function () {
-    function CallerId(callData, config) {
-        _classCallCheck(this, CallerId);
-
-        this.callData = callData;
-        this.uniqueId = callData.unique_id;
-        this.config = config;
-    }
-
-    _createClass(CallerId, [{
-        key: 'createHtml',
-        value: function createHtml() {
-            var callData = this.callData;
-            var client = this.callData.client;
-            var html = void 0;
-            html = $("<div>");
-            if (client) {
-                //  client name ---------------------------------------------
-                var html_clientName = void 0;
-                html_clientName = $("<a>").attr("href", this.config.adminPanelUrl + '/clientssummary.php?userid=' + client.id).html('<strong> ' + client.fullname + '</strong>');
-                $(html).append($("<div class='clientName'>").append(html_clientName));
-
-                //  company name ---------------------------------------------
-                var companyName = $("<a>").attr("href", this.config.adminPanelUrl + '/clientssummary.php?userid=' + client.id).html(' ' + client.companyname);
-                if (client.hasOwnProperty("companyname")) $(html).append($("<div class='clientCompany'>").append(companyName));
-
-                //  participant number ---------------------------------------------
-                var html_tell = void 0;
-                html_tell = $("<a>").attr("href", 'tel:' + callData.participant).html('<strong> ' + callData.participant + '</strong>');
-                $(html).append($("<div class='clientTell'>").append(html_tell));
-
-                //  notes ---------------------------------------------
-                var notesSummaryCharactersCount = 30;
-                if (client.notes) {
-                    if (client.notes.length > notesSummaryCharactersCount) {
-                        var readMoreBtn = $("<span>").click(function () {
-                            $(this).html(client.notes);
-                        }).html(client.notes.slice(0, notesSummaryCharactersCount) + "<a class='readMoreDots'> <span class='bracket'>[</span>...<span class='bracket'>]</span> </a>");
-                        var clientNotes = $("<div>").html('<strong>\u06CC\u0627\u062F\u062F\u0627\u0634\u062A: </strong>').append(readMoreBtn);
-                        $(html).append($("<div class='clientNotes'>").append(clientNotes));
-                    } else {
-                        var _clientNotes = $("<div>").html('<strong>\u06CC\u0627\u062F\u062F\u0627\u0634\u062A: </strong>' + client.notes);
-                        $(html).append($("<div class='clientNotes'>").append(_clientNotes));
-                    }
-                }
-
-                $(html).append($("<div class='clrfx'>"));
-
-                //--------------------------------------------------
-                var popUpButtons = this.getAllButtons(client);
-
-                var html_footer = $("<div class='simotelBtns'>");
-                this.config.selectedPopUpButtons.forEach(function (btn) {
-                    if (popUpButtons.hasOwnProperty(btn)) {
-                        var btnToAppend = $("<a>").attr("href", popUpButtons[btn].url).html(popUpButtons[btn].caption);
-                        $(html_footer).append(btnToAppend);
-                    }
-                });
-
-                $(html).append(html_footer);
-                $(html).append($("<div class='clrfx'>"));
-                return html;
-            } else {
-                var clientName = "بدون نام";
-                var _html_tell = void 0;
-                _html_tell = $("<a>").attr("href", "tel:" + callData.participant).html(callData.participant);
-                var thisPopup = this;
-                var copyBtn = $("<a>").attr("href", "#").click(function (e) {
-                    e.preventDefault();
-                    thisPopup.CopyMe(callData.participant);
-                });
-                $(copyBtn).append($("<img>").attr("src", addonUrl + "/templates/images/copy.png").css({
-                    width: "15px",
-                    margin: "0 5px"
-                }).attr("title", "کپی"));
-                $(_html_tell).append(copyBtn);
-
-                $(html).append($("<div>").append(clientName));
-                $(html).append($("<div>").append(_html_tell));
-
-                var _adminPanelUrl = this.config.adminPanelUrl;
-                var buttons = [{
-                    url: _adminPanelUrl + '/clientsadd.php?phonenumber=' + callData.participant,
-                    caption: "ایجاد مشتری جدید"
-                }];
-
-                var _html_footer = $("<div class='simotelBtns'>");
-                for (var btn in buttons) {
-                    var btnToAppend = $("<a>").attr("href", buttons[btn].url).html(buttons[btn].caption);
-                    $(_html_footer).append(btnToAppend);
-                }
-
-                $(html).append($("<div class='clrfx'>"));
-                $(html).append(_html_footer);
-                $(html).append($("<div class='clrfx'>"));
-                return html;
-            }
-        }
-    }, {
-        key: 'CopyMe',
-        value: function CopyMe(TextToCopy) {
-            var TempText = document.createElement("input");
-            TempText.value = TextToCopy;
-            document.body.appendChild(TempText);
-            TempText.select();
-
-            document.execCommand("copy");
-            document.body.removeChild(TempText);
-
-            alert("کپی شد: " + TempText.value);
-        }
-    }, {
-        key: 'getAllButtons',
-        value: function getAllButtons(client) {
-            var adminPanelUrl = this.config.adminPanelUrl;
-            return {
-                view_profile: {
-                    url: adminPanelUrl + '/clientssummary.php?userid=' + client.id,
-                    caption: "مشاهده پروفایل"
-                },
-                edit_profile: {
-                    url: adminPanelUrl + '/clientsprofile.php?userid=' + client.id,
-                    caption: "ویرایش پروفایل"
-                },
-                services: {
-                    url: adminPanelUrl + '/clientsservices.php?userid=' + client.id,
-                    caption: "سرویس ها"
-                },
-                domains: {
-                    url: adminPanelUrl + '/clientsdomains.php?userid=' + client.id,
-                    caption: "دامنه ها"
-                },
-                notes: {
-                    url: adminPanelUrl + '/clientsnotes.php?userid=' + client.id,
-                    caption: "یادداشت ها"
-                },
-                tickets: {
-                    url: adminPanelUrl + '/client/' + client.id + '/tickets',
-                    caption: "تیکت ها"
-                },
-                transactions: {
-                    url: adminPanelUrl + '/clientstransactions.php?userid=' + client.id,
-                    caption: "تراکنش ها"
-                },
-                factors: {
-                    url: adminPanelUrl + '/clientsinvoices.php?userid=' + client.id,
-                    caption: "فاکتور ها"
-                },
-                pre_factors: {
-                    url: adminPanelUrl + '/clientsquotes.php?userid=' + client.id,
-                    caption: "پیش فاکتور ها"
-                },
-                create_ticket: {
-                    url: adminPanelUrl + '/supporttickets.php?action=open&userid=' + client.id,
-                    caption: "ایجاد تیکت"
-                },
-                create_factor: {
-                    url: adminPanelUrl + '/clientssummary.php?userid=' + client.id,
-                    caption: "ایجاد فاکتور"
-                },
-                create_pre_factor: {
-                    url: adminPanelUrl + '/quotes.php?action=manage&userid=' + client.id,
-                    caption: "ایجاد پیش فاکتور"
-                },
-                view_bill: {
-                    url: adminPanelUrl + '/reports.php?report=client_statement&userid=' + client.id,
-                    caption: "صورت حساب"
-                }
-            };
-        }
-    }, {
-        key: 'show',
-        value: function show() {
-            var html = this.createHtml();
-            var popup = $.notify({
-                body: html
-            }, {
-                style: 'simotel-caller-id'
-            });
-            this.popUp = $(popup.body[0]).parents(".notifyjs-wrapper");
-            this.turnOnHideTimer();
-        }
-    }, {
-        key: 'turnOnHideTimer',
-        value: function turnOnHideTimer() {
-            var countDownCounter = this.config.popUpTime * 1000 / 100;
-            var popUpElement = this.popUp;
-            var interval = void 0;
-            var intervalTime = 100;
-            var popupFixed = false;
-
-            var intervalAction = function intervalAction() {
-                if (countDownCounter < 1) {
-                    popUpElement.find(".notifyjs-simotel-caller-id-base").css("background-color", "#fa9393");
-                    popUpElement.slideUp(1000, function () {
-                        popUpElement.remove();
-                    });
-                    clearInterval(interval);
-                }
-                countDownCounter--;
-            };
-
-            interval = setInterval(intervalAction, intervalTime);
-
-            $(popUpElement).on("click", function () {
-                popupFixed = true;
-                popUpElement.find(".notifyjs-simotel-caller-id-base").addClass("fixed");
-                clearInterval(interval);
-                $(popUpElement).find(".countDownProgress").slideUp(150);
-            }).on("mouseover", function () {
-                $(popUpElement).find(".countDownProgress").css("animation-play-state", "paused");
-                clearInterval(interval);
-            }).on("mouseleave", function () {
-                $(popUpElement).find(".countDownProgress").css("animation-play-state", "running");
-                interval = !popupFixed ? setInterval(intervalAction, intervalTime) : null;
-            });
-        }
-    }]);
-
-    return CallerId;
-}();
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
-
-/***/ }),
-/* 10 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* WEBPACK VAR INJECTION */(function($) {
-//--- simotel click to dial --------------------------------------
+/* WEBPACK VAR INJECTION */(function($) {//--- simotel click to dial --------------------------------------
 // find numbers in page and attach the ClickToDIal Balloon
 var phoneNumberRegx = window.phoneNumberRegx;
+var adminPanelUrl = window.panelWebUrl;
 if (window.clickToDialActive) {
     $('p ,td').each(function () {
         if ($(this).find("textarea,input,a").length > 0) return null;
@@ -11536,7 +11188,6 @@ if (window.clickToDialActive) {
         $(balloon).find(".message").html("");
         setStatus("pending", "در حال ارسال تماس ...");
         resetElHeight($(balloon));
-        //https://mysup.ir/panel/s4admin/addonmodules.php?module=simotel
         $.get(adminPanelUrl + "/addonmodules.php?module=simotel&action=simotelCall&callee=" + $(this).data("number")).done(function (x) {
             if (x.success == true) setStatus("success", "با موفقیت ارسال شد.");else {
                 setStatus("error", "خطا در ارسال تماس.");
@@ -11568,10 +11219,443 @@ function makeBalloon(number) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
-/* 11 */
+/* 20 */
 /***/ (function(module, exports) {
 
 
+// ------------------------------------------
+function setCookie(name, value, days) {
+    var expires = "";
+    if (days) {
+        var date = new Date();
+        date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+        expires = "; expires=" + date.toUTCString();
+    }
+    document.cookie = name + "=" + (value || "") + expires + "; path=/";
+}
+
+function getCookie(name) {
+    var nameEQ = name + "=";
+    var ca = document.cookie.split(';');
+    for (var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1, c.length);
+        }if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+    }
+    return null;
+}
+
+function eraseCookie(name) {
+    document.cookie = name + '=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+}
+
+// -----------------------------------------------------------------
+
+/***/ }),
+/* 21 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function($) {
+//-----------------------------------------------------------------------------
+//--------------------- module configuration ----------------------------------
+//-----------------------------------------------------------------------------
+
+function addProfilesRow() {
+    var name = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "";
+    var address = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "";
+    var user = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "";
+    var pass = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "";
+
+    var index = $("form.module-configs table tbody tr").length;
+    var row = "\n            <tr>\n              <td>" + (index + 1) + "</td>\n                <td><input type=\"text\" name=\"simotelServerProfile[" + index + "][profile_name]\" value=\"" + name + "\" class=\"form-control\">\n                </td>\n                <td><input dir=\"ltr\" type=\"text\" name=\"simotelServerProfile[" + index + "][server_address]\" value=\"" + address + "\"\n                           class=\"form-control\"></td>\n                <td><input dir=\"ltr\" type=\"text\" name=\"simotelServerProfile[" + index + "][api_user]\" value=\"" + user + "\"\n                           class=\"form-control\"></td>\n                <td><input dir=\"ltr\" type=\"password\" name=\"simotelServerProfile[" + index + "][api_pass]\" value=\"" + pass + "\"\n                           class=\"form-control\"></td>\n                <td><input dir=\"ltr\" type=\"text\" name=\"simotelServerProfile[" + index + "][context]\" value=\"" + pass + "\"\n                           class=\"form-control\"></td>\n                <td><a href=\"#\" class=\"btn btn-danger btn-sm delete-row\">\u062D\u0630\u0641</a></td>           \n                           \n            </tr>               \n            ";
+
+    $("form.module-configs tbody").append(row);
+}
+
+$("document").ready(function () {
+
+    $("form.module-configs #addProfile").click(function (e) {
+        e.preventDefault();
+        addProfilesRow();
+    });
+    $("form.module-configs table").on("click", " a.delete-row", function (e) {
+        $(this).parents("tr").remove();
+
+        $("form.module-configs table tbody").find("tr").each(function (index, val) {
+            $(this).find("td:first").html(index + 1);
+        });
+    });
+    $("form.module-configs").submit(function (e) {
+        e.preventDefault();
+        $("#saveModuleConfigsBtn").attr("disabled", "disabled");
+        $.post($(this).attr("action"), $(this).serialize()).success(function (x) {
+            if (x.success == true) alert("ذخیره شد.");
+        }).done(function () {
+            $("#saveModuleConfigsBtn").attr("disabled", false);
+        });
+    });
+});
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
+
+/***/ }),
+/* 22 */
+/***/ (function(module, exports) {
+
+// load css
+var cssId = 'simotelCss';
+if (!document.getElementById(cssId)) {
+    var head = document.getElementsByTagName('head')[0];
+    var link = document.createElement('link');
+    link.id = cssId;
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = rootWebUrl + '/modules/addons/simotel/templates/css/simotel.css';
+    link.media = 'all';
+    head.appendChild(link);
+}
+
+/***/ }),
+/* 23 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__CallerId_CallerId__ = __webpack_require__(24);
+var adminPanelUrl = window.panelWebUrl;
+var addonUrl = window.addonUrl;
+
+
+//pusher
+if (window.callerIdPopUpActive) {
+    var pusherOptions = {
+        useTLS: true,
+        cluster: app_cluster,
+        wsHost: wsHost,
+        wsPort: wsPort,
+        wssPort: wsPort,
+        disableStats: true,
+        enabledTransports: ['ws', 'wss'],
+        authEndpoint: authEndpoint
+    };
+    var pusher = new Pusher(app_key, pusherOptions);
+    var channel = pusher.subscribe(window.channelName);
+    channel.bind("CallerId", showCallerId);
+}
+
+function showCallerId(callData) {
+    var callerIdConfig = {
+        selectedPopUpButtons: window.selectedPopUpButtons,
+        adminPanelUrl: adminPanelUrl,
+        addonUrl: addonUrl,
+        popUpTime: window.popUpTime
+    };
+    var callerIdd = new __WEBPACK_IMPORTED_MODULE_0__CallerId_CallerId__["a" /* default */](callData, callerIdConfig);
+    callerIdd.show();
+}
+
+/***/ }),
+/* 24 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function($) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Html__ = __webpack_require__(25);
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+
+
+var CallerId = function () {
+    function CallerId(callData, config) {
+        _classCallCheck(this, CallerId);
+
+        this.callData = callData;
+        this.config = config;
+        this.htmlBuilder = new __WEBPACK_IMPORTED_MODULE_0__Html__["a" /* default */](config);
+        this.setUpNotifyJs();
+    }
+
+    _createClass(CallerId, [{
+        key: 'setUpNotifyJs',
+        value: function setUpNotifyJs() {
+            var notifyOptions = {
+                clickToHide: false,
+                autoHide: false,
+                position: 'bottom right',
+                className: 'info'
+            };
+            $.notify.defaults(notifyOptions);
+            $.notify.addStyle('simotel-caller-id', {
+                html: '<div class=\'\'>\n                    <a class=\'closeNotify\' ><strong>x</strong></a>\n                    <div class=\'icon-holder\'><img class=\'newcall-icon\' src=\'' + addonUrl + '/templates/images/call-simotel-blue.png\' /></div>\n                    <div class=\'simotel-popup-body\' data-notify-html=\'body\'/></div>\n                    <div class=\'clrfx\'></div>\n                    <div class=\'countDownProgress\' style=\'animation: progressBarCountDown forwards linear ' + popUpTime + 's\'><span></span></div>\n                </div>'
+            });
+
+            $(document).on('click', '.notifyjs-simotel-caller-id-base .closeNotify', function () {
+                $(this).trigger('notify-hide');
+            });
+        }
+    }, {
+        key: 'createHtml',
+        value: function createHtml() {
+            var callData = this.callData;
+            var client = this.callData.client;
+            var html = void 0;
+            html = $("<div>");
+            $(html).append(this.htmlBuilder.htmlClientName(client));
+            $(html).append(this.htmlBuilder.companyName(client));
+            $(html).append(this.htmlBuilder.clientTell(callData));
+            $(html).append(this.htmlBuilder.clientNotes(client ? client.notes : null));
+            $(html).append($("<div class='clrfx'>"));
+            $(html).append(this.htmlBuilder.popupActions(callData));
+            $(html).append($("<div class='clrfx'>"));
+            return html;
+        }
+    }, {
+        key: 'show',
+        value: function show() {
+            var html = this.createHtml();
+            var popup = $.notify({
+                body: html
+            }, {
+                style: 'simotel-caller-id'
+            });
+            this.popUp = $(popup.body[0]).parents(".notifyjs-wrapper");
+            this.turnOnHideTimer();
+        }
+    }, {
+        key: 'turnOnHideTimer',
+        value: function turnOnHideTimer() {
+            var intervalTime = 100;
+            var countDownCounter = this.config.popUpTime * 1000 / intervalTime;
+            var popUpElement = this.popUp;
+            var interval = void 0;
+            var popupFixed = false;
+
+            var intervalAction = function intervalAction() {
+                if (countDownCounter < 1) {
+                    popUpElement.find(".notifyjs-simotel-caller-id-base").css("background-color", "#fa9393");
+                    popUpElement.slideUp(400, function () {
+                        popUpElement.remove();
+                    });
+                    clearInterval(interval);
+                }
+                countDownCounter--;
+            };
+
+            interval = setInterval(intervalAction, intervalTime);
+
+            $(popUpElement).on("click", function () {
+                popupFixed = true;
+                popUpElement.find(".notifyjs-simotel-caller-id-base").addClass("fixed");
+                clearInterval(interval);
+                $(popUpElement).find(".countDownProgress").slideUp(150);
+            }).on("mouseover", function () {
+                $(popUpElement).find(".countDownProgress").css("animation-play-state", "paused");
+                clearInterval(interval);
+            }).on("mouseleave", function () {
+                $(popUpElement).find(".countDownProgress").css("animation-play-state", "running");
+                interval = !popupFixed ? setInterval(intervalAction, intervalTime) : null;
+            });
+        }
+    }, {
+        key: 'adminUrl',
+        value: function adminUrl(url) {
+            return this.config.adminPanelUrl + url;
+        }
+    }, {
+        key: 'addon',
+        value: function addon(url) {
+            return this.config.adminPanelUrl + url;
+        }
+    }]);
+
+    return CallerId;
+}();
+
+/* harmony default export */ __webpack_exports__["a"] = (CallerId);
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(2)))
+
+/***/ }),
+/* 25 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function($) {var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Html = function () {
+    function Html(config) {
+        _classCallCheck(this, Html);
+
+        this.config = config;
+    }
+
+    _createClass(Html, [{
+        key: "CopyMe",
+        value: function CopyMe(TextToCopy) {
+            var TempText = document.createElement("input");
+            TempText.value = TextToCopy;
+            document.body.appendChild(TempText);
+            TempText.select();
+            document.execCommand("copy");
+            document.body.removeChild(TempText);
+            alert("کپی شد: " + TempText.value);
+        }
+    }, {
+        key: "getAllButtons",
+        value: function getAllButtons(callData) {
+            var client = callData.client;
+
+            if (!client) return {
+                create_client: {
+                    url: this.adminUrl("/clientsadd.php?phonenumber=" + callData.participant),
+                    caption: "ایجاد مشتری جدید"
+                }
+            };
+
+            return {
+                view_profile: {
+                    url: this.adminUrl("/clientssummary.php?userid=" + client.id),
+                    caption: "مشاهده پروفایل"
+                },
+                edit_profile: {
+                    url: this.adminUrl("/clientsprofile.php?userid=" + client.id),
+                    caption: "ویرایش پروفایل"
+                },
+                services: {
+                    url: this.adminUrl("/clientsservices.php?userid=" + client.id),
+                    caption: "سرویس ها"
+                },
+                domains: {
+                    url: this.adminUrl("/clientsdomains.php?userid=" + client.id),
+                    caption: "دامنه ها"
+                },
+                notes: {
+                    url: this.adminUrl("/clientsnotes.php?userid=" + client.id),
+                    caption: "یادداشت ها"
+                },
+                tickets: {
+                    url: this.adminUrl("/client/" + client.id + "/tickets"),
+                    caption: "تیکت ها"
+                },
+                transactions: {
+                    url: this.adminUrl("/clientstransactions.php?userid=" + client.id),
+                    caption: "تراکنش ها"
+                },
+                factors: {
+                    url: this.adminUrl("/clientsinvoices.php?userid=" + client.id),
+                    caption: "فاکتور ها"
+                },
+                pre_factors: {
+                    url: this.adminUrl("/clientsquotes.php?userid=" + client.id),
+                    caption: "پیش فاکتور ها"
+                },
+                create_ticket: {
+                    url: this.adminUrl("/supporttickets.php?action=open&userid=" + client.id),
+                    caption: "ایجاد تیکت"
+                },
+                create_factor: {
+                    url: this.adminUrl("/clientssummary.php?userid=" + client.id),
+                    caption: "ایجاد فاکتور"
+                },
+                create_pre_factor: {
+                    url: this.adminUrl("/quotes.php?action=manage&userid=" + client.id),
+                    caption: "ایجاد پیش فاکتور"
+                },
+                view_bill: {
+                    url: this.adminUrl("/reports.php?report=client_statement&userid=" + client.id),
+                    caption: "صورت حساب"
+                }
+            };
+        }
+    }, {
+        key: "adminUrl",
+        value: function adminUrl(url) {
+            return this.config.adminPanelUrl + url;
+        }
+    }, {
+        key: "addon",
+        value: function addon(url) {
+            return this.config.adminPanelUrl + url;
+        }
+    }, {
+        key: "clientNotes",
+        value: function clientNotes(notes) {
+            var minChCount = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 30;
+
+
+            if (!notes) return "";
+
+            var clientNotes = void 0;
+
+            if (notes.length < minChCount) {
+                clientNotes = $("<div>").html("<strong>\u06CC\u0627\u062F\u062F\u0627\u0634\u062A: </strong>" + notes);
+                return $("<div class='clientNotes'>").append(clientNotes);
+            }
+
+            var readMoreBtn = $("<span>").click(function () {
+                $(this).html(notes);
+            }).html(notes.slice(0, minChCount) + "<a class='readMoreDots'> <span class='bracket'>[</span>...<span class='bracket'>]</span> </a>");
+            clientNotes = $("<div>").html("<strong>\u06CC\u0627\u062F\u062F\u0627\u0634\u062A: </strong>").append(readMoreBtn);
+            return $("<div class='clientNotes'>").append(clientNotes);
+        }
+    }, {
+        key: "htmlClientName",
+        value: function htmlClientName(client) {
+            if (!client) return $("<div class='clientName'>").append("بدون نام");
+
+            var htmlClientName = void 0;
+            htmlClientName = $("<a>").attr("href", this.adminUrl("/clientssummary.php?userid=" + client.id));
+            htmlClientName.html($("<strong>").append(client.fullname));
+            return $("<div class='clientName'>").append(htmlClientName);
+        }
+    }, {
+        key: "companyName",
+        value: function companyName(client) {
+            if (!client) return "";
+            var clientSummaryUrl = this.adminUrl("/clientssummary.php?userid=" + client.id);
+            var companyName = $("<a>").attr("href", clientSummaryUrl);
+            companyName.html(" " + client.companyname);
+            if (client.hasOwnProperty("companyname")) return $("<div class='clientCompany'>").append(companyName);
+        }
+    }, {
+        key: "clientTell",
+        value: function clientTell(callData) {
+
+            var htmlTell = void 0;
+            htmlTell = $("<a>").attr("href", "tel:" + callData.participant).html(callData.participant);
+            var thisPopup = this;
+            var copyBtn = $("<a>").attr("href", "#").click(function (e) {
+                e.preventDefault();
+                thisPopup.CopyMe(callData.participant);
+            });
+            $(copyBtn).append($("<img>").attr("src", addonUrl + "/templates/images/copy.png").css({
+                width: "15px",
+                margin: "0 5px"
+            }).attr("title", "کپی"));
+            return $(htmlTell).append(copyBtn);
+        }
+    }, {
+        key: "popupActions",
+        value: function popupActions(callData) {
+            var popUpButtons = this.getAllButtons(callData);
+            var html_footer = $("<div class='simotelBtns'>");
+            this.config.selectedPopUpButtons.forEach(function (btn) {
+                if (popUpButtons.hasOwnProperty(btn)) {
+                    var btnToAppend = $("<a>").attr("href", popUpButtons[btn].url).html(popUpButtons[btn].caption);
+                    $(html_footer).append(btnToAppend);
+                }
+            });
+            return html_footer;
+        }
+    }]);
+
+    return Html;
+}();
+
+/* harmony default export */ __webpack_exports__["a"] = (Html);
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(2)))
 
 /***/ })
 /******/ ]);

@@ -1,7 +1,7 @@
-
 //--- simotel click to dial --------------------------------------
 // find numbers in page and attach the ClickToDIal Balloon
 const phoneNumberRegx = window.phoneNumberRegx;
+const adminPanelUrl = window.panelWebUrl;
 if (window.clickToDialActive) {
     $('p ,td').each(function () {
         if ($(this).find("textarea,input,a").length > 0) return null;
@@ -36,7 +36,6 @@ if (window.clickToDialActive) {
         $(balloon).find(".message").html("")
         setStatus("pending", "در حال ارسال تماس ...");
         resetElHeight($(balloon));
-        //https://mysup.ir/panel/s4admin/addonmodules.php?module=simotel
         $.get(adminPanelUrl + "/addonmodules.php?module=simotel&action=simotelCall&callee=" + $(this).data("number"))
             .done(x => {
                 if (x.success == true)
@@ -59,9 +58,7 @@ if (window.clickToDialActive) {
             $(statusElement).removeClass("error pending success");
             $(statusElement).addClass(status);
         }
-
     })
-
 }
 
 function resetElHeight(el) {
