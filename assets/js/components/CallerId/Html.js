@@ -11,12 +11,11 @@ export default class Html {
         TempText.select();
         document.execCommand("copy");
         document.body.removeChild(TempText);
-        alert("کپی شد: " + TempText.value);
+        return true;
     }
 
     getAllButtons(callData) {
         let client = callData.client;
-
         if (!client)
             return {
                 create_client: {
@@ -134,9 +133,10 @@ export default class Html {
         let htmlTell;
         htmlTell = $("<a>").attr("href", "tel:" + callData.participant).html(callData.participant);
         let thisPopup = this;
-        let copyBtn = $("<a>").attr("href", "#")
+        let copyBtn = $("<a class='copyBtn'>").attr("href", "#")
             .click(function (e) {
                 e.preventDefault();
+                e.stopPropagation();
                 thisPopup.CopyMe(callData.participant);
             })
         $(copyBtn).append($("<img>").attr("src", addonUrl + "/templates/images/copy.png").css({
@@ -148,13 +148,16 @@ export default class Html {
 
     popupActions(callData) {
         let popUpButtons = this.getAllButtons(callData);
-        let html_footer = $("<div class='simotelBtns'>");
-        this.config.selectedPopUpButtons.forEach(btn => {
+
+        let selectedBtns = callData.client ? this.config.selectedPopUpButtons : ["create_client"];
+
+        let html = $("<div class='simotelBtns'>");
+        selectedBtns.forEach(btn => {
             if (popUpButtons.hasOwnProperty(btn)) {
                 let btnToAppend = $("<a>").attr("href", popUpButtons[btn].url).html(popUpButtons[btn].caption)
-                $(html_footer).append(btnToAppend)
+                $(html).append(btnToAppend)
             }
         })
-        return html_footer;
+        return html;
     }
 }

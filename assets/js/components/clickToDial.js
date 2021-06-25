@@ -4,7 +4,7 @@ const phoneNumberRegx = window.phoneNumberRegx;
 const adminPanelUrl = window.panelWebUrl;
 if (window.clickToDialActive) {
     $('p ,td').each(function () {
-        if ($(this).find("textarea,input,a").length > 0) return null;
+        if ($(this).find("textarea,input,a:not(.clientName)").length > 0) return null;
         let newContent = $(this).html().replaceAll(phoneNumberRegx, makeBalloon)
         $(this).html(newContent);
     });

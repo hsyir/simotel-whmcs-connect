@@ -56,41 +56,26 @@ export default class CallerId {
             style: 'simotel-caller-id',
         });
         this.popUp = $(popup.body[0]).parents(".notifyjs-wrapper");
-        this.turnOnHideTimer();
+        this.turnOnHideTimer(this.popUp);
     }
 
-    turnOnHideTimer() {
-        let intervalTime = 100;
-        let countDownCounter = (this.config.popUpTime * 1000) / intervalTime;
-        let popUpElement = this.popUp;
-        let interval;
-        let popupFixed = false;
+    turnOnHideTimer(popUpElement) {
 
-        let intervalAction = () => {
-            if (countDownCounter < 1) {
-                popUpElement.find(".notifyjs-simotel-caller-id-base").css("background-color", "#fa9393")
-                popUpElement.slideUp(400, function () {
-                    popUpElement.remove()
-                });
-                clearInterval(interval);
-            }
-            countDownCounter--;
-        };
-
-        interval = setInterval(intervalAction, intervalTime)
+        $(popUpElement).find(".countDownProgress").on("animationend", x => {
+            popUpElement.slideUp(400, function () {
+                popUpElement.remove()
+            })
+        })
 
         $(popUpElement).on("click", function () {
-            popupFixed = true;
             popUpElement.find(".notifyjs-simotel-caller-id-base").addClass("fixed")
-            clearInterval(interval);
             $(popUpElement).find(".countDownProgress").slideUp(150);
         }).on("mouseover", function () {
             $(popUpElement).find(".countDownProgress").css("animation-play-state", "paused")
-            clearInterval(interval);
         }).on("mouseleave", function () {
             $(popUpElement).find(".countDownProgress").css("animation-play-state", "running")
-            interval = !popupFixed ? setInterval(intervalAction, intervalTime) : null;
         });
+
     }
 
     adminUrl(url) {
