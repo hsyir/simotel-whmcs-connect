@@ -43,14 +43,12 @@
     {$pagination}
 </div>
 <div class="container-fluid mt-5">
-    <table class="table">
+    <table class="table cdrTable">
         <thead>
         <tr>
             <th></th>
             <th>مبدا</th>
             <th>مقصد</th>
-            <th>همکار</th>
-            <th>مشتری</th>
             <th>زمان</th>
             <th>مدت تماس</th>
             <th>وضعیت</th>
@@ -58,15 +56,30 @@
         </thead>
         <tbody>
         {foreach from=$calls key=key item=call}
-            <tr>
+            <tr >
                 <td><img src="{$call->direction_icon_url}" alt="{$call->direction}" title="{$call->direction}"
                          width="15"></td>
-                <td>{$call["src"]}</td>
-                <td>{$call["dst"]}</td>
-                <td>{$call->admin->fullname}</td>
-                <td><a href="{$call->client->profile_url}">{$call->client->fullname}</a></td>
-                <td >{$call->created_at_fa}</td>
-                <td  title="{$call->billsec_minutes}">{$call->billsec_short}</td>
+                {if $call->direction=="in"}
+                    <td class="client">
+                        <span class="number" dir="ltr">{$call["src"]}</span>&nbsp;
+                        <a class="clientName" href="{$call->client->profile_url}">{$call->client->fullname_p}</a>
+                    </td>
+                    <td class="admin">
+                        <span class="number" dir="ltr">{$call["dst"]}</span>&nbsp;
+                        <span class="name">{$call->admin->fullname_p}</span>
+                    </td>
+                {else}
+                    <td class="admin">
+                        <span class="number" dir="ltr">{$call["src"]}</span>&nbsp;
+                        <span class="name"> {$call->admin->fullname_p}</span>
+                    </td>
+                    <td class="client">
+                        <span class="number" dir="ltr">{$call["dst"]}</span>&nbsp;
+                        <a href="{$call->client->profile_url}" class="clientName">{$call->client->fullname_p}</a>
+                    </td>
+                {/if}
+                <td>{$call->created_at_fa}</td>
+                <td title="{$call->billsec_minutes}">{$call->billsec_short}</td>
                 <td><img src="{$call->status_icon_url}" alt="{$call->status}" title="{$call->status}" width="20"></td>
             </tr>
         {/foreach}
@@ -88,3 +101,19 @@
         })
     })
 </script>
+<style>
+    .cdrTable span.number {
+    }
+    .cdrTable .admin {
+    }
+
+    .cdrTable .admin span.name {
+        color: #b85c5c;
+    }
+
+    .cdrTable .client {
+    }
+
+    .cdrTable .client a {
+    }
+</style>
