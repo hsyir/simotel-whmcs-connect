@@ -83,7 +83,6 @@ class Controller
         return Smarty::render("allAdminsConfigs", compact("admins"));
     }
 
-
     public function authorizeChannel()
     {
         echo (new PushNotification())->authorize("whmcsChannel");
@@ -255,7 +254,6 @@ class Controller
         $HTMLpagePagination = $this->paginate($record_count, $offset, $page, $modulelink, $offsets);
         return array($calls, $HTMLpagePagination);
     }
-
 
     private function echoResponse($result){
         header('Content-Type: application/json');
