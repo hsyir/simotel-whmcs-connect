@@ -9,7 +9,6 @@
     "require": {
         "pusher/pusher-php-server": "^6.1",
         "nasimtelecom/simotel-php-connect": "dev-main",
-        "illuminate/pagination": "^8.44",
         "sanjabteam/baloot": "^1.2"
     }
 }
