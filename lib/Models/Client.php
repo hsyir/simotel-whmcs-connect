@@ -12,6 +12,10 @@ class Client extends \Illuminate\Database\Eloquent\Model
     {
         return $this->firstname . " " . $this->lastname;
     }
+    public function getFullnamePAttribute()
+    {
+        return "(". $this->firstname . " " . $this->lastname . ")";
+    }
 
     public function getProfileUrlAttribute()
     {
