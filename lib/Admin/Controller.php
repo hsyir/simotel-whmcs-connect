@@ -3,7 +3,6 @@
 namespace WHMCS\Module\Addon\Simotel\Admin;
 
 
-use Hsy\Simotel\Simotel;
 use League\Container\Container;
 use WHMCS\Module\Addon\Simotel\Models\Call;
 use WHMCS\Module\Addon\Simotel\Options;
