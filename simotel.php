@@ -159,6 +159,7 @@ function simotel_activate()
                     $table->integer('client_id')->nullable();
                     $table->string('comment')->nullable();
                     $table->string('direction')->nullable();
+                    $table->string('server_profile')->nullable();
                     $table->timestamps();
                     $table->softDeletes();
                 }
