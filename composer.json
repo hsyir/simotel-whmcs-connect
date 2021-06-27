@@ -8,7 +8,7 @@
     ],
     "require": {
         "pusher/pusher-php-server": "^6.1",
-        "nasimtelecom/simotel-php-connect": "dev-main",
-        "sanjabteam/baloot": "^1.2"
+        "sanjabteam/baloot": "^1.2",
+        "nasimtelecom/simotel-php-connect": "^3.12"
     }
 }

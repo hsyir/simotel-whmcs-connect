@@ -19,7 +19,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => 'ea0dddc1561b5f2816f900b8a125ebcb03627b74',
+    'reference' => 'c2226b46b872cb55db69bcc5e21022fcdf65779e',
     'name' => 'hsyir/simotel-whmcs-connect',
   ),
   'versions' => 
@@ -121,7 +121,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => 'ea0dddc1561b5f2816f900b8a125ebcb03627b74',
+      'reference' => 'c2226b46b872cb55db69bcc5e21022fcdf65779e',
     ),
     'illuminate/collections' => 
     array (
@@ -215,13 +215,12 @@ private static $installed = array (
     ),
     'nasimtelecom/simotel-php-connect' => 
     array (
-      'pretty_version' => 'dev-main',
-      'version' => 'dev-main',
+      'pretty_version' => '3.12.1',
+      'version' => '3.12.1.0',
       'aliases' => 
       array (
-        0 => '9999999-dev',
       ),
-      'reference' => '1af7e7ae3d35b24cecca7a96aac28136720de416',
+      'reference' => 'd10d7539427ab9ffdb9ffe55ac63339ff7881cff',
     ),
     'nesbot/carbon' => 
     array (

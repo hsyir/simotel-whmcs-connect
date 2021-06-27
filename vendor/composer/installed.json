@@ -1359,17 +1359,17 @@
         },
         {
             "name": "nasimtelecom/simotel-php-connect",
-            "version": "dev-main",
-            "version_normalized": "dev-main",
+            "version": "3.12.1",
+            "version_normalized": "3.12.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nasimtelecom/simotel-php-connect.git",
-                "reference": "1af7e7ae3d35b24cecca7a96aac28136720de416"
+                "reference": "d10d7539427ab9ffdb9ffe55ac63339ff7881cff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nasimtelecom/simotel-php-connect/zipball/1af7e7ae3d35b24cecca7a96aac28136720de416",
-                "reference": "1af7e7ae3d35b24cecca7a96aac28136720de416",
+                "url": "https://api.github.com/repos/nasimtelecom/simotel-php-connect/zipball/d10d7539427ab9ffdb9ffe55ac63339ff7881cff",
+                "reference": "d10d7539427ab9ffdb9ffe55ac63339ff7881cff",
                 "shasum": ""
             },
             "require": {
@@ -1379,10 +1379,9 @@
             "require-dev": {
                 "phpunit/phpunit": "^8.0|^9.0"
             },
-            "time": "2021-04-08T20:37:09+00:00",
-            "default-branch": true,
+            "time": "2021-06-26T16:14:43+00:00",
             "type": "library",
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "psr-4": {
                     "Hsy\\Simotel\\": "src"
@@ -1401,7 +1400,7 @@
             "description": "Keep connected with simotel in php",
             "support": {
                 "issues": "https://github.com/nasimtelecom/simotel-php-connect/issues",
-                "source": "https://github.com/nasimtelecom/simotel-php-connect/tree/main"
+                "source": "https://github.com/nasimtelecom/simotel-php-connect/tree/3.12.1"
             },
             "install-path": "../nasimtelecom/simotel-php-connect"
         },

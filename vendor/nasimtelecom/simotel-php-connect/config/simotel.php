@@ -23,9 +23,9 @@ return [
     ],
     'simotelApi' => [
         'connect' => [
-            'user'           => 'apiUser',
-            'pass'           => 'apiPass',
-            'token'          => 'apiToken',
+            'user' => 'apiUser',
+            'pass' => 'apiPass',
+            'token' => 'apiToken',
             'server_address' => 'http://simotelServer',
 
         ],
@@ -247,7 +247,7 @@ return [
             ],
             'reports_audio_download' => [
                 'address' => 'reports/audio/download',
-                'request_method' => 'GET',
+                'request_method' => 'PUT',
                 'default_request_data' => [],
             ],
             'reports_cdr_search' => [

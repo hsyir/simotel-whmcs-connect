@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7cb2f57e32f39fcf7c40f39f2c2b47ca",
+    "content-hash": "9c43a88b3e0521ef47c2cbc81c030373",
     "packages": [
         {
             "name": "cocur/slugify",
@@ -1305,16 +1305,16 @@
         },
         {
             "name": "nasimtelecom/simotel-php-connect",
-            "version": "dev-main",
+            "version": "3.12.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nasimtelecom/simotel-php-connect.git",
-                "reference": "1af7e7ae3d35b24cecca7a96aac28136720de416"
+                "reference": "d10d7539427ab9ffdb9ffe55ac63339ff7881cff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nasimtelecom/simotel-php-connect/zipball/1af7e7ae3d35b24cecca7a96aac28136720de416",
-                "reference": "1af7e7ae3d35b24cecca7a96aac28136720de416",
+                "url": "https://api.github.com/repos/nasimtelecom/simotel-php-connect/zipball/d10d7539427ab9ffdb9ffe55ac63339ff7881cff",
+                "reference": "d10d7539427ab9ffdb9ffe55ac63339ff7881cff",
                 "shasum": ""
             },
             "require": {
@@ -1324,7 +1324,6 @@
             "require-dev": {
                 "phpunit/phpunit": "^8.0|^9.0"
             },
-            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -1344,9 +1343,9 @@
             "description": "Keep connected with simotel in php",
             "support": {
                 "issues": "https://github.com/nasimtelecom/simotel-php-connect/issues",
-                "source": "https://github.com/nasimtelecom/simotel-php-connect/tree/main"
+                "source": "https://github.com/nasimtelecom/simotel-php-connect/tree/3.12.1"
             },
-            "time": "2021-04-08T20:37:09+00:00"
+            "time": "2021-06-26T16:14:43+00:00"
         },
         {
             "name": "nesbot/carbon",
@@ -3445,9 +3444,7 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "nasimtelecom/simotel-php-connect": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
