@@ -3,9 +3,11 @@
 namespace WHMCS\Module\Addon\Simotel\Admin;
 
 
+use Hsy\Simotel\Simotel;
 use League\Container\Container;
 use WHMCS\Module\Addon\Simotel\Models\Call;
 use WHMCS\Module\Addon\Simotel\Options;
+use WHMCS\Module\Addon\Simotel\PBX\Connectors\SimotelConnector;
 use WHMCS\Module\Addon\Simotel\PBX\Pbx;
 use WHMCS\Module\Addon\Simotel\PushNotification;
 use WHMCS\Module\Addon\Simotel\Request;
@@ -55,10 +57,10 @@ class Controller
     {
         $extens = $this->request->adminExten;
         $options = new Options;
-        foreach ($extens as $adminId=>$exten){
-            $options->set("exten",$exten,$adminId);
+        foreach ($extens as $adminId => $exten) {
+            $options->set("exten", $exten, $adminId);
         }
-        $this->echoResponse(["success"=>true]);
+        $this->echoResponse(["success" => true]);
     }
 
     public function adminsList()
@@ -255,9 +257,22 @@ class Controller
         return array($calls, $HTMLpagePagination);
     }
 
-    private function echoResponse($result){
+    private function echoResponse($result)
+    {
         header('Content-Type: application/json');
         echo json_encode($result);
         exit;
+    }
+
+
+    public function downloadAudio()
+    {
+        if (!WhmcsOperations::adminCanConfigureModuleConfigs())
+            return "Unauthorized";
+
+        $callId = $this->request->call_id;
+        $call = Call::find($callId);
+        $simotel = new SimotelConnector();
+        $simotel->downloadAudio($call->record);
     }
 }

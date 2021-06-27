@@ -52,11 +52,12 @@
             <th>زمان</th>
             <th>مدت تماس</th>
             <th>وضعیت</th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
         {foreach from=$calls key=key item=call}
-            <tr >
+            <tr>
                 <td><img src="{$call->direction_icon_url}" alt="{$call->direction}" title="{$call->direction}"
                          width="15"></td>
                 {if $call->direction=="in"}
@@ -81,6 +82,10 @@
                 <td>{$call->created_at_fa}</td>
                 <td title="{$call->billsec_minutes}">{$call->billsec_short}</td>
                 <td><img src="{$call->status_icon_url}" alt="{$call->status}" title="{$call->status}" width="20"></td>
+                <td>{if $call->has_audio }<a href="{$call->audio_url}"><img src="{$call->recorded_icon_url}"
+                                                                            alt="{$call->status}"
+                                                                            title="{$call->record}" width="20"></a>{/if}
+                </td>
             </tr>
         {/foreach}
         </tbody>
@@ -104,6 +109,7 @@
 <style>
     .cdrTable span.number {
     }
+
     .cdrTable .admin {
     }
 

@@ -79,9 +79,42 @@ class SimotelConnector implements PbxConnectorInterface
         $selectedSimotelProfileName = $adminOptions->simotelProfileName;
         $simotelProfile = (array)collect($simotelServers)->keyBy("profile_name")->get($selectedSimotelProfileName);
         $server = $simotelProfile["server_address"];
+        $server .= "/api/v3/";
         $user = $simotelProfile["api_user"];
         $pass = $simotelProfile["api_pass"];
         $context = $simotelProfile["context"];
         return array($server, $user, $pass, $context);
+    }
+
+
+    public function downloadAudio($filename)
+    {
+        list($server, $user, $pass, $context) = $this->serverProfile();
+        if (!$server or !$user or !$pass or !$context)
+            return $this->addError("اطلاعات تماس با سیموتل کامل نشده است");
+
+        $data = [
+            "file" => $filename,
+        ];
+
+        $simotelConfig = require __DIR__ . "/simotelConfig.php";
+        $simotelConfig['simotelApi']['connect'] = [
+            'user' => $user,
+            'pass' => $pass,
+            'server_address' => $server,
+        ];
+
+        $simotel = new Simotel($simotelConfig);
+
+        try {
+            $result = $simotel->connect()->reports()->audio()->download($data);
+            header('Content-type: audio/mp3');
+            header('Content-Disposition: attachment; filename="' . $filename . '"');
+            echo $result->contents;
+            exit;
+
+        } catch (\Exception $exception) {
+            return $this->addError($exception->getMessage());
+        }
     }
 }

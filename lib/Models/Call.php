@@ -4,6 +4,7 @@ namespace WHMCS\Module\Addon\Simotel\Models;
 
 use Baloot\EloquentHelper;
 use Carbon\CarbonInterval;
+use WHMCS\Module\Addon\Simotel\WhmcsOperations;
 
 class Call extends \Illuminate\Database\Eloquent\Model
 {
@@ -69,5 +70,19 @@ class Call extends \Illuminate\Database\Eloquent\Model
         global $CONFIG;
         return $CONFIG["Domain"] . "/modules/addons/simotel/templates/images/cdr/{$this->direction}.png";
 
+    }
+    public function getRecordedIconUrlAttribute()
+    {
+        global $CONFIG;
+        return $CONFIG["Domain"] . "/modules/addons/simotel/templates/images/recorded.png";
+
+    }
+    public function getAudioUrlAttribute()
+    {
+        return WhmcsOperations::getAdminPanelUrl("/addonmodules.php?module=simotel&action=downloadAudio&call_id=".$this->id);
+    }
+    public function getHasAudioAttribute()
+    {
+        return $this->record != null;
     }
 }
