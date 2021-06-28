@@ -67,10 +67,8 @@ class SimotelApiCenter extends Simotel
     {
         $options = $this->makeHttpRequestOptions();
         $options['json'] = $requestBody;
-        $options["sink"]= __DIR__  . "/abs.mp3";
 
-        $response = $this->client->request($method, $uri, $options);
-        return new Response($response);
+        return $this->client->request($method, $uri, $options);
     }
 
     /**

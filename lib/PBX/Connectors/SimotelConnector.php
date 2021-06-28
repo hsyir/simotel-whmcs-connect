@@ -44,10 +44,9 @@ class SimotelConnector implements PbxConnectorInterface
 
         try {
             $result = $simotel->connect()->call()->originate()->act($data);
-            if ($result->success)
+            if ($result->getStatusCode() == 200)
                 return true;
 
-            $this->addError($result->message);
             return false;
 
         } catch (\Exception $exception) {
@@ -108,12 +107,19 @@ class SimotelConnector implements PbxConnectorInterface
 
         try {
             $result = $simotel->connect()->reports()->audio()->download($data);
+
+            if ($result->getStatusCode() != 200)
+                return false;
             header('Content-type: audio/mp3');
             header('Content-Disposition: attachment; filename="' . $filename . '"');
-            echo $result->contents;
+            echo $result->getBody()->getContents();
             exit;
 
         } catch (\Exception $exception) {
+            WhmcsOperations::dd("error");
+            WhmcsOperations::dd($exception->getMessage());
+            exit;
+
             return $this->addError($exception->getMessage());
         }
     }
