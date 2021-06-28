@@ -18,7 +18,7 @@ function simotel_config()
 {
     return [
         // Display name for your module
-        'name' => 'Simotel-WHMCS connect',
+        'name' => 'Simotel-WHMCS-Connect',
         // Description displayed within the admin interface
         'description' => '',
         // Module author name
@@ -26,7 +26,7 @@ function simotel_config()
         // Default language
         'language' => 'english',
         // Version number
-        'version' => '2.3',
+        'version' => '2.4',
         'fields' => [
             'PhoneFields' => [
                 'FriendlyName' => 'Phone Fields',
