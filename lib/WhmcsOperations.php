@@ -5,6 +5,7 @@ namespace WHMCS\Module\Addon\Simotel;
 
 use Smarty;
 use WHMCS\Database\Capsule;
+use WHMCS\Config\Setting;
 
 class WhmcsOperations
 {
@@ -55,16 +56,14 @@ class WhmcsOperations
 
     public static function getAdminPanelUrl($address=null): string
     {
-        global $CONFIG;
-        $domain = $CONFIG["Domain"];
+        $domain = Setting::getValue("SystemUrl");
         $config = WhmcsOperations::getConfig();
         $customAdminPath = $config["CustomAdminPath"] ?? "";
         return $domain . $customAdminPath . $address;
     }
     public static function getRootUrl($address=null): string
     {
-        global $CONFIG;
-        $domain = $CONFIG["Domain"];
+        $domain = Setting::getValue("SystemUrl");
         return $domain .  $address;
     }
 

@@ -231,17 +231,15 @@ function simotel_output($vars)
  */
 function simotel_sidebar($vars)
 {
-    $configs = \WHMCS\Module\Addon\Simotel\WhmcsOperations::getConfig();
-    $adminUrl = \WHMCS\Module\Addon\Simotel\WhmcsOperations::getAdminPanelUrl();
     $sidebar = "<div class='sidebar-header'>
     <i class='fas fa-box-alt'></i>
     منو سیموتل
     </div> 
     <ul class='menu'>
-        <li><a href='$adminUrl/addonmodules.php?module=simotel&action=moduleConfigForm'>تنظیمات سیستم</a></li>
-        <li><a href='$adminUrl/addonmodules.php?module=simotel'>تنظیمات کاربر</a></li>
-        <li><a href='$adminUrl/addonmodules.php?module=simotel&action=cdrReport'>ریز مکالمات</a></li>
-        <li><a href='$adminUrl/addonmodules.php?module=simotel&action=adminsList'>تنظیمات همکاران</a></li>
+        <li><a href='addonmodules.php?module=simotel&action=moduleConfigForm'>تنظیمات سیستم</a></li>
+        <li><a href='addonmodules.php?module=simotel'>تنظیمات کاربر</a></li>
+        <li><a href='addonmodules.php?module=simotel&action=cdrReport'>ریز مکالمات</a></li>
+        <li><a href='addonmodules.php?module=simotel&action=adminsList'>تنظیمات همکاران</a></li>
     </ul>
     
     ";
