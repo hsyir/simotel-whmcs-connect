@@ -26,36 +26,6 @@
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-md-12">
-                    <h4 class="h4 legend">تنظیم اتصال به سیموتل</h4>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-6">
-                    <div class="form-group">
-                        <label for="simotel_profile">انتخاب سرور سیموتل</label>
-                        <select name="simotel_profile" id="simotel_profile" class="form-control">
-                            <option value="" >انتخاب کنید</option>
-                            {foreach from=$simotelServers key=key item=profile}
-                                <option value="{$profile->profile_name}"
-                                        {if $adminOptions->simotelProfileName eq $profile->profile_name}
-                                selected
-                                        {/if}>
-                                    {$profile->profile_name}</option>
-                            {/foreach}
-                        </select>
-                    </div>
-                </div>
-                <div class="col-sm-6">
-                    <div class="form-group">
-                        <label for="exten">شماره اکستن سیموتل </label>
-                        <input type="text" name="exten" id="exten"
-                               value="{WHMCS\Module\Addon\Simotel\WhmcsOperations::getAdminExten()}"
-                               class="form-control">
-                    </div>
-                </div>
-            </div>
 
             <div class="row">
                 <div class="col-md-12">

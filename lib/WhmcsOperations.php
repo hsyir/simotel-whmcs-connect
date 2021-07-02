@@ -47,6 +47,17 @@ class WhmcsOperations
         return $options->get("exten", $adminId);
     }
 
+    /**
+     * @param $adminId
+     * @return mixed
+     */
+    public static function getAdminServerProfile($adminId = null)
+    {
+        $adminId = $adminId ? $adminId : self::getCurrentAdminId();
+        $options = new Options();
+        return $options->get("serverProfile", $adminId);
+    }
+
 
     public static function getAdminByExten($exten)
     {
