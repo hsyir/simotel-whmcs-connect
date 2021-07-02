@@ -92,10 +92,10 @@ function simotel_config()
                 'Description' => 'Regular expression - block unwanted incoming calls',
             ],
             'CustomAdminPath' => [
-                'FriendlyName' => 'Custom admin path',
+                'FriendlyName' => 'Admin path',
                 'Type' => 'text',
                 'Size' => '50',
-                'Default' => '',
+                'Default' => '/admin',
             ],
          /*   'SimotelConnectTimeout' => [
                 'FriendlyName' => 'Simotel Connect Timeout',
@@ -116,7 +116,13 @@ function simotel_config()
                 'Type' => 'text',
                 'Size' => '25',
                 'Default' => '/09[0-9]{9}/g',
-                'Description' => 'Discover phone numbers on whole document',
+                'Description' => 'Discover phone numbers on whole admin area pages',
+            ],
+            'OnlyDefinedExtens' => [
+                'FriendlyName' => 'Log Cdr only for defined extens',
+                'Type' => 'yesno',
+                'Default' => false,
+                'Description' => '',
             ],
         ]
     ];

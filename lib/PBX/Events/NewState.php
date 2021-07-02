@@ -81,6 +81,8 @@ class NewState extends PbxEvent
      */
     private function validateNewStateRequest($participant, $exten, $state, $direction, $dialing): bool
     {
+        $config = WhmcsOperations::getConfig();
+
         if (!$state)
             $this->addError("Call state not defined");
 
@@ -102,13 +104,17 @@ class NewState extends PbxEvent
             $this->addError("Participant number required");
         }
 
-        $config = WhmcsOperations::getConfig();
         if (preg_match($config["BlockPattern"], $participant)) {
             $this->addError("Blocked number: '$participant'");
         }
 
         if (!$exten) {
-            $this->addError("Exten number not exists");
+            $this->addError("Exten number not Required");
+        } else {
+            if ($config["OnlyDefinedExtens"]) {
+                if (!WhmcsOperations::getAdminByExten($exten))
+                    $this->addError("Exten Not found");
+            }
         }
 
         if ($this->fails())
