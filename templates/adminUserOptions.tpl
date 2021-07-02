@@ -218,7 +218,7 @@
         $("#clickToDial").submit(function (e) {
             e.preventDefault();
             let dst = $("#dst").val();
-            $.get(adminPanelUrl + "/addonmodules.php?module=simotel&action=simotelCall&callee=" + dst)
+            $.get(panelWebUrl + "/addonmodules.php?module=simotel&action=simotelCall&callee=" + dst)
                 .done(x => {
                     if (x.success) {
                         $("#clickToDialStatus").html("با موفقیت ارسال شد.");

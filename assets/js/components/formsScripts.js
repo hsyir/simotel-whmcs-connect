@@ -46,11 +46,11 @@ $("document").ready(function () {
         e.preventDefault();
         $("#saveModuleConfigsBtn").attr("disabled", "disabled")
         $.post($(this).attr("action"), $(this).serialize())
-            .success(x => {
+            .done(x => {
                 if (x.success == true)
                     alert("ذخیره شد.")
             })
-            .done(function () {
+            .always(function () {
                 $("#saveModuleConfigsBtn").attr("disabled", false)
             })
     })
