@@ -6,6 +6,7 @@ namespace WHMCS\Module\Addon\Simotel;
 use Smarty;
 use WHMCS\Database\Capsule;
 use WHMCS\Config\Setting;
+use WHMCS\Module\Addon\Simotel\Models\Client;
 
 class WhmcsOperations
 {
@@ -127,6 +128,16 @@ class WhmcsOperations
             if ($client)
                 return $client;
         }
+
+        $client = Capsule::table('tblcustomfields')
+            ->join('tblcustomfieldsvalues','tblcustomfieldsvalues.fieldid','=','tblcustomfields.id')
+            ->where("tblcustomfields.type","=","client")
+            ->select('tblcustomfieldsvalues.relid as client_id')
+            ->where("tblcustomfieldsvalues.value", "like", "%$phoneNumber%")
+            ->first();
+        if($client)
+            return Client::find($client->client_id);
+
         return null;
     }
 
