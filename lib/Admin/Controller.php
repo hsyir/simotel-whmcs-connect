@@ -7,6 +7,7 @@ use Hsy\Simotel\Simotel;
 use League\Container\Container;
 use WHMCS\Module\Addon\Simotel\Models\Call;
 use WHMCS\Module\Addon\Simotel\Options;
+use WHMCS\Module\Addon\Simotel\PBX\Connectors\SimotelConnector;
 use WHMCS\Module\Addon\Simotel\PBX\Pbx;
 use WHMCS\Module\Addon\Simotel\PushNotification;
 use WHMCS\Module\Addon\Simotel\Request;
@@ -29,6 +30,11 @@ class Controller
 
     public function index($vars)
     {
+        return $this->cdrReport();
+    }
+
+    public function userConfigs()
+    {
         $adminId = WhmcsOperations::getCurrentAdminId();
 
         $options = new Options();
@@ -44,8 +50,6 @@ class Controller
 
     public function cdrReport()
     {
-        if (!WhmcsOperations::adminCanConfigureModuleConfigs())
-            return "Unauthorized";
 
         list($calls, $pagination) = $this->getCalls();
 
@@ -55,11 +59,18 @@ class Controller
     public function storeAdminsExtens()
     {
         $extens = $this->request->adminExten;
+        $profiles = $this->request->profiles;
+
         $options = new Options;
-        foreach ($extens as $adminId=>$exten){
-            $options->set("exten",$exten,$adminId);
+        foreach ($extens as $adminId => $exten) {
+            $options->set("exten", $exten, $adminId);
         }
-        $this->echoResponse(["success"=>true]);
+
+        foreach ($profiles as $adminId => $profile) {
+            $options->set("serverProfile", $profile, $adminId);
+        }
+
+        $this->echoResponse(["success" => true]);
     }
 
     public function adminsList()
@@ -81,9 +92,13 @@ class Controller
                 return $item;
             })->toArray();
 
-        return Smarty::render("allAdminsConfigs", compact("admins"));
-    }
 
+        $opts = new Options();
+        $simotelServerProfiles = $opts->get("simotelServerProfiles");
+        $simotelServers = json_decode($simotelServerProfiles);
+
+        return Smarty::render("allAdminsConfigs", compact("admins", "simotelServers"));
+    }
 
     public function authorizeChannel()
     {
@@ -94,8 +109,6 @@ class Controller
     public function storeMyConfigs()
     {
         $adminId = WhmcsOperations::getCurrentAdminId();
-        $simotelProfileName = $_REQUEST["simotel_profile"];
-        $exten = $_REQUEST["exten"];
         $callerIdPopUpActive = $_REQUEST["caller_id_pop_up"] == "on";
         $clickToDialActive = $_REQUEST["click_to_dial"] == "on";
 
@@ -104,13 +117,10 @@ class Controller
         foreach ($popUpButtons as $btn => $status) {
             $selectedPopUpButtons[$btn] = true;
         }
-
-        $optionValues = compact("callerIdPopUpActive", "simotelProfileName", "clickToDialActive", "selectedPopUpButtons");
+        $optionValues = compact("callerIdPopUpActive", "clickToDialActive", "selectedPopUpButtons");
 
         $options = new Options();
         $options->setAdminOptions($adminId, $optionValues);
-        $options->set("exten", $exten, $adminId);
-
         header('Content-Type: application/json');
         echo json_encode(["success" => true]);
         exit;
@@ -237,6 +247,9 @@ class Controller
             })
             ->when($clientId, function ($q) use ($clientId) {
                 return $q->whereClientId($clientId);
+            })
+            ->when(!WhmcsOperations::adminCanConfigureModuleConfigs(), function ($q) {
+                return $q->whereAdminId(WhmcsOperations::getCurrentAdminId());
             });
         $record_count = $callQuery->count();
         $offset = 50;
@@ -257,10 +270,22 @@ class Controller
         return array($calls, $HTMLpagePagination);
     }
 
-
-    private function echoResponse($result){
+    private function echoResponse($result)
+    {
         header('Content-Type: application/json');
         echo json_encode($result);
         exit;
+    }
+
+
+    public function downloadAudio()
+    {
+        if (!WhmcsOperations::adminCanConfigureModuleConfigs())
+            return "Unauthorized";
+
+        $callId = $this->request->call_id;
+        $call = Call::find($callId);
+        $simotel = new SimotelConnector();
+        $simotel->downloadAudio($call->record);
     }
 }

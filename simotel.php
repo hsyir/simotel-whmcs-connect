@@ -18,7 +18,7 @@ function simotel_config()
 {
     return [
         // Display name for your module
-        'name' => 'Simotel-WHMCS connect',
+        'name' => 'Simotel-CRM-Connect',
         // Description displayed within the admin interface
         'description' => '',
         // Module author name
@@ -26,7 +26,7 @@ function simotel_config()
         // Default language
         'language' => 'english',
         // Version number
-        'version' => '2.3',
+        'version' => '2.5',
         'fields' => [
             'PhoneFields' => [
                 'FriendlyName' => 'Phone Fields',
@@ -92,10 +92,10 @@ function simotel_config()
                 'Description' => 'Regular expression - block unwanted incoming calls',
             ],
             'CustomAdminPath' => [
-                'FriendlyName' => 'Custom admin path',
+                'FriendlyName' => 'Admin path',
                 'Type' => 'text',
                 'Size' => '50',
-                'Default' => '',
+                'Default' => '/admin',
             ],
          /*   'SimotelConnectTimeout' => [
                 'FriendlyName' => 'Simotel Connect Timeout',
@@ -116,7 +116,13 @@ function simotel_config()
                 'Type' => 'text',
                 'Size' => '25',
                 'Default' => '/09[0-9]{9}/g',
-                'Description' => 'Discover phone numbers on whole document',
+                'Description' => 'Discover phone numbers on whole admin area pages',
+            ],
+            'OnlyDefinedExtens' => [
+                'FriendlyName' => 'Log Cdr only for defined extens',
+                'Type' => 'yesno',
+                'Default' => false,
+                'Description' => '',
             ],
         ]
     ];
@@ -159,6 +165,7 @@ function simotel_activate()
                     $table->integer('client_id')->nullable();
                     $table->string('comment')->nullable();
                     $table->string('direction')->nullable();
+                    $table->string('server_profile')->nullable();
                     $table->timestamps();
                     $table->softDeletes();
                 }
@@ -230,17 +237,15 @@ function simotel_output($vars)
  */
 function simotel_sidebar($vars)
 {
-    $configs = \WHMCS\Module\Addon\Simotel\WhmcsOperations::getConfig();
-    $adminUrl = \WHMCS\Module\Addon\Simotel\WhmcsOperations::getAdminPanelUrl();
     $sidebar = "<div class='sidebar-header'>
     <i class='fas fa-box-alt'></i>
     منو سیموتل
     </div> 
     <ul class='menu'>
-        <li><a href='$adminUrl/addonmodules.php?module=simotel&action=moduleConfigForm'>تنظیمات سیستم</a></li>
-        <li><a href='$adminUrl/addonmodules.php?module=simotel'>تنظیمات کاربر</a></li>
-        <li><a href='$adminUrl/addonmodules.php?module=simotel&action=cdrReport'>ریز مکالمات</a></li>
-        <li><a href='$adminUrl/addonmodules.php?module=simotel&action=adminsList'>تنظیمات همکاران</a></li>
+        <li><a href='addonmodules.php?module=simotel&action=cdrReport'>ریز مکالمات</a></li>
+        <li><a href='addonmodules.php?module=simotel&action=userConfigs'>تنظیمات کاربری من</a></li>
+        <li><a href='addonmodules.php?module=simotel&action=adminsList'>تنظیمات داخلی ها</a></li>
+        <li><a href='addonmodules.php?module=simotel&action=moduleConfigForm'>تنظیمات سیستم</a></li>
     </ul>
     
     ";

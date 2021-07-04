@@ -22,7 +22,7 @@
                         <tr>
                             <th></th>
                             <th>نام</th>
-                            <th>اکستن</th>
+                            <th>داخلی سیموتل</th>
                             <th>سرور</th>
                         </tr>
                         </thead>
@@ -34,9 +34,21 @@
                                 <td dir="ltr" width="0100"><input type="text" name="adminExten[{$admin["id"]}]" class="form-control"
                                            value="{WHMCS\Module\Addon\Simotel\WhmcsOperations::getAdminExten($admin["id"])}">
                                 </td>
-                                <td>{$admin["options"]->simotelProfileName}</td>
+                                <td>
+                                    <select name="profiles[{$admin["id"]}]" id="profiles" class="form-control">
+                                        <option value="" >- - -</option>
+                                        {foreach from=$simotelServers key=key item=profile}
+                                            <option value="{$profile->profile_name}"
+                                                    {if WHMCS\Module\Addon\Simotel\WhmcsOperations::getAdminServerProfile($admin["id"]) eq $profile->profile_name}
+                                            selected
+                                                    {/if}>
+                                                {$profile->profile_name}</option>
+                                        {/foreach}
+                                    </select>
+                                </td>
                             </tr>
                         {/foreach}
+
                         </tbody>
                     </table>
                 </div>

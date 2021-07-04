@@ -6,7 +6,7 @@ if (!document.getElementById(cssId)) {
     link.id = cssId;
     link.rel = 'stylesheet';
     link.type = 'text/css';
-    link.href = rootWebUrl + '/modules/addons/simotel/templates/css/simotel.css';
+    link.href = rootWebUrl + '/modules/addons/simotel/templates/css/simotel.css?ver=' + window.SimotelConnectVersion;
     link.media = 'all';
     head.appendChild(link);
 }

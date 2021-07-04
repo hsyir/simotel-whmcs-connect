@@ -44,10 +44,9 @@ class SimotelConnector implements PbxConnectorInterface
 
         try {
             $result = $simotel->connect()->call()->originate()->act($data);
-            if ($result->success)
+            if ($result->getStatusCode() == 200)
                 return true;
 
-            $this->addError($result->message);
             return false;
 
         } catch (\Exception $exception) {
@@ -79,9 +78,49 @@ class SimotelConnector implements PbxConnectorInterface
         $selectedSimotelProfileName = $adminOptions->simotelProfileName;
         $simotelProfile = (array)collect($simotelServers)->keyBy("profile_name")->get($selectedSimotelProfileName);
         $server = $simotelProfile["server_address"];
+        $server .= "/api/v3/";
         $user = $simotelProfile["api_user"];
         $pass = $simotelProfile["api_pass"];
         $context = $simotelProfile["context"];
         return array($server, $user, $pass, $context);
+    }
+
+
+    public function downloadAudio($filename)
+    {
+        list($server, $user, $pass, $context) = $this->serverProfile();
+        if (!$server or !$user or !$pass or !$context)
+            return $this->addError("اطلاعات تماس با سیموتل کامل نشده است");
+
+        $data = [
+            "file" => $filename,
+        ];
+
+        $simotelConfig = require __DIR__ . "/simotelConfig.php";
+        $simotelConfig['simotelApi']['connect'] = [
+            'user' => $user,
+            'pass' => $pass,
+            'server_address' => $server,
+        ];
+
+        $simotel = new Simotel($simotelConfig);
+
+        try {
+            $result = $simotel->connect()->reports()->audio()->download($data);
+
+            if ($result->getStatusCode() != 200)
+                return false;
+            header('Content-type: audio/mp3');
+            header('Content-Disposition: attachment; filename="' . $filename . '"');
+            echo $result->getBody()->getContents();
+            exit;
+
+        } catch (\Exception $exception) {
+            WhmcsOperations::dd("error");
+            WhmcsOperations::dd($exception->getMessage());
+            exit;
+
+            return $this->addError($exception->getMessage());
+        }
     }
 }

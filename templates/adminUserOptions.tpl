@@ -28,31 +28,24 @@
 
             <div class="row">
                 <div class="col-md-12">
-                    <h4 class="h4 legend">تنظیم اتصال به سیموتل</h4>
+                    <h4 class="h4 legend">اطلاعات سیموتل</h4>
                 </div>
             </div>
             <div class="row">
                 <div class="col-sm-6">
                     <div class="form-group">
-                        <label for="simotel_profile">انتخاب سرور سیموتل</label>
-                        <select name="simotel_profile" id="simotel_profile" class="form-control">
-                            <option value="" >انتخاب کنید</option>
-                            {foreach from=$simotelServers key=key item=profile}
-                                <option value="{$profile->profile_name}"
-                                        {if $adminOptions->simotelProfileName eq $profile->profile_name}
-                                selected
-                                        {/if}>
-                                    {$profile->profile_name}</option>
-                            {/foreach}
-                        </select>
+                        <label for="simotel_profile"> سرور سیموتل</label>
+                        <input type="text"
+                               value="{if WHMCS\Module\Addon\Simotel\WhmcsOperations::getCurrentAdminServerProfile()}{WHMCS\Module\Addon\Simotel\WhmcsOperations::getCurrentAdminServerProfile()}{else}در انتظار ادمین{/if}"
+                               class="form-control" disabled>
                     </div>
                 </div>
                 <div class="col-sm-6">
                     <div class="form-group">
-                        <label for="exten">شماره اکستن سیموتل </label>
+                        <label for="exten">شماره داخلی سیموتل </label>
                         <input type="text" name="exten" id="exten"
-                               value="{WHMCS\Module\Addon\Simotel\WhmcsOperations::getAdminExten()}"
-                               class="form-control">
+                               value="{if WHMCS\Module\Addon\Simotel\WhmcsOperations::getAdminExten()}{WHMCS\Module\Addon\Simotel\WhmcsOperations::getAdminExten()}{else}در انتظار ادمین{/if}"
+                               class="form-control" disabled>
                     </div>
                 </div>
             </div>
@@ -218,7 +211,7 @@
         $("#clickToDial").submit(function (e) {
             e.preventDefault();
             let dst = $("#dst").val();
-            $.get(adminPanelUrl + "/addonmodules.php?module=simotel&action=simotelCall&callee=" + dst)
+            $.get(panelWebUrl + "/addonmodules.php?module=simotel&action=simotelCall&callee=" + dst)
                 .done(x => {
                     if (x.success) {
                         $("#clickToDialStatus").html("با موفقیت ارسال شد.");

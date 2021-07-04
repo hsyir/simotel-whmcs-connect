@@ -5,6 +5,8 @@ namespace WHMCS\Module\Addon\Simotel;
 
 use Smarty;
 use WHMCS\Database\Capsule;
+use WHMCS\Config\Setting;
+use WHMCS\Module\Addon\Simotel\Models\Client;
 
 class WhmcsOperations
 {
@@ -46,6 +48,17 @@ class WhmcsOperations
         return $options->get("exten", $adminId);
     }
 
+    /**
+     * @param $adminId
+     * @return mixed
+     */
+    public static function getAdminServerProfile($adminId = null)
+    {
+        $adminId = $adminId ? $adminId : self::getCurrentAdminId();
+        $options = new Options();
+        return $options->get("serverProfile", $adminId);
+    }
+
 
     public static function getAdminByExten($exten)
     {
@@ -55,16 +68,14 @@ class WhmcsOperations
 
     public static function getAdminPanelUrl($address=null): string
     {
-        global $CONFIG;
-        $domain = $CONFIG["Domain"];
+        $domain = Setting::getValue("SystemUrl");
         $config = WhmcsOperations::getConfig();
         $customAdminPath = $config["CustomAdminPath"] ?? "";
         return $domain . $customAdminPath . $address;
     }
     public static function getRootUrl($address=null): string
     {
-        global $CONFIG;
-        $domain = $CONFIG["Domain"];
+        $domain = Setting::getValue("SystemUrl");
         return $domain .  $address;
     }
 
@@ -117,6 +128,16 @@ class WhmcsOperations
             if ($client)
                 return $client;
         }
+
+        $client = Capsule::table('tblcustomfields')
+            ->join('tblcustomfieldsvalues','tblcustomfieldsvalues.fieldid','=','tblcustomfields.id')
+            ->where("tblcustomfields.type","=","client")
+            ->select('tblcustomfieldsvalues.relid as client_id')
+            ->where("tblcustomfieldsvalues.value", "like", "%$phoneNumber%")
+            ->first();
+        if($client)
+            return Client::find($client->client_id);
+
         return null;
     }
 
