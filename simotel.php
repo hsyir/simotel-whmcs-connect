@@ -18,7 +18,7 @@ function simotel_config()
 {
     return [
         // Display name for your module
-        'name' => 'Simotel-WHMCS-Connect',
+        'name' => 'Simotel-CRM-Connect',
         // Description displayed within the admin interface
         'description' => '',
         // Module author name
@@ -242,10 +242,10 @@ function simotel_sidebar($vars)
     منو سیموتل
     </div> 
     <ul class='menu'>
-        <li><a href='addonmodules.php?module=simotel&action=userConfigs'>تنظیمات کاربر</a></li>
-        <li><a href='addonmodules.php?module=simotel&action=moduleConfigForm'>تنظیمات سیستم</a></li>
         <li><a href='addonmodules.php?module=simotel&action=cdrReport'>ریز مکالمات</a></li>
-        <li><a href='addonmodules.php?module=simotel&action=adminsList'>تنظیمات همکاران</a></li>
+        <li><a href='addonmodules.php?module=simotel&action=userConfigs'>تنظیمات کاربری من</a></li>
+        <li><a href='addonmodules.php?module=simotel&action=adminsList'>تنظیمات داخلی ها</a></li>
+        <li><a href='addonmodules.php?module=simotel&action=moduleConfigForm'>تنظیمات سیستم</a></li>
     </ul>
     
     ";

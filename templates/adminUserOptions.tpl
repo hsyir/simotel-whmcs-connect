@@ -26,6 +26,29 @@
                 </div>
             </div>
 
+            <div class="row">
+                <div class="col-md-12">
+                    <h4 class="h4 legend">اطلاعات سیموتل</h4>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="simotel_profile"> سرور سیموتل</label>
+                        <input type="text"
+                               value="{if WHMCS\Module\Addon\Simotel\WhmcsOperations::getCurrentAdminServerProfile()}{WHMCS\Module\Addon\Simotel\WhmcsOperations::getCurrentAdminServerProfile()}{else}در انتظار ادمین{/if}"
+                               class="form-control" disabled>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="exten">شماره داخلی سیموتل </label>
+                        <input type="text" name="exten" id="exten"
+                               value="{if WHMCS\Module\Addon\Simotel\WhmcsOperations::getAdminExten()}{WHMCS\Module\Addon\Simotel\WhmcsOperations::getAdminExten()}{else}در انتظار ادمین{/if}"
+                               class="form-control" disabled>
+                    </div>
+                </div>
+            </div>
 
             <div class="row">
                 <div class="col-md-12">
