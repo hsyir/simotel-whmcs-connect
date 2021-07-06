@@ -61,20 +61,20 @@ class Call extends \Illuminate\Database\Eloquent\Model
                 break;
         }
         global $CONFIG;
-        return $CONFIG["Domain"] . "/modules/addons/simotel/templates/images/cdr/{$icon}.png";
+        return $CONFIG["SystemUrl"] . "/modules/addons/simotel/templates/images/cdr/{$icon}.png";
 
 
     }
     public function getDirectionIconUrlAttribute()
     {
         global $CONFIG;
-        return $CONFIG["Domain"] . "/modules/addons/simotel/templates/images/cdr/{$this->direction}.png";
+        return $CONFIG["SystemUrl"] . "/modules/addons/simotel/templates/images/cdr/{$this->direction}.png";
 
     }
     public function getRecordedIconUrlAttribute()
     {
         global $CONFIG;
-        return $CONFIG["Domain"] . "/modules/addons/simotel/templates/images/recorded.png";
+        return $CONFIG["SystemUrl"] . "/modules/addons/simotel/templates/images/recorded.png";
 
     }
     public function getAudioUrlAttribute()
