@@ -69,13 +69,10 @@ class SimotelConnector implements PbxConnectorInterface
      */
     private function serverProfile(): array
     {
-        $adminId = WhmcsOperations::getCurrentAdminId();
-        $adminOptions = WhmcsOperations::getAdminOptions($adminId);
-
         $options = new Options();
         $simotelServerProfiles = $options->get("simotelServerProfiles");
         $simotelServers = json_decode($simotelServerProfiles);
-        $selectedSimotelProfileName = $adminOptions->simotelProfileName;
+        $selectedSimotelProfileName = WhmcsOperations::getCurrentAdminServerProfile();
         $simotelProfile = (array)collect($simotelServers)->keyBy("profile_name")->get($selectedSimotelProfileName);
         $server = $simotelProfile["server_address"];
         $server .= "/api/v3/";
