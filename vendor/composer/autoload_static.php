@@ -28,6 +28,7 @@ class ComposerStaticInit92ddd94fa9b5a72fe9727e7cb8020d16
         '4ad677cf23be1eeec8c74951804d4cb0' => __DIR__ . '/..' . '/hekmatinasser/verta/src/helpers.php',
         '3109cb1a231dcd04bee1f9f620d46975' => __DIR__ . '/..' . '/paragonie/sodium_compat/autoload.php',
         'edb42e825e0ce89932e29a2d9c59d73c' => __DIR__ . '/..' . '/sanjabteam/baloot/src/helpers.php',
+        'a253ca409bb786d5f722ee2e4e3557db' => __DIR__ . '/../..' . '/helpers.php',
     );
 
     public static $prefixLengthsPsr4 = array (

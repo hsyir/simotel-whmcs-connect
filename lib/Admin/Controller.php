@@ -264,8 +264,7 @@ class Controller
                 ->get();
         }
         $queryString = ($dst ? "&dst=$dst" : "") . ($src ? "&src=$src" : "");
-        $adminUrl = WhmcsOperations::getAdminPanelUrl();
-        $modulelink = "$adminUrl/addonmodules.php?module=simotel&action=cdrReport{$queryString}";
+        $modulelink = adminUrl("/addonmodules.php?module=simotel&action=cdrReport{$queryString}");
         $HTMLpagePagination = $this->paginate($record_count, $offset, $page, $modulelink, $offsets);
         return array($calls, $HTMLpagePagination);
     }

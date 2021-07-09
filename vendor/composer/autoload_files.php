@@ -27,4 +27,5 @@ return array(
     '4ad677cf23be1eeec8c74951804d4cb0' => $vendorDir . '/hekmatinasser/verta/src/helpers.php',
     '3109cb1a231dcd04bee1f9f620d46975' => $vendorDir . '/paragonie/sodium_compat/autoload.php',
     'edb42e825e0ce89932e29a2d9c59d73c' => $vendorDir . '/sanjabteam/baloot/src/helpers.php',
+    'a253ca409bb786d5f722ee2e4e3557db' => $baseDir . '/helpers.php',
 );
