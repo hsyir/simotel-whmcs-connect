@@ -79,13 +79,12 @@ class HomePageWidget extends \WHMCS\Module\AbstractWidget
      */
     public function generateOutput($data)
     {
-
-
         return <<<EOF
         <div class="widget-content-padded">
-            <div id=""><strong>شماره داخلی سیموتل من: </strong>{$data["myExten"]}</div>
-            <div id=""><strong> سرور: </strong>{$data["serverProfile"]}</div>
-            
+            <div style="font-size: 12px">
+                <span id="" style="margin-left: 30px"><strong>شماره داخلی سیموتل من: </strong>{$data["myExten"]}</span>
+                <span id=""><strong> سرور: </strong>{$data["serverProfile"]}</span>
+            </div>
             <div style="padding: 0 5px;margin-top: 15px">
                  <table class="table" >
                     <thead>
@@ -122,24 +121,22 @@ EOF;
 
     private function renderCalls($myLastCalls)
     {
-        if(count($myLastCalls)<1)
-            return "<tr><td colspan='5'>تاریخچه تماس وجود ندارد</td> </tr>";
+        if (count($myLastCalls) < 1)
+            return "<tr><td colspan='5'>تاریخچه تماس وجود ندارد</td></tr>";
 
-
-        $html="";
+        $html = "";
         foreach ($myLastCalls as $call) {
-           $html.= "<tr>";
-           $html.="
+            $html .= "<tr>";
+            $html .= "
                 <td><img src='{$call->direction_icon_url}' alt='{$call->direction}' title='{$call->direction}'
                          width='15'></td>";
-            $html.= "<td>$call->contact</td>";
+            $html .= "<td>$call->contact</td>";
             $html .= "<td><a href='{$call->client->profile_url}' class='clientName'>{$call->client->fullname_p}</a></td>";
-            $html.= "<td>$call->created_at_fa</td>";
-            $html.= "<td title='{$call->billsec_minutes}'>{$call->billsec_short}</td>
+            $html .= "<td>$call->created_at_fa</td>";
+            $html .= "<td title='{$call->billsec_minutes}'>{$call->billsec_short}</td>
                 <td><img src='{$call->status_icon_url}' alt='{$call->status}' title='{$call->status}' width='20'></td>";
-            $html.= "</tr>";
+            $html .= "</tr>";
         }
-
         return $html;
     }
 
