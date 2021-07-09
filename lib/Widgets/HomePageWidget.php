@@ -81,11 +81,7 @@ class HomePageWidget extends \WHMCS\Module\AbstractWidget
     {
         return <<<EOF
         <div class="widget-content-padded">
-            <div style="font-size: 12px">
-                <span id="" style="margin-left: 30px"><strong>شماره داخلی سیموتل من: </strong>{$data["myExten"]}</span>
-                <span id=""><strong> سرور: </strong>{$data["serverProfile"]}</span>
-            </div>
-            <div style="padding: 0 5px;margin-top: 15px">
+            <div style="padding: 0 5px">
                  <table class="table" >
                     <thead>
                     <tr>
@@ -102,6 +98,10 @@ class HomePageWidget extends \WHMCS\Module\AbstractWidget
                     </tbody>
                  </table>
 <!--            <h5 style="font-size: 12px;color: #888888;padding-top: 5px">آخرین تماس های من</h5>-->
+            </div>
+            <div style="font-size: 12px;margin-top: 15px">
+                <span id="" style="margin-left: 30px"><strong>شماره داخلی سیموتل من: </strong>{$data["myExten"]}</span>
+                <span id=""><strong> سرور: </strong>{$data["serverProfile"]}</span>
             </div>
         </div>
 EOF;
