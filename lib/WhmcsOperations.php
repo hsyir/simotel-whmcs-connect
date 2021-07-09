@@ -193,9 +193,5 @@ class WhmcsOperations
         return $results;
     }
 
-    public static function dd($var)
-    {
-        echo "<pre>" . var_export($var, true) . "</pre>";
-    }
 
 }
