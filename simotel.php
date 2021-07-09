@@ -26,7 +26,7 @@ function simotel_config()
         // Default language
         'language' => 'english',
         // Version number
-        'version' => '2.5',
+        'version' => '2.6',
         'fields' => [
             'PhoneFields' => [
                 'FriendlyName' => 'Phone Fields',
