@@ -110,6 +110,7 @@ EOF;
     private function getMyLastCalls()
     {
         return Call::whereAdminId(WhmcsOperations::getCurrentAdminId())
+            ->latest()
             ->limit(5)
             ->get()
             ->map(function ($item) {
