@@ -5,7 +5,7 @@
 </form>
 
 <form class="simotelConfigs" id="adminsForm"
-      action="{WHMCS\Module\Addon\Simotel\WhmcsOperations::getAdminPanelUrl("/addonmodules.php?module=simotel&action=storeAdminsExtens")}"
+      action="{adminUrl("/addonmodules.php?module=simotel&action=storeAdminsExtens")}"
       method="get">
     <fieldset>
         <div class="container-fluid">
@@ -35,7 +35,7 @@
                                            value="{WHMCS\Module\Addon\Simotel\WhmcsOperations::getAdminExten($admin["id"])}">
                                 </td>
                                 <td>
-                                    <select name="profiles[{$admin["id"]}]" id="profiles" class="form-control">
+                                    <select name="profiles[{$admin["id"]}]" id="profiles{$admin["id"]}" class="form-control">
                                         <option value="" >- - -</option>
                                         {foreach from=$simotelServers key=key item=profile}
                                             <option value="{$profile->profile_name}"
