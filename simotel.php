@@ -22,7 +22,7 @@ function simotel_config()
         // Description displayed within the admin interface
         'description' => '',
         // Module author name
-        'author' => 'Hossein Yaghmaee',
+        'author' => 'Nasim Telecom',
         // Default language
         'language' => 'english',
         // Version number
