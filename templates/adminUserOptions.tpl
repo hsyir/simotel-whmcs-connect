@@ -196,7 +196,7 @@
             $("#popUpStatus").html("در حال ارسال تماس آزمایشی");
             let participant = $("#participant").val();
             let exten = $("#exten").val();
-            let url = "{$configs["WebRootUrl"] }/panel/index.php?m=simotel&event_name=TestEvent&exten=" + exten + "&participant=" + participant
+            let url = "{$configs["WebRootUrl"] }/index.php?m=simotel&event_name=TestEvent&exten=" + exten + "&participant=" + participant
             $.get(url).success(result => {
                 console.log(result)
                 if (result.success) {
