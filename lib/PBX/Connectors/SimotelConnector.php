@@ -3,7 +3,7 @@
 namespace WHMCS\Module\Addon\Simotel\PBX\Connectors;
 
 use GuzzleHttp\Client;
-use Hsy\Simotel\Simotel;
+use Simotel\Simotel;
 use WHMCS\Module\Addon\Simotel\Options;
 use WHMCS\Module\Addon\Simotel\PBX\Errors;
 use WHMCS\Module\Addon\Simotel\PBX\PbxConnectorInterface;
@@ -22,8 +22,9 @@ class SimotelConnector implements PbxConnectorInterface
     public function sendCall($caller, $callee, $callerId)
     {
         list($server, $user, $pass, $context) = $this->serverProfile();
-        if (!$server or !$user or !$pass or !$context)
+        if (!$server or !$user or !$pass or !$context) {
             return $this->addError("اطلاعات تماس با سیموتل کامل نشده است");
+        }
 
         $data = [
             "caller" => WhmcsOperations::getCurrentAdminExten(),
@@ -34,18 +35,20 @@ class SimotelConnector implements PbxConnectorInterface
         ];
 
         $simotelConfig = require __DIR__ . "/simotelConfig.php";
-        $simotelConfig['simotelApi']['connect'] = [
-            'user' => $user,
-            'pass' => $pass,
+        $simotelConfig['simotelApi'] = [
+            'api_auth' => 'basic',
+            'api_user' => $user,
+            'api_pass' => $pass,
             'server_address' => $server,
         ];
 
         $simotel = new Simotel($simotelConfig);
 
         try {
-            $result = $simotel->connect()->call()->originate()->act($data);
-            if ($result->getStatusCode() == 200)
+            $result = $simotel->connect("call/originate/act", $data);
+            if ($result->getStatusCode() == 200) {
                 return true;
+            }
 
             return false;
 
@@ -69,16 +72,12 @@ class SimotelConnector implements PbxConnectorInterface
      */
     private function serverProfile(): array
     {
-        $adminId = WhmcsOperations::getCurrentAdminId();
-        $adminOptions = WhmcsOperations::getAdminOptions($adminId);
-
         $options = new Options();
         $simotelServerProfiles = $options->get("simotelServerProfiles");
         $simotelServers = json_decode($simotelServerProfiles);
-        $selectedSimotelProfileName = $adminOptions->simotelProfileName;
+        $selectedSimotelProfileName = WhmcsOperations::getCurrentAdminServerProfile();
         $simotelProfile = (array)collect($simotelServers)->keyBy("profile_name")->get($selectedSimotelProfileName);
         $server = $simotelProfile["server_address"];
-        $server .= "/api/v3/";
         $user = $simotelProfile["api_user"];
         $pass = $simotelProfile["api_pass"];
         $context = $simotelProfile["context"];
@@ -89,8 +88,9 @@ class SimotelConnector implements PbxConnectorInterface
     public function downloadAudio($filename)
     {
         list($server, $user, $pass, $context) = $this->serverProfile();
-        if (!$server or !$user or !$pass or !$context)
+        if (!$server or !$user or !$pass or !$context) {
             return $this->addError("اطلاعات تماس با سیموتل کامل نشده است");
+        }
 
         $data = [
             "file" => $filename,
@@ -108,8 +108,9 @@ class SimotelConnector implements PbxConnectorInterface
         try {
             $result = $simotel->connect()->reports()->audio()->download($data);
 
-            if ($result->getStatusCode() != 200)
+            if ($result->getStatusCode() != 200) {
                 return false;
+            }
             header('Content-type: audio/mp3');
             header('Content-Disposition: attachment; filename="' . $filename . '"');
             echo $result->getBody()->getContents();

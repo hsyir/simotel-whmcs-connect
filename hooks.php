@@ -1,5 +1,6 @@
 <?php
 
+
 add_hook('AdminAreaPage', 1, function ($vars) {
     $config = \WHMCS\Module\Addon\Simotel\WhmcsOperations::getConfig();
     $version = $config["version"];
@@ -17,7 +18,6 @@ add_hook('AdminAreaPage', 1, function ($vars) {
     $selectedPupUpButtons = json_encode($popUpButtons);
 
     $js = <<<EOF
-
                 window.channelName = "$channelName";
                 window.SimotelConnectVersion = "$version";
                 window.app_key = "$config[WsAppKey]";
@@ -63,4 +63,11 @@ add_hook('AdminAreaClientSummaryActionLinks', 1, function ($vars) {
                     </a>';
 
     return $return;
+});
+
+
+add_hook('AdminHomeWidgets', 1, function() {
+
+    require_once(__DIR__ . "/vendor/autoload.php");
+    return new WHMCS\Module\Addon\Simotel\Widgets\HomePageWidget();
 });

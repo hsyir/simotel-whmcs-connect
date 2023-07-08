@@ -60,6 +60,16 @@ class WhmcsOperations
     }
 
 
+    /**
+     * @return mixed
+     */
+    public static function getCurrentAdminServerProfile()
+    {
+        $adminId = self::getCurrentAdminId();
+        return self::getAdminServerProfile($adminId);
+    }
+
+
     public static function getAdminByExten($exten)
     {
         $options = new Options();
@@ -183,9 +193,10 @@ class WhmcsOperations
         return $results;
     }
 
+
     public static function dd($var)
     {
         echo "<pre>" . var_export($var, true) . "</pre>";
+        exit;
     }
-
 }

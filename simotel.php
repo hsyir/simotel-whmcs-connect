@@ -8,7 +8,7 @@ if (!defined("WHMCS")) {
     die("This file cannot be accessed directly");
 }
 
-require(__DIR__ . "/vendor/autoload.php");
+require_once(__DIR__ . "/vendor/autoload.php");
 
 
 /**
@@ -26,7 +26,7 @@ function simotel_config()
         // Default language
         'language' => 'english',
         // Version number
-        'version' => '2.5',
+        'version' => '2.6',
         'fields' => [
             'PhoneFields' => [
                 'FriendlyName' => 'Phone Fields',

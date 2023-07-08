@@ -8,6 +8,7 @@ use WHMCS\Module\Addon\Simotel\WhmcsOperations;
 
 class Call extends \Illuminate\Database\Eloquent\Model
 {
+
     use EloquentHelper;
 
     protected $table = "mod_simotel_calls";
@@ -27,9 +28,10 @@ class Call extends \Illuminate\Database\Eloquent\Model
     {
         return $this["billsec"] ? CarbonInterval::seconds($this['billsec'])->cascade()->forHumans() : "0";
     }
+
     public function getBillsecShortAttribute()
     {
-        $seconds=$this["billsec"];
+        $seconds = $this["billsec"];
         $hours = floor($seconds / 3600);
         $minutes = floor(($seconds - ($hours * 60 * 60)) / 60);
         $seconds = $seconds - $hours * 3600 - $minutes * 60;
@@ -60,27 +62,27 @@ class Call extends \Illuminate\Database\Eloquent\Model
                 $icon = "answered";
                 break;
         }
-        global $CONFIG;
-        return $CONFIG["Domain"] . "/modules/addons/simotel/templates/images/cdr/{$icon}.png";
 
+        return templateUrl("/images/cdr/{$icon}.png");
 
     }
+
     public function getDirectionIconUrlAttribute()
     {
-        global $CONFIG;
-        return $CONFIG["Domain"] . "/modules/addons/simotel/templates/images/cdr/{$this->direction}.png";
+        return templateUrl("/images/cdr/{$this->direction}.png");
 
     }
+
     public function getRecordedIconUrlAttribute()
     {
-        global $CONFIG;
-        return $CONFIG["Domain"] . "/modules/addons/simotel/templates/images/recorded.png";
-
+        return templateUrl("/images/recorded.png");
     }
+
     public function getAudioUrlAttribute()
     {
-        return WhmcsOperations::getAdminPanelUrl("/addonmodules.php?module=simotel&action=downloadAudio&call_id=".$this->id);
+        return adminUrl("/addonmodules.php?module=simotel&action=downloadAudio&call_id=" . $this->id);
     }
+
     public function getHasAudioAttribute()
     {
         return $this->record != null;

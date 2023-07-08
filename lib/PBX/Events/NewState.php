@@ -20,6 +20,7 @@ class NewState extends PbxEvent
         $uniqueId = $this->request->unique_id;
         $participant = $this->request->participant;
         $direction = $this->request->direction;
+        $serverProfile = $this->request->server_profile;
 
         $validate = $this->validateNewStateRequest($participant, $exten, $state, $direction, $dialing);
         if (!$validate)
@@ -44,7 +45,8 @@ class NewState extends PbxEvent
                     "client_id" => $client->id,
                     "admin_id" => $adminId,
                     "status" => $state,
-                    "direction" => $direction
+                    "direction" => $direction,
+                    "server_profile" => $serverProfile
                 ]);
             } catch (\Exception $exception) {
                 $this->addError($exception->getMessage());

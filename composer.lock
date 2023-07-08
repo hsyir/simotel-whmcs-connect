@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9c43a88b3e0521ef47c2cbc81c030373",
+    "content-hash": "e740ab88e4af024b68fd6471353a75eb",
     "packages": [
         {
             "name": "cocur/slugify",
@@ -1304,50 +1304,6 @@
             "time": "2021-06-22T13:41:32+00:00"
         },
         {
-            "name": "nasimtelecom/simotel-php-connect",
-            "version": "3.12.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/nasimtelecom/simotel-php-connect.git",
-                "reference": "d10d7539427ab9ffdb9ffe55ac63339ff7881cff"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/nasimtelecom/simotel-php-connect/zipball/d10d7539427ab9ffdb9ffe55ac63339ff7881cff",
-                "reference": "d10d7539427ab9ffdb9ffe55ac63339ff7881cff",
-                "shasum": ""
-            },
-            "require": {
-                "ext-json": "*",
-                "guzzlehttp/guzzle": ">=6.5"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^8.0|^9.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Hsy\\Simotel\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Hossein",
-                    "email": "hosseinyaghmaee@gmail.com"
-                }
-            ],
-            "description": "Keep connected with simotel in php",
-            "support": {
-                "issues": "https://github.com/nasimtelecom/simotel-php-connect/issues",
-                "source": "https://github.com/nasimtelecom/simotel-php-connect/tree/3.12.1"
-            },
-            "time": "2021-06-26T16:14:43+00:00"
-        },
-        {
             "name": "nesbot/carbon",
             "version": "2.49.0",
             "source": {
@@ -1999,6 +1955,50 @@
                 "source": "https://github.com/sanjabteam/baloot/tree/1.2.0"
             },
             "time": "2021-04-18T16:12:59+00:00"
+        },
+        {
+            "name": "simotel/simotel-php-connect",
+            "version": "4.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/simotel/simotel-php-connect.git",
+                "reference": "4b6eeb9ef200915801bc1c292385947031ea561b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/simotel/simotel-php-connect/zipball/4b6eeb9ef200915801bc1c292385947031ea561b",
+                "reference": "4b6eeb9ef200915801bc1c292385947031ea561b",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "guzzlehttp/guzzle": ">=7.2"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^9.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Simotel\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Hossein",
+                    "email": "hosseinyaghmaee@gmail.com"
+                }
+            ],
+            "description": "Keep connected with simotel in php",
+            "support": {
+                "issues": "https://github.com/simotel/simotel-php-connect/issues",
+                "source": "https://github.com/simotel/simotel-php-connect/tree/4.0.0"
+            },
+            "time": "2022-11-19T18:41:12+00:00"
         },
         {
             "name": "symfony/console",
@@ -3449,5 +3449,5 @@
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "plugin-api-version": "2.0.0"
+    "plugin-api-version": "2.3.0"
 }

@@ -11,7 +11,7 @@ class Controller
 {
     public function index($vars)
     {
-//        logActivity(json_encode($_REQUEST), 0);
+  logActivity(json_encode($_REQUEST), 0);
 
         $pbx = new Pbx();
         $result = $pbx->dispatchEvent()
